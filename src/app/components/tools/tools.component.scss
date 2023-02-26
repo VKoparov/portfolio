@@ -80,6 +80,10 @@
   grid-column-end: 1;
   grid-row: 2;
 
+  .scroll-header-container {
+    display: none;
+  }
+
   .tools-container {
     width: fit-content;
     margin: auto;
@@ -129,6 +133,23 @@
   }
 
   @media screen and (max-width: 60em) {
+    display: grid;
+    gap: 30px;
+    margin: auto;
+
+    .scroll-header-container {
+      display: flex;
+      gap: 20px;
+      margin: auto;
+
+      .scroll-header {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+
+        color: #3C4761;
+      }
+    }
 
     .list-item {
       width: 60px;
