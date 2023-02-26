@@ -1,0 +1,28 @@
+<div class="tools-container">
+  <div class="container">
+
+    <div class="grid-1">
+      <div class="intro-container">
+        <div class="header-container">
+          <b class="header">SKILLS I GOT!</b>
+          <div class="selector"></div>
+        </div>
+        <div class="description">
+          Web tools are the secret weapon in a web developer's arsenal, allowing me to build amazing websites and applications with ease.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="tools-container">
+        <div class="tools-list">
+          <div class="list-item" *ngFor="let tool of tools">
+            <img class="tool-icon" [src]="tool.imgSrc" alt="">
+            <div class="tool-name">{{ tool.name }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

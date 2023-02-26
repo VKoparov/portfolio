@@ -1,0 +1,9 @@
+<div class="frame-container">
+  <app-navigation-bar (skipLocation)="handleSkipLocation($event)" [windowLocation]="location"></app-navigation-bar>
+  <app-about-me appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-about-me')"></app-about-me>
+  <app-what-i-do appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-what-i-do')"></app-what-i-do>
+  <app-tools appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-tools')"></app-tools>
+  <app-projects appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-projects')"></app-projects>
+  <app-reviews appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-reviews')"></app-reviews>
+  <app-contacts appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-contacts')"></app-contacts>
+</div>

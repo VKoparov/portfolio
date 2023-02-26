@@ -1,0 +1,49 @@
+<div class="projects-container">
+  <div class="container">
+
+    <div class="grid-1">
+      <div class="intro-container">
+        <div class="header-container">
+          <b class="header">PROJECTS</b>
+          <div class="selector"></div>
+        </div>
+        <div class="description">
+          Projects are the building blocks of innovation and progress, and as a web developer, I thrive on bringing ideas to life through my work.
+        </div>
+        <div class="navigation-bar-button-container">
+          <button [ngClass]="{'selected': selectedOption === 'all'}" class="navigation-button" (click)="filterProjects('all')">ALL</button>
+          <button [ngClass]="{'selected': selectedOption === 'web'}" class="navigation-button" (click)="filterProjects('web')">WEB</button>
+          <button [ngClass]="{'selected': selectedOption === 'packs'}" class="navigation-button" (click)="filterProjects('packs')">PACKS</button>
+          <button [ngClass]="{'selected': selectedOption === 'apis'}" class="navigation-button" (click)="filterProjects('apis')">APIS</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="scroll-header-container">
+        <img class="scroll-direction" src="assets/scroll-left.svg" alt="">
+        <div class="scroll-header">Drag to Scroll</div>
+        <img class="scroll-direction" src="assets/scroll-right.svg" alt="">
+      </div>
+      <div class="scroll-content-container">
+        <button class="scroll-nav-button" (click)="moveLeft()">
+          <img class="scroll-direction" src="assets/scroll-left.svg" alt="">
+        </button>
+        <div class="scroll-container" appHorizontalScrollSnap>
+          <div class="scroll-item project-container" *ngFor="let project of filteredProjects">
+            <div class="content-container">
+              <div class="header">{{ project.header }}</div>
+              <div class="description">{{ project.description }}</div>
+              <a class="view-project" [href]="project.url" target="_blank">View Project</a>
+            </div>
+            <img class="project-logo" [src]="project.imgSrc" alt="">
+          </div>
+        </div>
+        <button class="scroll-nav-button" (click)="moveRight()">
+          <img class="scroll-direction" src="assets/scroll-right.svg" alt="">
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

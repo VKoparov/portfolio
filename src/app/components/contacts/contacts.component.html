@@ -1,0 +1,42 @@
+<div class="contacts-container">
+  <div class="container">
+
+    <div class="grid-1">
+      <div class="intro-container">
+        <div class="header-container">
+          <b class="header">GET IN TOUCH</b>
+          <div class="selector"></div>
+        </div>
+        <div class="description">
+          1404 Sofia, Bulgaria.
+          Tel:
+          <a class="phone-link" href="tel:+359896219798">+359 896219798</a>
+          Email:
+          <a class="email-link" href="mailto:valentinkoparov.dev@gmail.com">valentinkoparov.dev@gmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <form class="input-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()" encType="multipart/form-data">
+        <div class="input-container">
+          <div class="short-input-container">
+            <input type="text" class="input-scale name" formControlName="name" placeholder="Name*">
+            <input type="email" class="input-scale email" formControlName="email" placeholder="Email*">
+            <input type="text" class="input-scale email" formControlName="_subject" placeholder="Subject*">
+          </div>
+          <div class="message-container">
+            <textarea class="message" formControlName="message" placeholder="Message*"></textarea>
+          </div>
+        </div>
+        <button class="send-message ripple">SEND MESSAGE</button>
+      </form>
+    </div>
+
+    <div class="footer">
+      <div class="social-link-container">
+        <a class="social-link" *ngFor="let link of socialLinks" [href]="link.url">{{ link.name }}</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div [class.hide]="isHidden" class="sidebar">
+  <div class="navigation-options-container">
+    <button *ngFor="let navigation of siteNavigation" class="navigation-button" (click)="scrollIntoObject(navigation)">
+      {{ formatNavigation(navigation) }}
+    </button>
+  </div>
+</div>
+<button class="toggle-side-bar" (click)="toggleSidebar()">
+  <img class="side-bar-icon" src="assets/side-bar.svg" alt="">
+</button>

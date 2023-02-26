@@ -1,0 +1,27 @@
+<div class="about-me-container">
+  <div class="container">
+
+    <div class="grid-1">
+      <div class="intro-container">
+        <div class="header-container">
+          <b class="header">What I Do!</b>
+          <div class="selector"></div>
+        </div>
+        <div class="description">
+          I am working with both individuals and businesses from all over the globe
+          to create awesome websites and applications.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div [class]="'grid-inner-' + (i + 1)" *ngFor="let template of templates; index as i">
+        <div class="grid-inner-container">
+          <img class="action-type-card" [src]="template.imgSrc" alt="">
+          <div class="action-type-header">{{ template.header }}</div>
+          <div class="action-type-description">{{ template.description }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

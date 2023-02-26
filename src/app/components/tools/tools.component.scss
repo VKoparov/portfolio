@@ -1,0 +1,149 @@
+* {
+  text-align: center;
+}
+
+.container {
+  display: grid;
+  gap: 60px;
+  height: fit-content;
+
+  padding: 40px 0 80px 0;
+
+  background: #FFFFFF;
+
+  @media screen and (max-width: 60em) {
+    gap: 0;
+  }
+}
+
+.grid-1 {
+  grid-column-start: 1;
+  grid-row: 1;
+
+  display: inherit;
+
+  .intro-container {
+    margin: 20px auto;
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    gap: 20px;
+
+    .header-container {
+      display: grid;
+      margin: auto;
+
+      .header {
+        height: 50px;
+
+        font-style: normal;
+        font-weight: 700;
+        font-size: 32.1529px;
+        line-height: 61px;
+
+        text-align: center;
+
+        color: #3C4761;
+      }
+    }
+
+    .description {
+      max-width: 555px;
+      margin: auto;
+
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 27px;
+      text-align: center;
+
+      color: #3C4761;
+    }
+  }
+
+  @media screen and (max-width: 60em) {
+    grid-row: 1;
+    grid-column: 1;
+
+    .intro-container {
+      margin: auto auto 50px auto;
+    }
+
+    .description {
+      width: 280px;
+    }
+  }
+}
+
+.grid-2 {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row: 2;
+
+  .tools-container {
+    width: fit-content;
+    margin: auto;
+  }
+
+  .tools-list {
+    display: grid;
+    gap: 15px;
+
+    grid-template-rows: repeat(3, 0.7fr);
+    grid-template-columns: repeat(8, 0.7fr);
+  }
+
+  .list-item {
+    width: 80px;
+    padding: 10px 0 4px 0;
+    border-radius: 10px;
+    background-color: #D0DCE9;
+  }
+
+  .list-item:hover {
+    background-color: transparent;
+
+    .tool-icon {
+      display: none;
+    }
+
+    .tool-name {
+      visibility: visible;
+    }
+  }
+
+  .tool-icon {
+    margin: auto;
+    width: 40px;
+  }
+
+  .tool-name {
+    height: 0;
+
+    font-style: normal;
+    font-size: 17px;
+    font-weight: 600;
+    color: #3C4761;
+
+    visibility: hidden;
+  }
+
+  @media screen and (max-width: 60em) {
+
+    .list-item {
+      width: 60px;
+    }
+
+    .tools-list {
+      grid-template-columns: repeat(4, 0.7fr);
+    }
+
+    .tool-icon {
+      width: 30px;
+    }
+
+    .tool-name {
+      font-size: 13px;
+    }
+  }
+}
