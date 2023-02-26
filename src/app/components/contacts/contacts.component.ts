@@ -29,6 +29,10 @@ export class ContactsComponent implements OnInit {
     {
       name: 'NPM',
       url: 'https://www.npmjs.com/~valik98'
+    },
+    {
+      name: 'fiverr.',
+      url: 'https://www.fiverr.com/valentinkoparov/building-your-dream-website'
     }
   ];
 
