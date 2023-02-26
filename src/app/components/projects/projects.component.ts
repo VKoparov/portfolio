@@ -15,49 +15,49 @@ export class ProjectsComponent implements OnInit {
       type: 'web',
       header: 'Yotpo Subscriptions',
       description: 'An intuitive subscription management solution that makes it easy for eCommerce brands to grow recurring revenue by adding a subscription offering.',
-      imgSrc: 'assets/yotpo-subs.png',
+      imgSrc: 'assets/images/yotpo-subs.png',
       url: 'https://www.yotpo.com/platform/subscriptions/'
     },
     {
       type: 'web',
       header: 'Yotpo Integrations Center',
       description: 'Easily integrate Yotpo with the leading eCommerce apps and platforms to create seamless, engaging, and high-converting shopping experiences using rich customer data.',
-      imgSrc: 'assets/integrations-center.png',
+      imgSrc: 'assets/images/integrations-center.png',
       url: 'https://www.yotpo.com/platform/subscriptions/'
     },
     {
       type: 'web',
       header: 'PeopleStrategy',
       description: 'From intuitive, hire-to-retire HR technology to comprehensive benefits consulting and HR services, PeopleStrategy offers employers a single source for the tools and services necessary to attract, manage and retain talent.',
-      imgSrc: 'assets/peoplestrategy.png',
+      imgSrc: 'assets/images/peoplestrategy.png',
       url: 'https://www.peoplestrategy.com/'
     },
     {
       type: 'web',
       header: 'Codexio ERP',
       description: 'An ERP (Enterprise Resource Planning) system is a comprehensive software platform that helps organizations manage and automate key business processes such as finance, inventory, production, and sales.',
-      imgSrc: 'assets/erp-system.png',
+      imgSrc: 'assets/images/erp-system.png',
       url: 'https://codexio.bg/'
     },
     {
       type: 'apis',
       header: 'Material Minesweeper',
       description: 'Minesweeper, the classic puzzle game, has been given a modern take with updated style and new gameplay features, like colored tiles and more.',
-      imgSrc: 'assets/material-minesweeper.png',
+      imgSrc: 'assets/images/material-minesweeper.png',
       url: 'https://minesweeper-material.herokuapp.com/'
     },
     {
       type: 'packs',
       header: 'Stream Kafka for NestJS',
       description: 'Stream Kafka for NestJS is a powerful tool that allows developers to easily implement Kafka messaging into their NestJS applications.',
-      imgSrc: 'assets/empty.jpg',
+      imgSrc: 'assets/images/empty.jpg',
       url: 'https://www.npmjs.com/package/stream-kafka'
     },
     {
       type: 'packs',
       header: 'SocksJS for Angular',
       description: 'Socket.IO inspired wrapper over Stomp Websocket for Angular.',
-      imgSrc: 'assets/empty.jpg',
+      imgSrc: 'assets/images/empty.jpg',
       url: 'https://www.npmjs.com/package/ngx-socksjs'
     }
   ];
