@@ -1,0 +1,13 @@
+<div class="dark-overlay" [ngStyle]="{'top': bottomOffset, 'background': darkOverlay}">
+    <div class="parallax">
+        <div class="background">
+            <img class="parallax-image" src="../../../assets/backgound.jpg" alt="background-image"/>
+        </div>
+        <div class="logo-container">
+            <img [ngStyle]="{'transform': logoTransform}" class="logo" src="../../../assets/icons/logo.svg" alt="">
+        </div>
+        <div class="foreground" [ngStyle]="{'transform': foregroundTransform}">
+            <img class="parallax-image" src="../../../assets/foreground.png" alt="foreground-image"/>
+        </div>
+    </div>
+</div>

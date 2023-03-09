@@ -17,6 +17,7 @@ import { ReviewsComponent } from './components/reviews/reviews.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { ParallaxLandingComponent } from './components/parallax-landing/parallax-landing.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SideBarComponent } from './components/side-bar/side-bar.component';
     HorizontalScrollSnapDirective,
     ReviewsComponent,
     SideBarComponent,
-    SideBarComponent
+    SideBarComponent,
+    ParallaxLandingComponent
   ],
   imports: [
     BrowserModule,
