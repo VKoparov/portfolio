@@ -1,35 +1,32 @@
 <div class="about-me-container">
-  <div class="container">
-
-    <div class="grid-1">
-      <div class="intro-container">
-        <div class="header">Hi !, let's build together</div>
-        <a class="download-cv ripple" download="Resume-Valentin-Koparov" target="_blank" href="../../../assets/files/Resume-Valentin-Koparov-2022.pdf">
-          DOWNLOAD CV
-        </a>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="intro-container">
-        <div class="header-container-gap">
-          <div class="header-container">
-            <div class="header">WHO AM I</div>
-            <div class="selector"></div>
-          </div>
-          <div class="description">
-            Hello, my name is Valentin, and I am a web developer with a passion for creating dynamic and innovative websites and applications.
-            I have a deep understanding of web development best practices and a proven track record of delivering high-quality results.
-            If you are looking for a skilled and experienced web developer to bring your digital vision to life, look no further than me. I am dedicated to helping companies and clients achieve their goals and I am confident that I can deliver outstanding results for your project.
-          </div>
+    <div class="about">
+        <div class="background-container">
+            <img class="background-image" src="assets/images/about-me.png" alt="">
+            <div class="top-fade"></div>
+            <app-bottom-fade></app-bottom-fade>
         </div>
-        <img class="profile-picture" src="../../../assets/images/profile-picture.svg" alt="">
-        <div class="name-title-container">
-          <div class="name">Valentin Koparov</div>
-          <div class="title">Full-Stack Developer</div>
+        <div class="wrap-text">
+            <a class="download-cv" download="Resume-Valentin-Koparov" target="_blank"
+               href="../../../assets/files/Resume-Valentin-Koparov-2022.pdf">
+                <svg [ngStyle]="{'transform' : objectRotate}" width="110" height="110" viewBox="0 0 110 110">
+                    <path id="textpath-1" d="M 55, 55 m -55, 0 a 55,55 0 1,0 110,0 a 55,55 0 1,0 -110,0 "></path>
+                    <text fill="#FFF">
+                        <textPath xlink:href="#textpath-1" startOffset="50%" text-anchor="middle">
+                            DOWNLOAD RESUME
+                        </textPath>
+                    </text>
+                </svg>
+            </a>
+            <p><strong>Awkward introduction? Clammy handshake? Nah, let’s go in for a virtual bear hug and a quick
+                two-minute spiel about who I am, because who I am is your new hyper-talented mate – a web developer
+                with a background in corporate software building.</strong></p>
+            <p>I am passion for creating dynamic and innovative websites and applications.
+               I have a deep understanding of web development best practices and a proven track record of delivering
+                high-quality results. If you are looking for a skilled and experienced web developer to bring your digital
+                vision to life, look no further than me. I am dedicated to helping companies and clients achieve their
+                goals and I am confident that I can deliver outstanding results for your project.</p>
+            <p>So that’s me in a nutshell. If you want to learn more about me (especially how I ended up in the biggest ecommerce company),
+                take a peek around the rest of my site.</p>
         </div>
-      </div>
     </div>
-
-  </div>
 </div>

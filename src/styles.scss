@@ -1,9 +1,17 @@
 * {
-  font-family: Titillium Web;
+  font-family: Poppins, sans-serif;
+
+  transition: all .25s ease-in-out;
 }
 
 body {
   margin: 0;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .selector {
@@ -65,5 +73,23 @@ body {
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+@keyframes scale-down {
+  from {
+    transform: scale(8);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes rotating {
+  from{
+    transform: rotate(0deg);
+  }
+  to{
+    transform: rotate(360deg);
   }
 }

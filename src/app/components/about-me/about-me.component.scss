@@ -1,154 +1,80 @@
-* {
-  text-align: center;
-}
+.about {
+  padding: 100px 0;
 
-.container {
-  display: grid;
-  height: fit-content;
-}
+  background: black;
 
-.grid-1 {
-  height: 400px;
+  .background-container {
+    position: relative;
 
-  display: inherit;
+    img {
+      width: 100%;
+      height: 50em;
 
-  background-color: #643A79;
-
-  .intro-container {
-    margin: auto auto 80px auto;
-    width: fit-content;
-    display: grid;
-    gap: 30px;
-
-    .header {
-      font-style: normal;
-      font-weight: 700;
-      font-size: 32.1529px;
-      line-height: 64px;
-      text-align: center;
-
-      color: #F7F3EA;
+      object-fit: cover;
     }
 
+    .top-fade {
+      width: 100%;
+      height: 60%;
+
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+    }
+  }
+
+  .wrap-text {
+    position: relative;
+
+    max-width: 860px;
+
+    margin: -22em auto 0 auto;
+    padding: 0 80px;
+
+    z-index: 10;
+
     .download-cv {
-      margin: auto;
-      padding: 10px 70px;
+      display: block;
+
+      width: fit-content;
+
+      margin: auto auto 80px 0;
+      padding: 10px 15px;
 
       font-style: normal;
-      font-weight: 700;
-      font-size: 14.0002px;
-      line-height: 27px;
+      font-size: 15px;
 
-      border-radius: 5px;
-      background: #EB854B;
-
+      border-radius: 150px;
+      background: black;
       color: #FFFFFF;
-
       text-decoration: none;
     }
 
-    .ripple {
-      background-position: center;
-      transition: background 0.8s;
+    .download-cv svg {
+      font-size: 13px;
+      letter-spacing: 5px;
+
+      transform: rotate(0);
     }
 
-    .ripple:hover {
-      background: sandybrown radial-gradient(circle, transparent 1%, sandybrown 1%) center/15000%;
+    strong {
+      color: #FFFFFF;
     }
 
-    .ripple:active {
-      background-color: navajowhite;
-      background-size: 100%;
-      transition: background 0s;
-    }
-  }
+    p, a {
+      margin-bottom: 24px;
 
-  @media screen and (max-width: 60em) {
-
-    .intro-container {
-      margin: auto auto 50px auto;
-    }
-  }
-}
-
-.grid-2 {
-  display: inherit;
-
-  padding: 40px 0 80px 0;
-
-  background-color: #E7F1F8;
-
-  .intro-container {
-    width: 100%;
-    height: fit-content;
-    display: grid;
-    gap: 40px;
-
-    .header-container-gap {
-      margin: 20px auto;
-      width: 100%;
-      height: fit-content;
-      display: grid;
-      gap: 20px;
-    }
-
-    .header-container {
-      display: grid;
-      margin: auto;
-
-      .header {
-        height: 50px;
-
-        font-style: normal;
-        font-weight: 700;
-        font-size: 30.635px;
-        line-height: 62px;
-
-        color: #3C4761;
-      }
-    }
-
-    .description {
-      max-width: 933px;
-      margin: auto;
-
-      font-style: normal;
-      font-weight: 400;
-      font-size: 16.2857px;
-      line-height: 28px;
-      text-align: justify;
-
-      color: #3C4761;
-    }
-
-    .profile-picture {
-      margin: auto;
-    }
-
-    .name {
-      font-style: normal;
-      font-weight: 700;
-      font-size: 24px;
-      line-height: 37px;
-
-      color: #3C4761;
-    }
-
-    .title {
-      font-style: normal;
-      font-weight: 400;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 24px;
-      text-align: center;
 
-      color: #30BAE7;
+      color: rgba(255, 255, 255, 0.7);
     }
-  }
 
-  @media screen and (max-width: 60em) {
+    @media screen and (max-width: 60em) {
 
-    .description {
-      width: 300px;
+      padding: 0 20px;
     }
   }
 }

@@ -1,34 +1,14 @@
-<div class="about-me-container">
-  <div class="container">
-
-    <div class="grid-1">
-      <div class="intro-container">
-        <div class="header-container">
-          <b class="header">What I Do!</b>
-          <div class="selector"></div>
+<div class="what-i-do-container">
+    <div class="container">
+        <div class="grid-1">
+            <div class="grid-inner-content" *ngFor="let template of templates">
+                <div class="content-container" *ngIf="visibility" [@flyInOut]="true" (click)="handleActionEvent(template.action)">
+                    <img class="action-card-image" [ngSrc]="template.imgSrc" width="300" height="470" alt="">
+                    <img class="action-card-logo" [src]="template.logoUrl" alt="">
+                    <h3 class="action-type-header">{{ template.header }}</h3>
+                    <div class="bottom-fade"></div>
+                </div>
+            </div>
         </div>
-        <div class="description">
-          I am working with both individuals and businesses from all over the globe
-          to create awesome websites and applications.
-        </div>
-      </div>
     </div>
-
-    <div class="grid-2">
-      <div class="scroll-header-container">
-        <img class="scroll-direction" src="../../../assets/icons/scroll-left.svg" alt="">
-        <div class="scroll-header">Drag to Scroll</div>
-        <img class="scroll-direction" src="../../../assets/icons/scroll-right.svg" alt="">
-      </div>
-      <div class="inner-container" appHorizontalScrollSnap>
-        <div class="scroll-item grid-inner-content" *ngFor="let template of templates; index as i">
-          <div class="grid-inner-container">
-            <img class="action-type-card" [src]="template.imgSrc" alt="">
-            <div class="action-type-header">{{ template.header }}</div>
-            <div class="action-type-description">{{ template.description }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

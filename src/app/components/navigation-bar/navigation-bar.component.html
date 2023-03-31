@@ -1,11 +1,18 @@
-<div class="navigation-bar-container" sticky>
-  <img class="logo" src="../../../assets/icons/logo.svg" alt="">
-  <div class="navigation-bar-button-container">
-    <button *ngFor="let navigation of siteNavigation" class="navigation-button" (click)="scrollIntoObject(navigation)">
-      {{ formatNavigation(navigation) }}
-    </button>
-  </div>
-  <div class="side-bar-container">
-    <app-side-bar></app-side-bar>
-  </div>
+<div class="navigation-bar-container">
+    <app-hamburger-menu-button (click)="handleNavigationOpenEvent()" class="ham-menu-btn"></app-hamburger-menu-button>
+    <div class="logo-container">
+        <h3 *ngIf="!isLogoVisible" class="logo-name logo">VALENTIN KOPAROV</h3>
+        <img *ngIf="isLogoVisible" class="logo-svg logo" ngSrc="assets/icons/logo.svg" alt="logo-svg" priority height="100" width="100">
+    </div>
+    <a class="nav-btn" href="mailto:valentinkoparov.dev@gmail.com">Get in touch</a>
 </div>
+<nav class="active" *ngIf="isNavigationOpen" [@fade]="isNavigationOpen">
+    <div class="background-image" style="background: url('assets/images/winter-blizzard.png') center center; background-size: cover;"></div>
+    <div class="top-fade"></div>
+    <div class="left-fade"></div>
+    <div class="navigation-button-container">
+        <button *ngFor="let navigation of siteNavigation" [ngClass]="{'active-nav-btn' : navigation === currentLocation}" class="navigation-button" (click)="scrollIntoPage(navigation)">
+            {{ formatNavigation(navigation) }}
+        </button>
+    </div>
+</nav>

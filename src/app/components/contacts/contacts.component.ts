@@ -9,33 +9,6 @@ import {EmailService} from "../../services/email.service";
 })
 export class ContactsComponent implements OnInit {
 
-  socialLinks: { name: string, url: string }[] = [
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/valentin-koparov-6875b11b9'
-    },
-    {
-      name: 'GitHub',
-      url: 'https://github.com/VKoparov'
-    },
-    {
-      name: 'Facebook',
-      url: 'https://www.facebook.com/valentin.koparov'
-    },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/vkoparov'
-    },
-    {
-      name: 'NPM',
-      url: 'https://www.npmjs.com/~valik98'
-    },
-    {
-      name: 'fiverr.',
-      url: 'https://www.fiverr.com/valentinkoparov/building-your-dream-website'
-    }
-  ];
-
   contactForm!: FormGroup;
 
   constructor(

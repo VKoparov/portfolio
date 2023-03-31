@@ -1,0 +1,19 @@
+* {
+  transition: all .3s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.social-ico-block {
+  position: fixed;
+  right: 30px;
+  top: 50vh;
+
+  width: 20px;
+
+  transform: translate(0, -50%);
+
+  z-index: 90;
+
+  .social-ico svg path {
+    fill: #fff;
+  }
+}

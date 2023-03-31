@@ -1,37 +1,21 @@
 <div class="reviews-container">
-  <div class="container">
-
-    <div class="grid-1">
-      <div class="intro-container">
-        <div class="header-container">
-          <b class="header">WHAT POEOPLE SAY ABOUT ME</b>
-          <div class="selector"></div>
-        </div>
-        <div class="description">
-          People love to work with me! - original reviews LinkedIn
-        </div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="scroll-header-container">
-        <img class="scroll-direction" src="../../../assets/icons/scroll-left.svg" alt="">
-        <div class="scroll-header">Drag to Scroll</div>
-        <img class="scroll-direction" src="../../../assets/icons/scroll-right.svg" alt="">
-      </div>
-      <div class="content-list" appHorizontalScrollSnap>
-        <div class="scroll-item content-container" *ngFor="let review of reviews">
-          <img class="profile-picture" [src]="review.imgSrc" alt="">
-          <div class="profile-container">
-            <div class="review-description">{{ review.description }}</div>
-            <div class="profile-info">
-              <div class="profile-name">{{ review.name }}</div>
-              <div class="profile-job-title">{{ review.jobTitle }}</div>
+    <div class="container">
+        <div class="grid-1">
+            <img class="smoke-background" [ngStyle]="{'transform' : objectScale}" src="assets/vectors/smoke.png" alt="">
+            <div class="content-list" [ngStyle]="{'transform' : objectScale}">
+                <div class="content-container" *ngFor="let review of reviews">
+                    <img class="profile-picture" [src]="review.imgSrc" alt="">
+                    <div class="review-description-container">
+                        <div class="review-description">{{ review.description }}</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">{{ review.name }}</div>
+                        <div class="profile-job-title">{{ review.jobTitle }}</div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="top-fade"></div>
+            <app-bottom-fade></app-bottom-fade>
         </div>
-      </div>
     </div>
-
-  </div>
 </div>

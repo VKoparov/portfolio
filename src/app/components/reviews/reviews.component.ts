@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-reviews',
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss']
 })
-export class ReviewsComponent {
+export class ReviewsComponent implements OnInit {
 
   reviews: { imgSrc: string, description: string, name: string, jobTitle: string }[] = [
     {
@@ -27,4 +28,18 @@ export class ReviewsComponent {
       jobTitle: 'Software Engineer'
     }
   ];
+
+  @Input() event!: Observable<string>;
+
+  objectScale: string = 'scale(.0)';
+
+  ngOnInit(): void {
+    this.event.subscribe(location => {
+      if (location === 'app-reviews') {
+        setTimeout(() => {
+          this.objectScale = 'scale(1)';
+        }, 300);
+      }
+    });
+  }
 }

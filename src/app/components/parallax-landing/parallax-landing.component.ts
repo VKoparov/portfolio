@@ -1,7 +1,7 @@
 import {Component, HostListener} from '@angular/core';
 
 @Component({
-  selector: 'app-parallax-landing',
+  selector: 'app-homepage',
   templateUrl: './parallax-landing.component.html',
   styleUrls: ['./parallax-landing.component.scss']
 })

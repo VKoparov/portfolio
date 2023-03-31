@@ -9,7 +9,7 @@
 
   padding: 40px 0 80px 0;
 
-  background: #FFDD99;
+  background: black;
 
   @media screen and (max-width: 60em) {
     gap: 0;
@@ -29,38 +29,7 @@
     display: grid;
     gap: 20px;
 
-    .header-container {
-      display: grid;
-      margin: auto;
-
-      .header {
-        height: 50px;
-
-        font-style: normal;
-        font-weight: 700;
-        font-size: 32.1529px;
-        line-height: 61px;
-
-        text-align: center;
-
-        color: #393939;
-      }
-    }
-
-    .description {
-      max-width: 555px;
-      margin: auto;
-
-      font-style: normal;
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 27px;
-      text-align: center;
-
-      color: #393939;
-    }
-
-    .navigation-bar-button-container {
+    .navigation-button-container {
       margin: auto;
       display: flex;
       gap: 7px;
@@ -72,21 +41,21 @@
         cursor: pointer;
 
         font-style: normal;
-        font-weight: 400;
-        font-size: 13px;
+        font-weight: bold;
+        font-size: 15px;
         line-height: 33px;
 
-        color: #393939;
+        color: #3C4761;;
 
         background-color: rgba(0, 0, 0, 0.1);
       }
 
       .selected {
-        background-color: #FFFFFF;
+        color: white;
       }
 
       .navigation-button:hover {
-        background: white;
+        color: white;
       }
     }
   }
@@ -106,51 +75,14 @@
 }
 
 .grid-2 {
-  grid-column-start: 1;
-  grid-row: 2;
+  position: relative;
 
-  display: grid;
-  gap: 25px;
+  display: flex;
 
   height: fit-content;
 
-  .scroll-header-container {
-    display: none;
-    gap: 20px;
-    margin: auto;
-
-    .scroll-direction {
-      width: 18px;
-    }
-
-    .scroll-header {
-      font-style: normal;
-      font-weight: 700;
-      font-size: 16px;
-
-      color: #393939;
-    }
-  }
-
   .scroll-content-container {
-    display: flex;
     margin: auto;
-
-    .scroll-nav-button {
-      width: fit-content;
-      height: fit-content;
-      margin: auto;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-    }
-
-    .scroll-nav-button:hover {
-      -webkit-animation: swing 1s ease;
-      animation: swing 1s ease;
-      -webkit-animation-iteration-count: 1;
-      animation-iteration-count: 1;
-    }
 
     .scroll-container {
       max-width: 890px;
@@ -158,7 +90,7 @@
       gap: 200px;
 
       margin: auto 20px;
-      border-radius: 20px;
+      border-radius: 10px;
 
       overflow-x: scroll;
       scroll-snap-type: x mandatory;
@@ -243,20 +175,42 @@
     }
   }
 
-  @media screen and (max-width: 60em) {
+  .scroll-nav-button {
+    position: absolute;
+    top: 50%;
 
-    .scroll-header-container {
-      display: flex;
-    }
+    width: fit-content;
+    height: fit-content;
+
+    margin: auto;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+  }
+
+  .scroll-nav-button:hover {
+    -webkit-animation: swing 1s ease;
+    animation: swing 1s ease;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+  }
+
+  .left-navigation {
+    left: 6%;
+  }
+
+  .right-navigation {
+    right: 6%;
+  }
+
+  @media screen and (max-width: 60em) {
 
     .scroll-content-container {
 
-      .scroll-nav-button {
-        display: none;
-      }
-
       .scroll-container {
-        max-width: 300px;
+        max-width: 280px;
         gap: 100px;
 
         .project-container {
