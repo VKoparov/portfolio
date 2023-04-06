@@ -1,24 +1,28 @@
-<div class="dark-overlay" [ngStyle]="{'top': bottomOffset, 'background': darkOverlay}">
-    <div class="parallax">
-        <div class="background">
-            <img class="parallax-image" src="../../../assets/backgound.jpg" alt="background-image"/>
+<div class="homepage-container">
+    <div class="dark-overlay" [ngStyle]="{'top': bottomOffset, 'background': darkOverlay}">
+
+        <div class="parallax">
+            <div class="background">
+                <img class="parallax-image" src="../../../assets/backgound.jpg" alt="background-image"/>
+            </div>
+            <div class="logo-container">
+                <img [ngStyle]="{'transform': logoTransform}" class="logo" src="../../../assets/icons/logo-main.svg"
+                     alt="">
+            </div>
+            <div class="foreground" [ngStyle]="{'transform': foregroundTransform}">
+                <img class="parallax-image" src="../../../assets/foreground.png" alt="foreground-image"/>
+            </div>
         </div>
-        <div class="logo-container">
-            <img [ngStyle]="{'transform': logoTransform}" class="logo" src="../../../assets/icons/logo-main.svg" alt="">
+        <div class="location">
+            <svg width="22" height="22">
+                <g transform="translate(1 1)" stroke="#FFF" stroke-width="1.5" fill="none" fill-rule="evenodd">
+                    <path d="M14.2 5.8l-2.1 6.3-6.3 2.1 2.1-6.3z"></path>
+                    <circle cx="10" cy="10" r="10"></circle>
+                </g>
+            </svg>
+            <span>37.8136° S, 144.9631° E</span>
         </div>
-        <div class="foreground" [ngStyle]="{'transform': foregroundTransform}">
-            <img class="parallax-image" src="../../../assets/foreground.png" alt="foreground-image"/>
-        </div>
+        <div class="right-bottom-text"><span>Creating Web Application in Bulgaria / Sofia</span></div>
     </div>
-    <div class="location">
-        <svg width="22" height="22">
-            <g transform="translate(1 1)" stroke="#FFF" stroke-width="1.5" fill="none" fill-rule="evenodd">
-                <path d="M14.2 5.8l-2.1 6.3-6.3 2.1 2.1-6.3z"></path>
-                <circle cx="10" cy="10" r="10"></circle>
-            </g>
-        </svg>
-        <span>37.8136° S, 144.9631° E</span>
-    </div>
-    <div class="right-bottom-text"><span>Creating Web Application in Bulgaria / Sofia</span></div>
-    <app-bottom-fade></app-bottom-fade>
+    <div class="bottom-fade"></div>
 </div>
