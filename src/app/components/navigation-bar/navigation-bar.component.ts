@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {fade} from "../../animations/fade";
 
 @Component({
@@ -13,6 +13,8 @@ export class NavigationBarComponent implements OnInit {
     @Input() event!: Observable<string>;
 
     currentLocation!: string;
+
+    menuItemClickEvent: Subject<void> = new Subject<void>();
 
     isLogoVisible: boolean = false;
 
@@ -43,6 +45,8 @@ export class NavigationBarComponent implements OnInit {
     }
 
     scrollIntoPage(elementId: string) {
+        this.menuItemClickEvent.next();
+
         const element = `${elementId.toLowerCase()}`;
 
         this.isNavigationOpen = !this.isNavigationOpen;
