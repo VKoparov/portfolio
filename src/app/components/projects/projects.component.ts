@@ -13,6 +13,13 @@ export class ProjectsComponent implements OnInit {
   projects: { type: string, header: string, description: string, imgSrc: string, url: string }[] = [
     {
       type: 'web',
+      header: 'Picante Social & Dance',
+      description: 'I\'ve meticulously crafted a captivating website that pulsates with the vibrant energy of Latin dance. From sleek design to user-friendly functionality, every element reflects my passion for fostering community and connection through the art of dance.',
+      imgSrc: 'assets/images/picante.png',
+      url: 'https://www.picante.bg/home'
+    },
+    {
+      type: 'web',
       header: 'Yotpo Subscriptions',
       description: 'An intuitive subscription management solution that makes it easy for eCommerce brands to grow recurring revenue by adding a subscription offering.',
       imgSrc: 'assets/images/yotpo-subs.png',
