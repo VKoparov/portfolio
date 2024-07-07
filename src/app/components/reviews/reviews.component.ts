@@ -26,6 +26,12 @@ export class ReviewsComponent implements OnInit {
       description: '"I worked with Valentin on a new project for almost an year in 2021 and we jointly delivered as per the requirements and on time. Valentin is energetic, enthusiastic, and passionate full stack software developer. He is always willing to learn new technologies and to improve his skills. He is able to fully implement the planned work regardless of if they involve developing on the front-end or on the back-end. Most of all Valentin is a valuable team player and is always willing to share his experience with his team-mates. I recommend Valentin for positions that require software development and or teaching."',
       name: 'Kamen Tomov',
       jobTitle: 'Software Engineer'
+    },
+    {
+      imgSrc: 'https://media.licdn.com/dms/image/C4E03AQFP7HoP7aB7cA/profile-displayphoto-shrink_800_800/0/1556876039322?e=1726099200&v=beta&t=PYHF-8eHWBwE4hfa3Lh9xu33Vgs9ksZItrZ4LPVz71E',
+      description: '"Experienced software developer with expertise in Java, microservices, and Angular. Strong team player with excellent communication skills. Proven experience in designing, developing, and implementing scalable and secure software solutions."',
+      name: 'Nikolay Ivanov',
+      jobTitle: 'Senior Full Stack Software Developer at UKG'
     }
   ];
 

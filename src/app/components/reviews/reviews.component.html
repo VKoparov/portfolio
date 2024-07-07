@@ -3,14 +3,16 @@
         <div class="grid-1" [ngStyle]="{'transform' : objectScale}">
             <img class="smoke-background" ngSrc="assets/vectors/smoke.png" alt="" height="4000" width="4000">
             <div class="content-list">
-                <div class="content-container" *ngFor="let review of reviews">
-                    <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" alt="">
-                    <div class="review-description-container">
-                        <div class="review-description">{{ review.description }}</div>
-                    </div>
-                    <div class="profile-info">
-                        <div class="profile-name">{{ review.name }}</div>
-                        <div class="profile-job-title">{{ review.jobTitle }}</div>
+                <div class="list">
+                    <div class="content-container" *ngFor="let review of reviews">
+                        <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" alt="">
+                        <div class="review-description-container">
+                            <div class="review-description">{{ review.description }}</div>
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name">{{ review.name }}</div>
+                            <div class="profile-job-title">{{ review.jobTitle }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
