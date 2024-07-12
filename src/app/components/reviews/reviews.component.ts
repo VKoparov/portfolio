@@ -32,6 +32,12 @@ export class ReviewsComponent implements OnInit {
       description: '"Experienced software developer with expertise in Java, microservices, and Angular. Strong team player with excellent communication skills. Proven experience in designing, developing, and implementing scalable and secure software solutions."',
       name: 'Nikolay Ivanov',
       jobTitle: 'Senior Full Stack Software Developer at UKG'
+    },
+    {
+      imgSrc: 'https://media.licdn.com/dms/image/C5603AQHXgywChocODw/profile-displayphoto-shrink_800_800/0/1516937811278?e=1726099200&v=beta&t=Z91CT733fD44mx0vsdxafGH-J6DC60hJSluG8qOYzxc',
+      description: '"Valentin possesses a wide variety of skills that make him an asset to every team he is a part of. His problem-solving abilities are enhanced by his dedication and innovative approach to his work. Valentin is not only technically proficient but also a great team player, always ready to assist colleagues and share knowledge. It was a pleasure working with him."',
+      name: 'Krasimir Dimitrov',
+      jobTitle: 'Software Developer'
     }
   ];
 

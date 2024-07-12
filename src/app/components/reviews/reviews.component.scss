@@ -40,15 +40,13 @@
     z-index: 60;
 
     .list {
+      width: fit-content;
+
       position: relative;
 
       display: flex;
-      grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: auto;
 
-      width: fit-content;
-
-      transform: rotate(-10deg);
+      transform: rotate(-15deg);
 
       .content-container {
         width: 300px;
@@ -85,6 +83,8 @@
             max-width: 500px;
 
             color: #FFFFFF;
+
+            white-space: break-spaces;
           }
         }
 
@@ -147,15 +147,39 @@
         z-index: 0;
       }
 
+      .content-container:nth-child(5) {
+        position: relative;
+        bottom: -70px;
+
+        transform: rotate(30deg);
+
+        z-index: -1;
+      }
+
       .content-container:hover {
         position: relative;
-        bottom: 50px;
 
         z-index: 10;
       }
 
+      .content-container:nth-child(1):hover {
+        bottom: 50px;
+      }
+
       .content-container:nth-child(2):hover {
         bottom: 60px;
+      }
+
+      .content-container:nth-child(3):hover {
+        bottom: 60px;
+      }
+
+      .content-container:nth-child(4):hover {
+        bottom: 0px;
+      }
+
+      .content-container:nth-child(5):hover {
+        bottom: -60px;
       }
     }
   }
@@ -186,6 +210,9 @@
     .content-list {
 
       .list {
+        width: 200px;
+
+        transform: rotate(-10deg);
 
         .content-container {
           width: 270px;
@@ -193,13 +220,7 @@
         }
 
         .content-container:nth-child(1) {
-          position: relative;
-
           transform: scale(.7) rotate(-10deg);
-        }
-
-        .content-container:nth-child(1):hover {
-          bottom: 60px;
         }
 
         .content-container:nth-child(2) {
@@ -207,11 +228,41 @@
         }
 
         .content-container:nth-child(3) {
+          bottom: 50px;
+
           transform: scale(.7) rotate(10deg);
         }
 
         .content-container:nth-child(4) {
+          bottom: 50px;
+
           transform: scale(.7) rotate(20deg);
+        }
+
+        .content-container:nth-child(5) {
+          bottom: 30px;
+
+          transform: scale(.7) rotate(30deg);
+        }
+
+        .content-container:nth-child(1):hover {
+          bottom: 60px;
+        }
+
+        .content-container:nth-child(2):hover {
+          bottom: 60px;
+        }
+
+        .content-container:nth-child(3):hover {
+          bottom: 60px;
+        }
+
+        .content-container:nth-child(4):hover {
+          bottom: 60px;
+        }
+
+        .content-container:nth-child(5):hover {
+          bottom: 40px;
         }
       }
     }
