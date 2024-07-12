@@ -1,5 +1,7 @@
 .about {
-  padding: 100px 0;
+  height: 100vh;
+
+  padding: 100px 0 50px 0;
 
   background: black;
 
@@ -27,10 +29,11 @@
 
   .wrap-text {
     position: relative;
+    top: -350px;
 
     max-width: 860px;
 
-    margin: -22em auto 0 auto;
+    margin: 0 auto;
     padding: 0 80px;
 
     z-index: 10;
@@ -76,5 +79,9 @@
 
       padding: 0 20px;
     }
+  }
+
+  @media screen and (max-width: 60em) {
+    height: 170vh;
   }
 }

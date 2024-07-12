@@ -19,18 +19,16 @@
 .grid-1 {
   position: relative;
 
-  transition: all 1s ease-in-out;
+  transition: all .5s ease-in-out;
 
   .smoke-background {
     width: 100%;
     height: 100vh;
 
     object-fit: cover;
-
-    transition: all 1s ease-in-out;
   }
 
-  .content-list {
+  .enter {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -38,6 +36,10 @@
     transform: translate(-50%, -50%);
 
     z-index: 60;
+  }
+
+  .content-list {
+    transition: all 1.5s ease-in-out;
 
     .list {
       width: fit-content;

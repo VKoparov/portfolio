@@ -1,36 +1,19 @@
-<div class="projects-container">
-  <div class="container">
-
-    <div class="grid-1">
-      <div class="intro-container">
-        <div class="navigation-button-container">
-          <button [ngClass]="{'selected': selectedOption === 'all'}" class="navigation-button" (click)="filterProjects('all')">ALL</button>
-          <button [ngClass]="{'selected': selectedOption === 'web'}" class="navigation-button" (click)="filterProjects('web')">WEB</button>
-          <button [ngClass]="{'selected': selectedOption === 'packs'}" class="navigation-button" (click)="filterProjects('packs')">PACKS</button>
-          <button [ngClass]="{'selected': selectedOption === 'apis'}" class="navigation-button" (click)="filterProjects('apis')">APIS</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="scroll-content-container">
-        <div class="scroll-container" appHorizontalScrollSnap>
-          <div class="scroll-item project-container" *ngFor="let project of filteredProjects">
-            <div class="content-container">
-              <div class="header">{{ project.header }}</div>
-              <div class="description">{{ project.description }}</div>
-              <a class="view-project" [href]="project.url" target="_blank">View Project</a>
+<div class="container">
+    <div id="slide" class="slider">
+        <div class="item" *ngFor="let project of projects" [style.background-image]="'url(' + project.imgSrc + ')'">
+            <div class="content">
+                <div class="top-fade"></div>
+                <div class="wrapper">
+                    <div class="name">{{ project.header }}</div>
+                    <div class="des">{{ project.description }}</div>
+                    <a class="button" [href]="project.url" target="_blank">View Project</a>
+                </div>
+                <div class="bottom-fade"></div>
             </div>
-            <img class="project-logo" [src]="project.imgSrc" alt="">
-          </div>
         </div>
-      </div>
-      <button class="scroll-nav-button left-navigation" (click)="moveLeft()">
-        <img class="scroll-direction" src="../../../assets/icons/scroll-left.svg" alt="">
-      </button>
-      <button class="scroll-nav-button right-navigation" (click)="moveRight()">
-        <img class="scroll-direction" src="../../../assets/icons/scroll-right.svg" alt="">
-      </button>
     </div>
-  </div>
+    <div class="buttons">
+        <button id="prev"><i class="fa-solid fa-angle-left"></i></button>
+        <button id="next"><i class="fa-solid fa-angle-right"></i></button>
+    </div>
 </div>

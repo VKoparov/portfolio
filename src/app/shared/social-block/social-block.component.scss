@@ -13,7 +13,7 @@
 
   z-index: 90;
 
-  .social-ico svg path {
-    fill: #fff;
+  .social-ico {
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
   }
 }
