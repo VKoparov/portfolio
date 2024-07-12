@@ -267,10 +267,6 @@ div#slide {
 
 @media(max-width: 992px) {
 
-  div#slide {
-    height: 100vh;
-  }
-
   .item .wrapper {
     top: 25%;
     left: 15px;
@@ -280,14 +276,20 @@ div#slide {
     height: 178px;
   }
 
-  .item {
-    top: 60%;
+  .item:nth-child(n+2) {
+    position: absolute;
+    top: auto;
+    bottom: 10px;
   }
 
   .buttons {
-    left: 0;
-    right: 0;
-    justify-content: start;
+    width: fit-content;
+
+    flex-direction: column;
+
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
   }
 }
 
@@ -335,11 +337,5 @@ div#slide {
 
   .item:nth-child(4) {
     left: calc(31% + 40px);
-  }
-
-  .buttons {
-    padding-left: 15px;
-    text-align: left;
-    padding-right: 15px;
   }
 }
