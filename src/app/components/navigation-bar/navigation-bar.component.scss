@@ -35,12 +35,18 @@
     text-align: center;
 
     color: #fff;
+
+    animation: fadeOutToTop 0.5s forwards;
+
+    opacity: 1;
   }
 
   .logo-svg {
     margin: 0 0 0 100px;
 
     opacity: 1;
+
+    animation: fadeInFromBottom 0.5s forwards;
   }
 
   .nav-btn {
@@ -133,7 +139,7 @@ nav {
     left: 0;
     top: 0;
 
-    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
   }
 
   .left-fade {
@@ -144,7 +150,7 @@ nav {
     left: 0;
     top: 0;
 
-    background: linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
   }
 }
 
@@ -156,7 +162,7 @@ nav {
   top: 30%;
   left: 42%;
 
-  transform: translate(-50% ,0);
+  transform: translate(-50%, 0);
 
   animation: scale-down;
   animation-fill-mode: forwards;
@@ -196,5 +202,31 @@ nav {
     .navigation-button {
       font-size: 32px;
     }
+  }
+}
+
+@keyframes fadeOutToTop {
+
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInFromBottom {
+
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
