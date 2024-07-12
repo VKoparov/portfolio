@@ -89,11 +89,15 @@ export class ProjectsComponent implements OnInit {
         document.getElementById('next')!.onclick = () => {
             const lists = document.querySelectorAll('.item');
             document.getElementById('slide')!.appendChild(lists[0]);
+            clearInterval(this.intervalId);
+            this.startTimer();
         };
 
         document.getElementById('prev')!.onclick = () => {
             const lists = document.querySelectorAll('.item');
             document.getElementById('slide')!.prepend(lists[lists.length - 1]);
+            clearInterval(this.intervalId);
+            this.startTimer();
         };
     }
 
