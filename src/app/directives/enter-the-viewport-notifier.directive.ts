@@ -1,37 +1,28 @@
-import {AfterViewInit, Directive, ElementRef, EventEmitter, Host, OnDestroy, Output} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, Host, OnDestroy, OnInit, Output} from '@angular/core';
 
 @Directive({
   selector: '[appEnterTheViewportNotifier]'
 })
-export class EnterTheViewportNotifierDirective implements AfterViewInit, OnDestroy {
+export class EnterTheViewportNotifierDirective implements OnInit {
 
   @Output() visibilityChange: EventEmitter<string> = new EventEmitter<string>();
 
-  private observer!: IntersectionObserver;
+  constructor(private el: ElementRef) {
+  }
 
-  constructor(
-    @Host() private elementRef: ElementRef
-  ) {}
-
-  ngAfterViewInit(): void {
+  ngOnInit() {
     const options = {
       root: null,
-      rootMargin: "0px",
-      threshold: 0.7
+      rootMargin: '0px',
+      threshold: 0.1
     };
 
-    this.observer = new IntersectionObserver(this.callback, options);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry: IntersectionObserverEntry) => {
+        this.visibilityChange.emit(entry.isIntersecting ? 'VISIBLE' : 'HIDDEN');
+      });
+    }, options);
 
-    this.observer.observe(this.elementRef.nativeElement);
+    observer.observe(this.el.nativeElement);
   }
-
-  ngOnDestroy() {
-    this.observer.disconnect();
-  }
-
-  private callback = (entries: any) => {
-    entries.forEach((entry: any) => {
-      this.visibilityChange.emit(entry.isIntersecting ? 'VISIBLE' : 'HIDDEN')
-    });
-  };
 }
