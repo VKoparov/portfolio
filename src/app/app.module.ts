@@ -23,6 +23,7 @@ import {BottomFadeModule} from "./shared/bottom-fade/bottom-fade.module";
 import {HamburgerMenuButtonModule} from "./shared/hamburger-menu-button/hamburger-menu-button.module";
 import {NgOptimizedImage} from "@angular/common";
 import {SocialBlockModule} from "./shared/social-block/social-block.module";
+import {MagneticDirective} from "./directives/magnetic.directive";
 
 @NgModule({
     declarations: [
@@ -51,7 +52,8 @@ import {SocialBlockModule} from "./shared/social-block/social-block.module";
         BottomFadeModule,
         HamburgerMenuButtonModule,
         NgOptimizedImage,
-        SocialBlockModule
+        SocialBlockModule,
+        MagneticDirective
     ],
     providers: [],
     bootstrap: [AppComponent]

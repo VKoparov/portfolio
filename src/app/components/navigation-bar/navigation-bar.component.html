@@ -1,5 +1,5 @@
 <div class="navigation-bar-container">
-    <app-hamburger-menu-button (click)="handleNavigationOpenEvent()" [menuItemClickEvent]="menuItemClickEvent.asObservable()" class="ham-menu-btn"></app-hamburger-menu-button>
+    <app-hamburger-menu-button appMagnetic (click)="handleNavigationOpenEvent()" [menuItemClickEvent]="menuItemClickEvent.asObservable()" class="ham-menu-btn"></app-hamburger-menu-button>
     <div class="logo-container">
         <h3 *ngIf="!isLogoVisible" class="logo-name logo">VALENTIN KOPAROV</h3>
         <img *ngIf="isLogoVisible" class="logo-svg logo" ngSrc="assets/icons/logo.svg" alt="logo-svg" priority height="100" width="100">
