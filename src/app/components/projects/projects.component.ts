@@ -72,7 +72,7 @@ export class ProjectsComponent implements OnInit {
             type: 'packs',
             header: 'Stream Kafka for NestJS',
             description: 'Stream Kafka for NestJS is a powerful tool that allows developers to easily implement Kafka messaging into their NestJS applications.',
-            imgSrc: 'https://images.unsplash.com/photo-1543966888-7c1dc482a810?q=80&w=906&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            imgSrc: 'https://images.unsplash.com/photo-1516259657995-80d1e36154b5?q=80&w=1519&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             url: 'https://www.npmjs.com/package/stream-kafka'
         },
         {
@@ -80,7 +80,7 @@ export class ProjectsComponent implements OnInit {
             type: 'packs',
             header: 'SocksJS for Angular',
             description: 'Socket.IO inspired wrapper over Stomp Websocket for Angular.',
-            imgSrc: 'https://images.unsplash.com/photo-1543966888-7c1dc482a810?q=80&w=906&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            imgSrc: 'https://images.unsplash.com/photo-1510672277783-ea03bdd8b602?q=80&w=2380&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             url: 'https://www.npmjs.com/package/ngx-socksjs'
         }
     ];
