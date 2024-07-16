@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-projects',
@@ -8,6 +8,8 @@ import {Component, OnInit} from '@angular/core';
 export class ProjectsComponent implements OnInit {
 
     intervalId!: any;
+
+    defaultTouch: any = {x: 0, y: 0, time: 0};
 
     projects: {
         identifier: string,
@@ -86,19 +88,84 @@ export class ProjectsComponent implements OnInit {
     ngOnInit(): void {
         this.startTimer();
 
-        document.getElementById('next')!.onclick = () => {
-            const lists = document.querySelectorAll('.item');
-            document.getElementById('slide')!.appendChild(lists[0]);
-            clearInterval(this.intervalId);
-            this.startTimer();
-        };
+        this.doSwipeLeft();
+        this.doSwipeRight();
+    }
 
-        document.getElementById('prev')!.onclick = () => {
-            const lists = document.querySelectorAll('.item');
-            document.getElementById('slide')!.prepend(lists[lists.length - 1]);
-            clearInterval(this.intervalId);
-            this.startTimer();
+    @HostListener('touchstart', ['$event'])
+    @HostListener('touchend', ['$event'])
+    @HostListener('touchcancel', ['$event'])
+    handleTouch(event: any) {
+        const touch = this.getTouch(event);
+
+        if (event.type === 'touchstart') {
+            this.handleTouchStart(touch, event.timeStamp);
+            return;
+        }
+
+        if (event.type === 'touchend') {
+            this.handleTouchEnd(touch, event.timeStamp, event);
+            return;
+        }
+    }
+
+    doSwipeLeft() {
+        document.getElementById('next')!.onclick = () => {
+            this.directionLeft(null);
         };
+    }
+
+    doSwipeRight() {
+        document.getElementById('prev')!.onclick = () => {
+            this.directionRight(null);
+        };
+    }
+
+    private getTouch(event: any): Touch {
+        return event.touches[0] || event.changedTouches[0];
+    }
+
+    private handleTouchStart(touch: Touch, timeStamp: number) {
+        this.defaultTouch.x = touch.pageX;
+        this.defaultTouch.y = touch.pageY;
+        this.defaultTouch.time = timeStamp;
+    }
+
+    private handleTouchEnd(touch: Touch, timeStamp: number, event: any) {
+        const deltaX = touch.pageX - this.defaultTouch.x;
+        const deltaY = touch.pageY - this.defaultTouch.y;
+        const deltaTime = timeStamp - this.defaultTouch.time;
+
+        if (this.isValidSwipe(deltaX, deltaTime)) {
+            this.executeSwipeAction(deltaX, event);
+        }
+    }
+
+    private isValidSwipe(deltaX: number, deltaTime: number): boolean {
+        return deltaTime < 500 && Math.abs(deltaX) > 60;
+    }
+
+    private executeSwipeAction(deltaX: number, event: any) {
+        if (deltaX > 0) {
+            this.directionRight(event);
+            return;
+        }
+
+        this.directionLeft(event);
+    }
+
+    private directionLeft(event: any) {
+        const lists = document.querySelectorAll('.item');
+        document.getElementById('slide')!.appendChild(lists[0]);
+        clearInterval(this.intervalId);
+        this.startTimer();
+    }
+
+    private directionRight(event: any) {
+        const lists = document.querySelectorAll('.item');
+        document.getElementById('slide')!.prepend(lists[lists.length - 1]);
+        clearInterval(this.intervalId);
+        this.startTimer();
     }
 
     private startTimer(): void {
