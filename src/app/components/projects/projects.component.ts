@@ -17,7 +17,7 @@ export class ProjectsComponent implements OnInit {
         header: string,
         description: string,
         imgSrc: string,
-        url: string
+        url?: string
     }[] = [
         {
             identifier: 'slkdfjlk',
@@ -26,6 +26,13 @@ export class ProjectsComponent implements OnInit {
             description: 'I\'ve meticulously crafted a captivating website that pulsates with the vibrant energy of Latin dance. From sleek design to user-friendly functionality, every element reflects my passion for fostering community and connection through the art of dance.',
             imgSrc: 'assets/images/picante.png',
             url: 'https://www.picante.bg/home'
+        },
+        {
+            identifier: 'sdn88lkjl',
+            type: 'web',
+            header: 'Agora Sofia',
+            description: 'Coming soon!',
+            imgSrc: 'assets/images/agora-sofia.png'
         },
         {
             identifier: 'jpioerjlk',
