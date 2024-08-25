@@ -6,7 +6,7 @@
                 <div class="wrapper">
                     <div class="name">{{ project.header }}</div>
                     <div class="des">{{ project.description }}</div>
-                    <a class="button" [href]="project.url" target="_blank">View Project</a>
+                    <a class="button" *ngIf="project.url" [href]="project.url" target="_blank">View Project</a>
                 </div>
                 <div class="bottom-fade"></div>
             </div>
