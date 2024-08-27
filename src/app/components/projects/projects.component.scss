@@ -60,7 +60,7 @@ div#slide {
   background-size: cover;
   position: absolute;
   top: 25%;
-  transform: translate(0, 0%);
+  transform: translate(-45px, 0%);
   border-radius: 20px;
   box-shadow: 0 10px 30px #252525;
   z-index: 5;
@@ -240,10 +240,10 @@ div#slide {
   border: 1px solid #FFFFFF;
   transition: 0.5s;
   cursor: pointer;
-  background: #FFFFFF;
+  background: transparent;
 
   i {
-    color: #252525;
+    color: #FFFFFF;
   }
 }
 
@@ -276,6 +276,7 @@ div#slide {
 
   .item {
     height: 178px;
+    transform: translate(0, 0%);
   }
 
   .item:nth-child(n+2) {
