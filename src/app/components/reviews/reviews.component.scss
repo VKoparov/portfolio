@@ -48,7 +48,7 @@
 
       display: flex;
 
-      transform: rotate(-15deg);
+      transform: rotate(-17.5deg);
 
       .content-container {
         width: 300px;
@@ -158,6 +158,16 @@
         z-index: -1;
       }
 
+      .content-container:nth-child(6) {
+        position: relative;
+        right: 10px;
+        bottom: -150px;
+
+        transform: rotate(40deg);
+
+        z-index: -2;
+      }
+
       .content-container:hover {
         position: relative;
 
@@ -177,11 +187,15 @@
       }
 
       .content-container:nth-child(4):hover {
-        bottom: 0px;
+        bottom: 0;
       }
 
       .content-container:nth-child(5):hover {
         bottom: -60px;
+      }
+
+      .content-container:nth-child(6):hover {
+        bottom: -140px;
       }
     }
   }
@@ -242,9 +256,17 @@
         }
 
         .content-container:nth-child(5) {
-          bottom: 30px;
+          right: 10px;
+          bottom: 50px;
 
-          transform: scale(.7) rotate(30deg);
+          transform: scale(0.7) rotate(30deg);
+        }
+
+        .content-container:nth-child(6) {
+          right: 10px;
+          bottom: 40px;
+
+          transform: scale(0.7) rotate(40deg);
         }
 
         .content-container:nth-child(1):hover {
@@ -264,7 +286,11 @@
         }
 
         .content-container:nth-child(5):hover {
-          bottom: 40px;
+          bottom: 60px;
+        }
+
+        .content-container:nth-child(6):hover {
+          bottom: 70px;
         }
       }
     }

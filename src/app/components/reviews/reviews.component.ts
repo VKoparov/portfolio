@@ -16,6 +16,16 @@ export class ReviewsComponent implements OnInit {
       jobTitle: 'Scrum Master at KPMG'
     },
     {
+      imgSrc: 'https://media.licdn.com/dms/image/v2/C4D03AQGLq45LXeqrag/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1516245755789?e=1731542400&v=beta&t=75UUbnIco4M43QgLC10SxnIQPh6Ov_1iMEUaOC-Mw6w',
+      description: 'I have worked with Valentin on several occasions throughout 2022 and 2023, with him being a software trainer/teacher on a training program developed by STY. Valentin has managed several iterations of the program mostly independently and has received excellent feedback. The program focused on Java, OOP, code quality, rdbms (mysql), html/css/js, typescript, angular.\n' +
+          '\n' +
+          'I was happy to work with Valentin, he\'s acted professionally, proactively and took ownership of the training programs.\n' +
+          '\n' +
+          'I highly recommend him.',
+      name: 'Mihail Stoynov',
+      jobTitle: 'OWASP Chapter Leader (Sofia) at OWASP'
+    },
+    {
       imgSrc: 'assets/profiles/1554447566058.jpeg',
       description: '"I worked with Valentine for about 10 months, working together on developing a new product in Yotpo. Valentine is passionate to succeed, to learn & solve problems, and is always seeking how to improve his craftsmanship. He is positive and a great team member, always looking for helping others. Valentine learned the entire stack from scratch, really fast, and was able to produce high quality outputs which helped us reach our goals. It was a pleasure seeing Valentine grow & succeed the way he did."',
       name: 'Eyal Kenig',
