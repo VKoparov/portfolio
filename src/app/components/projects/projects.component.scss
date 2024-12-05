@@ -169,9 +169,29 @@ div#slide {
 }
 
 .wrapper .des {
+  max-height: 300px;
+
   margin: 20px 0;
   opacity: 0;
   animation: showcontent 1s ease-in-out 0.3s 1 forwards;
+
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(241, 241, 241, .1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 .wrapper button {
@@ -269,6 +289,10 @@ div#slide {
 }
 
 @media(max-width: 992px) {
+
+  .wrapper .des {
+    max-height: 200px;
+  }
 
   .item .wrapper {
     top: 25%;

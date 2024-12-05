@@ -31,8 +31,9 @@ export class ProjectsComponent implements OnInit {
             identifier: 'sdn88lkjl',
             type: 'web',
             header: 'Agora Sofia',
-            description: 'Coming soon!',
-            imgSrc: 'assets/images/agora-sofia.png'
+            description: 'Designed and developed a sleek, modern website for the largest Japanese language academy in Sofia, Bulgaria. This project was a perfect blend of my love for Japanese culture and my passion for crafting intuitive user experiences. The website featured a fully responsive design, interactive course pages, and a streamlined schedule process tailored to the needs of language enthusiasts. Unfortunately, the client decided to part ways before the grand launch, leaving this project as an unreleased masterpiece in my portfolio. Sometimes, projects don’t see the light of day—but the lessons and skills gained shine brightly!',
+            imgSrc: 'assets/images/agora-sofia.png',
+            url: 'https://agora-opal.vercel.app/home'
         },
         {
             identifier: 'jpioerjlk',
