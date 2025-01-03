@@ -16,7 +16,7 @@ export class ReviewsComponent implements OnInit {
       jobTitle: 'Scrum Master at KPMG'
     },
     {
-      imgSrc: 'https://media.licdn.com/dms/image/v2/C4D03AQGLq45LXeqrag/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1516245755789?e=1731542400&v=beta&t=75UUbnIco4M43QgLC10SxnIQPh6Ov_1iMEUaOC-Mw6w',
+      imgSrc: 'assets/profiles/1854447566058.jpeg',
       description: 'I have worked with Valentin on several occasions throughout 2022 and 2023, with him being a software trainer/teacher on a training program developed by STY. Valentin has managed several iterations of the program mostly independently and has received excellent feedback. The program focused on Java, OOP, code quality, rdbms (mysql), html/css/js, typescript, angular.\n' +
           '\n' +
           'I was happy to work with Valentin, he\'s acted professionally, proactively and took ownership of the training programs.\n' +
@@ -38,13 +38,13 @@ export class ReviewsComponent implements OnInit {
       jobTitle: 'Software Engineer'
     },
     {
-      imgSrc: 'https://media.licdn.com/dms/image/C4E03AQFP7HoP7aB7cA/profile-displayphoto-shrink_800_800/0/1556876039322?e=1726099200&v=beta&t=PYHF-8eHWBwE4hfa3Lh9xu33Vgs9ksZItrZ4LPVz71E',
+      imgSrc: 'assets/profiles/1884447566058.jpeg',
       description: '"Experienced software developer with expertise in Java, microservices, and Angular. Strong team player with excellent communication skills. Proven experience in designing, developing, and implementing scalable and secure software solutions."',
       name: 'Nikolay Ivanov',
       jobTitle: 'Senior Full Stack Software Developer at UKG'
     },
     {
-      imgSrc: 'https://media.licdn.com/dms/image/C5603AQHXgywChocODw/profile-displayphoto-shrink_800_800/0/1516937811278?e=1726099200&v=beta&t=Z91CT733fD44mx0vsdxafGH-J6DC60hJSluG8qOYzxc',
+      imgSrc: 'assets/profiles/1994447566058.jpeg',
       description: '"Valentin possesses a wide variety of skills that make him an asset to every team he is a part of. His problem-solving abilities are enhanced by his dedication and innovative approach to his work. Valentin is not only technically proficient but also a great team player, always ready to assist colleagues and share knowledge. It was a pleasure working with him."',
       name: 'Krasimir Dimitrov',
       jobTitle: 'Software Developer'
