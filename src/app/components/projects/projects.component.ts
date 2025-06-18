@@ -73,7 +73,7 @@ export class ProjectsComponent implements OnInit {
             header: 'Material Minesweeper',
             description: 'Minesweeper, the classic puzzle game, has been given a modern take with updated style and new gameplay features, like colored tiles and more.',
             imgSrc: 'assets/images/material-minesweeper.png',
-            url: 'https://minesweeper-material.onrender.com/'
+            url: 'https://minesweeper-material.vercel.app/'
         },
         {
             identifier: 'rtyqwefbbb',
