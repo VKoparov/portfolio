@@ -64,4 +64,9 @@ export class ReviewsComponent implements OnInit {
       }
     });
   }
+
+  getCardAngle(index: number): string {
+    const angles = [4, -8, -7, 11, 13, -17];
+    return `${angles[index % angles.length]}deg`;
+  }
 }

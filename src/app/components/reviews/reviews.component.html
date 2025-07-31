@@ -4,7 +4,7 @@
             <img class="smoke-background" ngSrc="assets/vectors/smoke.png" alt="" height="4000" width="4000">
             <div class="enter">
                 <div class="content-list" [ngStyle]="{'transform' : objectScale}">
-                    <div class="list">
+                    <div class="list desktop">
                         <div class="content-container" *ngFor="let review of reviews">
                             <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" alt="">
                             <div class="review-description-container">
@@ -15,6 +15,43 @@
                                 <div class="profile-job-title">{{ review.jobTitle }}</div>
                             </div>
                         </div>
+                    </div>
+                    <div class="cards mobile">
+                        <ng-container *ngFor="let review of reviews; let i = index">
+                            <input type="radio" [id]="'radio-' + (i + 1)" name="radio-card" [checked]="i === 0"/>
+                            <article class="card" [attr.style]="'--angle:' + getCardAngle(i)">
+                                <div class="card-img content-container">
+                                    <img
+                                            class="profile-picture"
+                                            [ngSrc]="review.imgSrc"
+                                            width="76"
+                                            height="76"
+                                            alt=""
+                                    />
+                                    <div class="review-description-container">
+                                        <div class="review-description">{{ review.description }}</div>
+                                    </div>
+                                    <div class="profile-info">
+                                        <div class="profile-name">{{ review.name }}</div>
+                                        <div class="profile-job-title">{{ review.jobTitle }}</div>
+                                    </div>
+                                </div>
+                                <div class="card-data">
+                                    <footer>
+                                        <label
+                                                [attr.for]="'radio-' + (i === 0 ? reviews.length : i)"
+                                                aria-label="Previous"
+                                        >&#10094;</label
+                                        >
+                                        <label
+                                                [attr.for]="'radio-' + (i === reviews.length - 1 ? 1 : i + 2)"
+                                                aria-label="Next"
+                                        >&#10095;</label
+                                        >
+                                    </footer>
+                                </div>
+                            </article>
+                        </ng-container>
                     </div>
                 </div>
             </div>
