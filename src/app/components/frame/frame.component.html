@@ -4,7 +4,7 @@
     <app-homepage appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-homepage')"></app-homepage>
     <app-what-i-do appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-what-i-do')" [event]="visibilitySubject.asObservable()"></app-what-i-do>
     <app-about-me appEnterTheViewportNotifier [threshold]="0.3" (visibilityChange)="visibilityChangeHandler($event, 'app-about-me')" [event]="visibilitySubject.asObservable()"></app-about-me>
-    <app-reviews appEnterTheViewportNotifier [threshold]="0.1" (visibilityChange)="visibilityChangeHandler($event, 'app-reviews')" [event]="visibilitySubject.asObservable()">></app-reviews>
+    <app-reviews appEnterTheViewportNotifier [threshold]="0.1" (visibilityChange)="visibilityChangeHandler($event, 'app-reviews')" [event]="visibilitySubject.asObservable()"></app-reviews>
     <app-projects appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-projects')"></app-projects>
     <app-contacts appEnterTheViewportNotifier (visibilityChange)="visibilityChangeHandler($event, 'app-contacts')"></app-contacts>
 </div>
