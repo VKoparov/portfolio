@@ -1,16 +1,44 @@
 <div class="homepage-container">
-    <div class="dark-overlay" [ngStyle]="{'top': bottomOffset, 'background': darkOverlay}">
+    <div class="dark-overlay" #dark>
         <div class="parallax">
             <div class="background">
-                <img class="parallax-image" ngSrc="assets/background.webp" alt="background-image" fetchpriority="high" priority height="2730" width="4096"/>
+                <img
+                        class="parallax-image"
+                        ngSrc="assets/background.webp"
+                        alt="background-image"
+                        fetchpriority="high"
+                        priority
+                        height="2730"
+                        width="4096"
+                />
             </div>
+
             <div class="logo-container">
-                <img [ngStyle]="{'transform': logoTransform}" class="logo" ngSrc="assets/icons/logo-main.svg" fetchpriority="high" priority alt="" height="388" width="546">
+                <img
+                        class="logo"
+                        #logoImg
+                        ngSrc="assets/icons/logo-main.svg"
+                        fetchpriority="high"
+                        priority
+                        alt=""
+                        height="388"
+                        width="546"
+                />
             </div>
-            <div class="foreground" [ngStyle]="{'transform': foregroundTransform}">
-                <img class="parallax-image" ngSrc="assets/foreground.webp" fetchpriority="high" priority alt="foreground-image" height="3495" width="5242"/>
+
+            <div class="foreground" #fgDiv>
+                <img
+                        class="parallax-image"
+                        ngSrc="assets/foreground.webp"
+                        fetchpriority="high"
+                        priority
+                        alt="foreground-image"
+                        height="3495"
+                        width="5242"
+                />
             </div>
         </div>
+
         <div class="location">
             <svg width="22" height="22">
                 <g transform="translate(1 1)" stroke="#FFF" stroke-width="1.5" fill="none" fill-rule="evenodd">
@@ -20,7 +48,9 @@
             </svg>
             <span>37.8136° S, 144.9631° E</span>
         </div>
+
         <div class="right-bottom-text"><span>Creating Web Application in Bulgaria / Sofia</span></div>
     </div>
+
     <div class="bottom-fade"></div>
 </div>

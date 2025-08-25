@@ -1,7 +1,7 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import Lenis, { LenisOptions } from 'lenis';
+import {Injectable, NgZone, OnDestroy} from '@angular/core';
+import Lenis, {LenisOptions} from 'lenis';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class LenisService implements OnDestroy {
 
     private lenis?: Lenis;
@@ -10,7 +10,8 @@ export class LenisService implements OnDestroy {
 
     private reducedMotion = false;
 
-    constructor(private zone: NgZone) {}
+    constructor(private zone: NgZone) {
+    }
 
     init(opts: LenisOptions = {}) {
         if (this.lenis) return this.lenis;
@@ -20,7 +21,7 @@ export class LenisService implements OnDestroy {
 
         const options: LenisOptions = {
             duration: 1.1,
-            wheelMultiplier: 1.1,
+            wheelMultiplier: 0.7,
             ...opts,
         };
 
