@@ -10,8 +10,7 @@ export class LenisService implements OnDestroy {
 
     private reducedMotion = false;
 
-    constructor(private zone: NgZone) {
-    }
+    constructor(private zone: NgZone) {}
 
     init(opts: LenisOptions = {}) {
         if (this.lenis) return this.lenis;
