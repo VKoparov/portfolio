@@ -19,6 +19,14 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth, .lenis body {
+  scroll-behavior: auto;
+}
+
 .selector {
   content: '';
   height: 4px;
@@ -91,10 +99,10 @@ body::-webkit-scrollbar {
 }
 
 @keyframes rotating {
-  from{
+  from {
     transform: rotate(0deg);
   }
-  to{
+  to {
     transform: rotate(360deg);
   }
 }
