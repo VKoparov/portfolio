@@ -24,7 +24,21 @@ export class LenisService implements OnDestroy {
             ...opts,
         };
 
-        this.lenis = new Lenis(options);
+        const isTouch = typeof window !== 'undefined'
+            && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+        const runtimeOpts: any = {...options};
+
+        if (isTouch && !this.reducedMotion) {
+            runtimeOpts.smoothTouch = true;
+            runtimeOpts.syncTouch = true;
+            runtimeOpts.smoothWheel = true;
+
+            if (opts.duration == null) runtimeOpts.duration = 0.8;
+            if (opts.touchMultiplier == null) runtimeOpts.touchMultiplier = 1.15;
+        }
+
+        this.lenis = new Lenis(runtimeOpts as LenisOptions);
 
         if (!this.reducedMotion) {
             this.zone.runOutsideAngular(() => {
