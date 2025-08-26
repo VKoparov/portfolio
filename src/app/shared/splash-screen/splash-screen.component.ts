@@ -19,7 +19,8 @@ import {
     }
 })
 export class SplashScreenComponent implements OnInit, OnDestroy {
-    @Input() autoHideMs = 6800;
+
+    @Input() autoHideMs = 6200;
     @Output() closed = new EventEmitter<void>();
 
     isFading = false;
