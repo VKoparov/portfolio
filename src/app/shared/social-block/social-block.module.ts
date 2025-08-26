@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { SocialBlockComponent } from './social-block.component';
 
 
@@ -12,7 +12,8 @@ import { SocialBlockComponent } from './social-block.component';
         SocialBlockComponent
     ],
     imports: [
-        CommonModule
+        CommonModule,
+        NgOptimizedImage
     ]
 })
 export class SocialBlockModule { }
