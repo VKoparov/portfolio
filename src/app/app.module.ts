@@ -24,6 +24,7 @@ import {HamburgerMenuButtonModule} from "./shared/hamburger-menu-button/hamburge
 import {NgOptimizedImage} from "@angular/common";
 import {SocialBlockModule} from "./shared/social-block/social-block.module";
 import {MagneticDirective} from "./directives/magnetic.directive";
+import { SplashScreenComponent } from './shared/splash-screen/splash-screen.component';
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import {MagneticDirective} from "./directives/magnetic.directive";
         ReviewsComponent,
         SideBarComponent,
         SideBarComponent,
-        ParallaxLandingComponent
+        ParallaxLandingComponent,
+        SplashScreenComponent
     ],
     imports: [
         BrowserModule,
