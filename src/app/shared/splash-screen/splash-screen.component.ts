@@ -105,18 +105,18 @@ import {
     }
 })
 export class SplashScreenComponent implements OnInit, OnDestroy {
-    @Input() autoHideMs = 6800;
+    @Input() autoHideMs = 6200;
     @Output() closed = new EventEmitter<void>();
 
     isFading = false;
-    private t?: number;
+    private timer?: number;
 
     ngOnInit() {
         if (this.autoHideMs > 0) {
-            this.t = window.setTimeout(() => this.finish(), this.autoHideMs);
+            this.timer = window.setTimeout(() => this.finish(), this.autoHideMs);
         }
     }
-    ngOnDestroy() { if (this.t) clearTimeout(this.t); }
+    ngOnDestroy() { if (this.timer) clearTimeout(this.timer); }
 
     @HostListener('transitionend')
     onFadeDone() {
