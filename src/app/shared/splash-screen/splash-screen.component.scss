@@ -51,3 +51,14 @@ svg {
     stroke-dashoffset: 0;
   }
 }
+
+@media screen and (max-width: 60em) {
+
+  svg {
+    transform: scale(3);
+  }
+
+  .mountain {
+    stroke-width: .4;
+  }
+}
