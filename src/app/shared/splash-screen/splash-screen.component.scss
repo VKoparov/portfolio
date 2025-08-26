@@ -41,8 +41,12 @@ svg {
 }
 
 @keyframes afterglow {
-  0%   { filter: drop-shadow(0 0 12px rgba(134, 207, 255, 0.65)); }
-  100% { filter: drop-shadow(0 0 0 rgba(134, 207, 255, 0)); }
+  0% {
+    filter: drop-shadow(0 0 12px rgba(134, 207, 255, 0.65));
+  }
+  100% {
+    filter: drop-shadow(0 0 0 rgba(134, 207, 255, 0));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -53,7 +57,6 @@ svg {
 }
 
 @media screen and (max-width: 60em) {
-
   svg {
     transform: scale(3);
   }
