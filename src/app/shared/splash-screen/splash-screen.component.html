@@ -1,0 +1,37 @@
+<div class="wrap" role="status" aria-live="polite">
+    <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+            <linearGradient id="wb" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="50%" stop-color="#86cfff" />
+                <stop offset="100%" stop-color="#ffffff" />
+            </linearGradient>
+
+            <!-- wide fade mask -->
+            <linearGradient id="fadeMask" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="7%"   stop-color="black"/>
+                <stop offset="15%"  stop-color="white"/>
+                <stop offset="85%"  stop-color="white"/>
+                <stop offset="93%" stop-color="black"/>
+            </linearGradient>
+            <mask id="edgeFade">
+                <rect x="0" y="0" width="1200" height="400" fill="url(#fadeMask)" />
+            </mask>
+        </defs>
+
+        <g mask="url(#edgeFade)">
+            <polyline
+                    class="mountain"
+                    pathLength="1"
+                    points="
+          0,300 60,296 120,292 180,288 240,280 300,270
+          360,258 420,244 480,230 520,212 540,200 560,188
+          580,198 600,186 620,172 640,160 660,148 680,152
+          700,176 720,202 740,220 760,232 780,240 800,246
+          820,244 840,238 860,242 880,248 900,246 920,244
+          940,250 960,256 980,262 1000,270 1040,280 1080,290
+          1120,296 1160,300 1200,302
+        " />
+        </g>
+    </svg>
+</div>
