@@ -1,4 +1,5 @@
 import {
+    ApplicationRef,
     Component,
     EventEmitter,
     HostListener,
@@ -7,6 +8,8 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
+import {fromEvent, combineLatest, of} from 'rxjs';
+import {filter, take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-splash-screen',
@@ -20,16 +23,30 @@ import {
 })
 export class SplashScreenComponent implements OnInit, OnDestroy {
 
-    @Input() autoHideMs = 6200;
+    @Input() autoHideMs = 5800;
     @Output() closed = new EventEmitter<void>();
 
     isFading = false;
     private t?: number;
 
+    constructor(private appRef: ApplicationRef) {
+    }
+
     ngOnInit() {
         if (this.autoHideMs > 0) {
             this.t = window.setTimeout(() => this.finish(), this.autoHideMs);
         }
+
+        const isStable$ = this.appRef.isStable.pipe(filter(stable => !!stable), take(1));
+        const windowLoaded$ = (document.readyState === 'complete')
+            ? of(true)
+            : fromEvent(window as any, 'load').pipe(take(1));
+
+        combineLatest([isStable$, windowLoaded$])
+            .pipe(take(1))
+            .subscribe(() => {
+                this.finish();
+            });
     }
 
     ngOnDestroy() {
@@ -37,6 +54,10 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
     }
 
     finish() {
+        if (this.t) {
+            clearTimeout(this.t);
+            this.t = undefined;
+        }
         this.isFading = true;
     }
 
