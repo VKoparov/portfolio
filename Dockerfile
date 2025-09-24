@@ -1,5 +1,5 @@
 # Use the official lightweight Node.js image
-FROM node:14-alpine
+FROM node:22-alpine
 
 # Set the working directory to /app
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the app's source code to the container
 COPY . .
