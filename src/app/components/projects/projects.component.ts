@@ -60,6 +60,14 @@ export class ProjectsComponent implements OnInit {
             url: 'https://www.peoplestrategy.com/'
         },
         {
+            identifier: 'huqwefdsfrtfgfbh',
+            type: 'web',
+            header: 'Angular Intro',
+            description: 'Angular Intro is a lightweight educational project showcasing the fundamentals of Angular application development alongside modern testing practices using Cypress.',
+            imgSrc: 'assets/images/angular-intro.png',
+            url: 'https://angular-intro-eight.vercel.app/home'
+        },
+        {
             identifier: 'rtyqwefdsf',
             type: 'web',
             header: 'Codexio ERP',
