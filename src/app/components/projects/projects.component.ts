@@ -52,6 +52,20 @@ export class ProjectsComponent implements OnInit {
             url: 'https://www.yotpo.com/platform/subscriptions/'
         },
         {
+            identifier: 'ertvnhj',
+            type: 'web',
+            header: 'VisualVest',
+            description: 'VisualVest Platform – Investment Account & Banking Integration\n' +
+                '\n' +
+                'Worked on a large-scale fintech platform used by German cooperative banks to support digital investment account creation and management. Contributed to backend services responsible for handling depot (investment account) operations, customer eligibility, and integration with external banking systems such as Atruvia and Union Investment.\n' +
+                '\n' +
+                'Designed and implemented business-critical APIs for product availability, account creation flows, and support operations, ensuring alignment with complex banking rules and feature flags. Improved system reliability through robust validation, error handling, and test coverage.\n' +
+                '\n' +
+                'Collaborated across multiple services and teams to deliver scalable, production-ready solutions in a highly regulated financial environment.',
+            imgSrc: 'assets/images/visualvest.png',
+            url: 'https://www.visualvest.de/'
+        },
+        {
             identifier: 'huqwefdsf',
             type: 'web',
             header: 'PeopleStrategy',
