@@ -66,6 +66,14 @@ export class ProjectsComponent implements OnInit {
             url: 'https://www.visualvest.de/'
         },
         {
+            identifier: 'we34thyh',
+            type: 'web',
+            header: 'Deutsche Bahn',
+            description: 'Deutsche Bahn AG (DB) is Germany\'s state-owned national railway company, founded in 1994 and headquartered in Berlin. It operates Europe’s longest rail network, covering passenger (long-distance/regional) and freight transport, along with logistics services. As of 2026, it is focusing on infrastructure modernization while managing punctuality challenges and high demand.',
+            imgSrc: 'assets/images/deutsche-bahn.png',
+            url: 'https://www.bahn.de/'
+        },
+        {
             identifier: 'huqwefdsf',
             type: 'web',
             header: 'PeopleStrategy',
