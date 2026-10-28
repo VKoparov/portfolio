@@ -2,9 +2,9 @@
     <div class="container">
         <div class="grid-1">
             <div class="grid-inner-content" *ngFor="let template of templates">
-                <div class="content-container" *ngIf="visibility" [@flyInOut]="true" (click)="handleActionEvent(template.action)">
-                    <img class="action-card-image" [ngSrc]="template.imgSrc" width="300" height="470" alt="">
-                    <img class="action-card-logo" [src]="template.logoUrl" alt="">
+                <div class="content-container" *ngIf="visibility" [@flyInOut]="true" (click)="handleActionEvent(template.action)" [attr.aria-label]="template.header" role="button" tabindex="0">
+                    <img class="action-card-image" [ngSrc]="template.imgSrc" width="300" height="470" [alt]="template.header">
+                    <img class="action-card-logo" [src]="template.logoUrl" [alt]="template.header + ' icon'">
                     <h3 class="action-type-header">{{ template.header }}</h3>
                     <div class="bottom-fade"></div>
                 </div>

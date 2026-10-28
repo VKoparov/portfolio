@@ -1,5 +1,5 @@
 <div class="social-ico-block">
-    <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-ico">
-        <img [ngSrc]="social.icon" alt="" width="24" height="24">
+    <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-ico" [attr.aria-label]="social.name">
+        <img [ngSrc]="social.icon" [alt]="social.name" width="24" height="24">
     </a>
 </div>

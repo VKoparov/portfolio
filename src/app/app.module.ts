@@ -42,7 +42,6 @@ import { SplashScreenComponent } from './shared/splash-screen/splash-screen.comp
         HorizontalScrollSnapDirective,
         ReviewsComponent,
         SideBarComponent,
-        SideBarComponent,
         ParallaxLandingComponent,
         SplashScreenComponent
     ],

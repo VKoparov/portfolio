@@ -20,7 +20,7 @@
       <div class="tools-container">
         <div class="tools-list">
           <div class="list-item" *ngFor="let tool of tools">
-            <img class="tool-icon" [src]="tool.imgSrc" alt="">
+            <img class="tool-icon" [src]="tool.imgSrc" [alt]="tool.name + ' icon'">
             <div class="tool-name">{{ tool.name }}</div>
           </div>
         </div>
