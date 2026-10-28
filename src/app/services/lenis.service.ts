@@ -30,12 +30,8 @@ export class LenisService implements OnDestroy {
         const runtimeOpts: any = {...options};
 
         if (isTouch && !this.reducedMotion) {
-            runtimeOpts.smoothTouch = true;
-            runtimeOpts.syncTouch = true;
-            runtimeOpts.smoothWheel = true;
-
-            if (opts.duration == null) runtimeOpts.duration = 0.8;
-            if (opts.touchMultiplier == null) runtimeOpts.touchMultiplier = 1.15;
+            runtimeOpts.smoothTouch = false;
+            runtimeOpts.syncTouch = false;
         }
 
         this.lenis = new Lenis(runtimeOpts as LenisOptions);
