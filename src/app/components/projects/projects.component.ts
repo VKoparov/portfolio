@@ -120,6 +120,14 @@ export class ProjectsComponent implements OnInit {
             description: 'Socket.IO inspired wrapper over Stomp Websocket for Angular.',
             imgSrc: 'https://images.unsplash.com/photo-1510672277783-ea03bdd8b602?q=80&w=2380&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             url: 'https://www.npmjs.com/package/ngx-socksjs'
+        },
+        {
+            identifier: 'iushf8943s',
+            type: 'web',
+            header: 'Tune Keeper',
+            description: 'A Spotify companion app that tracks how your playlists change over time. It detects and diffs additions and removals, and for collaborative playlists it attributes changes to contributors and supports an approve/reject workflow.',
+            imgSrc: 'assets/images/tune-keeper.gif',
+            url: 'https://tune-keeper.vercel.app/dashboard'
         }
     ];
 
