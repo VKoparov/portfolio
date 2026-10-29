@@ -5,7 +5,12 @@
                 <div class="top-fade"></div>
                 <div class="wrapper">
                     <div class="name">{{ project.header }}</div>
-                    <div class="des">{{ project.description }}</div>
+                    <div class="des"
+                         (mouseenter)="pauseTimer()"
+                         (mouseleave)="resumeTimer()"
+                         (touchstart)="pauseTimer()"
+                         (touchend)="resumeTimer()"
+                         (touchcancel)="resumeTimer()">{{ project.description }}</div>
                     <a class="button" *ngIf="project.url" [href]="project.url" target="_blank">View Project</a>
                 </div>
                 <div class="bottom-fade"></div>

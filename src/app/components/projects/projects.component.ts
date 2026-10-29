@@ -1,11 +1,11 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-projects',
     templateUrl: './projects.component.html',
     styleUrls: ['./projects.component.scss']
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
 
     intervalId!: any;
 
@@ -138,6 +138,32 @@ export class ProjectsComponent implements OnInit {
         this.doSwipeRight();
     }
 
+    ngOnDestroy(): void {
+        this.pauseTimer();
+    }
+
+    pauseTimer(): void {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+
+    resumeTimer(): void {
+        this.startTimer();
+    }
+
+    public startTimer(): void {
+        this.pauseTimer();
+        this.intervalId = setInterval(() => {
+            const lists = document.querySelectorAll('.item');
+            const slide = document.getElementById('slide');
+            if (slide && lists.length > 0) {
+                slide.appendChild(lists[0]);
+            }
+        }, 5000);
+    }
+
     @HostListener('touchstart', ['$event'])
     @HostListener('touchend', ['$event'])
     @HostListener('touchcancel', ['$event'])
@@ -202,22 +228,19 @@ export class ProjectsComponent implements OnInit {
 
     private directionLeft(event: any) {
         const lists = document.querySelectorAll('.item');
-        document.getElementById('slide')!.appendChild(lists[0]);
-        clearInterval(this.intervalId);
+        const slide = document.getElementById('slide');
+        if (slide && lists.length > 0) {
+            slide.appendChild(lists[0]);
+        }
         this.startTimer();
     }
 
     private directionRight(event: any) {
         const lists = document.querySelectorAll('.item');
-        document.getElementById('slide')!.prepend(lists[lists.length - 1]);
-        clearInterval(this.intervalId);
+        const slide = document.getElementById('slide');
+        if (slide && lists.length > 0) {
+            slide.prepend(lists[lists.length - 1]);
+        }
         this.startTimer();
-    }
-
-    private startTimer(): void {
-        this.intervalId = setInterval(() => {
-            const lists = document.querySelectorAll('.item');
-            document.getElementById('slide')!.appendChild(lists[0]);
-        }, 5000);
     }
 }
