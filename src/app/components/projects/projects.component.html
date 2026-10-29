@@ -6,6 +6,8 @@
                 <div class="wrapper">
                     <div class="name">{{ project.header }}</div>
                     <div class="des"
+                         data-lenis-prevent
+                         (wheel)="$event.stopPropagation()"
                          (mouseenter)="pauseTimer()"
                          (mouseleave)="resumeTimer()"
                          (touchstart)="pauseTimer()"
@@ -17,8 +19,13 @@
             </div>
         </div>
     </div>
-    <div class="buttons">
-        <button id="prev" aria-label="Previous project"><i class="fa-solid fa-angle-left"></i></button>
-        <button id="next" aria-label="Next project"><i class="fa-solid fa-angle-right"></i></button>
+    <div class="controls-container">
+        <div class="time-indicator" [class.paused]="isPaused" aria-label="Project timer indicator">
+            <div class="time-progress" [style.width.%]="progress"></div>
+        </div>
+        <div class="buttons">
+            <button id="prev" aria-label="Previous project"><i class="fa-solid fa-angle-left"></i></button>
+            <button id="next" aria-label="Next project"><i class="fa-solid fa-angle-right"></i></button>
+        </div>
     </div>
 </div>

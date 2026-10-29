@@ -176,6 +176,7 @@ div#slide {
   animation: showcontent 1s ease-in-out 0.3s 1 forwards;
 
   overflow: auto;
+  overscroll-behavior: contain;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -241,17 +242,44 @@ div#slide {
   color: #000;
 }
 
-.buttons {
+.controls-container {
   position: relative;
-  right: 80px;
   bottom: 100px;
-  z-index: 222222;
-  text-align: center;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 80px 0 90px;
+  box-sizing: border-box;
+  z-index: 222222;
+}
+
+.time-indicator {
+  width: 180px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+  transition: opacity 0.3s ease;
+
+  &.paused {
+    opacity: 0.6;
+  }
+
+  .time-progress {
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 999px;
+    width: 0;
+    transition: width 0.05s linear;
+  }
+}
+
+.buttons {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
-  z-index: 2;
 }
 
 .buttons button {
@@ -308,6 +336,16 @@ div#slide {
     position: absolute;
     top: auto;
     bottom: 10px;
+  }
+
+  .controls-container {
+    bottom: -10px;
+    padding: 0 15px;
+    justify-content: flex-start;
+  }
+
+  .time-indicator {
+    width: 120px;
   }
 
   .buttons {

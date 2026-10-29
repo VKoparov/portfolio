@@ -87,4 +87,41 @@ describe('ProjectsComponent', () => {
     component.ngOnDestroy();
     expect(component.intervalId).toBeNull();
   });
+
+  it('should have data-lenis-prevent attribute on description element', () => {
+    const desEl = fixture.debugElement.query(By.css('.des')).nativeElement;
+    expect(desEl.hasAttribute('data-lenis-prevent')).toBeTrue();
+  });
+
+  it('should render time indicator on opposite side of controls and reflect progress', () => {
+    const timeIndicatorEl = fixture.debugElement.query(By.css('.time-indicator'));
+    const timeProgressEl = fixture.debugElement.query(By.css('.time-progress'));
+    expect(timeIndicatorEl).toBeTruthy();
+    expect(timeProgressEl).toBeTruthy();
+
+    component.progress = 45;
+    fixture.detectChanges();
+    expect(timeProgressEl.nativeElement.style.width).toBe('45%');
+  });
+
+  it('should freeze progress and add paused class when timer is paused', () => {
+    component.progress = 30;
+    component.pauseTimer();
+    fixture.detectChanges();
+
+    expect(component.isPaused).toBeTrue();
+    const timeIndicatorEl = fixture.debugElement.query(By.css('.time-indicator'));
+    expect(timeIndicatorEl.nativeElement.classList.contains('paused')).toBeTrue();
+    expect(component.progress).toBe(30);
+  });
+
+  it('should unpause and continue timer when resumeTimer is called', () => {
+    component.progress = 30;
+    component.pauseTimer();
+    expect(component.isPaused).toBeTrue();
+
+    component.resumeTimer();
+    expect(component.isPaused).toBeFalse();
+    expect(component.intervalId).toBeTruthy();
+  });
 });

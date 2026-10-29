@@ -8,6 +8,11 @@ import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 export class ProjectsComponent implements OnInit, OnDestroy {
 
     intervalId!: any;
+    readonly DURATION = 5000;
+    readonly STEP = 50;
+    elapsedTime = 0;
+    progress = 0;
+    isPaused = false;
 
     defaultTouch: any = {x: 0, y: 0, time: 0};
 
@@ -143,6 +148,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     pauseTimer(): void {
+        this.isPaused = true;
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
@@ -150,18 +156,31 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     resumeTimer(): void {
-        this.startTimer();
+        this.isPaused = false;
+        this.startInterval();
     }
 
     public startTimer(): void {
         this.pauseTimer();
+        this.elapsedTime = 0;
+        this.progress = 0;
+        this.isPaused = false;
+        this.startInterval();
+    }
+
+    private startInterval(): void {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
         this.intervalId = setInterval(() => {
-            const lists = document.querySelectorAll('.item');
-            const slide = document.getElementById('slide');
-            if (slide && lists.length > 0) {
-                slide.appendChild(lists[0]);
+            this.elapsedTime += this.STEP;
+            this.progress = Math.min(100, (this.elapsedTime / this.DURATION) * 100);
+
+            if (this.elapsedTime >= this.DURATION) {
+                this.directionLeft(null);
             }
-        }, 5000);
+        }, this.STEP);
     }
 
     @HostListener('touchstart', ['$event'])
