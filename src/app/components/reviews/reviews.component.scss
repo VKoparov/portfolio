@@ -30,7 +30,10 @@
 
   .review-description-container {
     height: 280px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y pinch-zoom;
 
     &::-webkit-scrollbar {
       display: none;

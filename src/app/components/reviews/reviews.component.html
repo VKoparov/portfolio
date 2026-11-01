@@ -7,7 +7,7 @@
                     <div class="list desktop">
                         <div class="content-container" *ngFor="let review of reviews">
                             <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" [alt]="review.name">
-                            <div class="review-description-container">
+                            <div class="review-description-container" data-lenis-prevent>
                                 <div class="review-description">{{ review.description }}</div>
                             </div>
                             <div class="profile-info">
@@ -37,7 +37,7 @@
                                             height="76"
                                             [alt]="review.name"
                                     />
-                                    <div class="review-description-container">
+                                    <div class="review-description-container" data-lenis-prevent>
                                         <div class="review-description">{{ review.description }}</div>
                                     </div>
                                     <div class="profile-info">
