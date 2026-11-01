@@ -20,7 +20,7 @@
                          aria-roledescription="carousel" aria-label="Reviews. Swipe left or right to change review."
                          (pointerdown)="onPointerDown($event)" (pointermove)="onPointerMove($event)"
                          (pointerup)="onPointerUp($event)" (pointercancel)="cancelSwipe()"
-                         (lostpointercapture)="cancelSwipe()"
+                         (lostpointercapture)="onLostPointerCapture($event)"
                          (keydown.arrowleft)="changeReview(-1); $event.preventDefault()"
                          (keydown.arrowright)="changeReview(1); $event.preventDefault()">
                         <ng-container *ngFor="let review of reviews; let i = index">

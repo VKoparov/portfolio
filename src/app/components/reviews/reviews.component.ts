@@ -120,6 +120,14 @@ export class ReviewsComponent implements OnInit, OnDestroy {
     }, reducedMotion ? 0 : 180);
   }
 
+  onLostPointerCapture(event: PointerEvent): void {
+    // Touch starts with implicit capture on the touched child. Moving capture
+    // to the deck emits a bubbling loss event from that child, not a cancelled swipe.
+    if (event.target === event.currentTarget && event.pointerId === this.pointerId) {
+      this.cancelSwipe();
+    }
+  }
+
   cancelSwipe(): void {
     if (this.pointerId === null) return;
     this.pointerId = null;
