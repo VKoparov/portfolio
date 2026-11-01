@@ -205,51 +205,30 @@
   }
 }
 
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: true;
-}
-
-input[type="radio"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
 .cards {
-  --img-w: 200px;
-  --duration: 300ms;
-  --img-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-inline: auto;
   display: grid;
-  counter-reset: my-counter;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid #FFDD99;
+    outline-offset: 30px;
+  }
 }
 
 .card {
-  --cards-grid-cols: auto;
-  --cards-grid-rows: var(--img-w) auto;
-  --cards-grid-gap: 2rem;
-  --cards-footer-justify: center;
-
   grid-area: 1/1;
   display: flex;
   flex-direction: column;
-  gap: 70px;
   place-items: center;
-  grid-template-columns: var(--cards-grid-cols);
-  grid-template-rows: var(--cards-grid-rows);
-  z-index: -1;
+  pointer-events: none;
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
 
-  .content-container {
-    width: 280px;
-  }
+  &.active { pointer-events: auto; }
+  &.dragging { transition: none; }
+
+  .content-container { width: 280px; }
 }
 
 .card-img {
@@ -257,123 +236,19 @@ input[type="radio"] {
   border-radius: 10px;
   overflow: hidden;
   transform-origin: center;
-  object-fit: cover;
+
+  img { -webkit-user-drag: none; }
 }
 
-@keyframes straighten-img {
-  50% {
-    --angle: 0deg;
-  }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-input:nth-of-type(1):checked + .card ~ .card > .card-img,
-.card:has(~input:nth-of-type(2):checked) > .card-img,
-input:nth-of-type(2):checked + .card ~ .card > .card-img,
-.card:has(~input:nth-of-type(3):checked) > .card-img,
-input:nth-of-type(3):checked + .card ~ .card > .card-img,
-.card:has(~input:nth-of-type(4):checked) > .card-img,
-input:nth-of-type(4):checked + .card ~ .card > .card-img,
-.card:has(~input:nth-of-type(5):checked) > .card-img,
-input:nth-of-type(5):checked + .card ~ .card > .card-img,
-.card:has(~input:nth-of-type(6):checked) > .card-img,
-input:nth-of-type(6):checked + .card ~ .card > .card-img {
-  animation: straighten-img calc(var(--duration) * 2) forwards;
-  animation-timing-function: var(--img-easing);
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
 }
-
-input:checked + .card {
-  z-index: 10 !important;
-  --data-opacity: 1;
-  --data-y: 0;
-  --data-delay: var(--duration);
-  --card-events: auto;
-  transition: z-index;
-  transition-delay: 300ms;
-}
-
-.card:has(+input:checked) {
-  z-index: 9;
-}
-
-.card:has(+input + .card + input:checked) {
-  z-index: 8;
-}
-
-.card:has(+input + .card +input + .card + input:checked) {
-  z-index: 7;
-}
-
-.card:has(+input + .card +input + .card +input + .card + input:checked) {
-  z-index: 6;
-}
-
-.card:has(+input + .card +input + .card +input + .card +input + .card + input:checked) {
-  z-index: 5;
-}
-
-.card:has(+input + .card +input + .card +input +input + .card +input + .card +input + .card + input:checked) {
-  z-index: 4;
-}
-
-.card:has(+input + .card +input + .card +input  + .card +input +input + .card +input + .card +input + .card + input:checked) {
-  z-index: 3;
-}
-
-.card-data {
-  display: grid;
-  gap: 1rem;
-}
-
-.card-data > .card-num {
-  opacity: var(--data-opacity, 0);
-  font-size: .8rem;
-  color: #666;
-}
-
-.card-data > p {
-  font-size: 0.9rem;
-}
-
-.card-data > h2, .card-data > p {
-  transition: var(--duration) ease-in-out;
-  transition-delay: var(--data-delay, 0ms);
-  opacity: var(--data-opacity, 0);
-  translate: 0 var(--data-y, 20px);
-}
-
-.card-data > footer {
-  display: flex;
-  justify-content: var(--cards-footer-justify);
-  gap: 2rem;
-}
-
-.card-data > footer label {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  border: 1px solid #FFFFFF;
-  color: #FFFFFF;
-  cursor: pointer;
-  background: transparent;
-  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
-}
-
-input:checked:focus-visible + .card > .card-data > footer label, .card-data > footer label:hover {
-  --label-clr-txt: #FFF;
-  --label-clr-bg: steelblue;
-}
-
-input:checked + .card > .card-img {
-  animation: reveal-img calc(var(--duration) * 2) forwards;
-}
-
-@keyframes reveal-img {
-  50% {
-    translate: -150% 0;
-    --angle: 0deg;
-  }
-}
-

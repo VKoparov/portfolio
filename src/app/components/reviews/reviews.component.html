@@ -16,10 +16,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="cards mobile">
+                    <div class="cards mobile" tabindex="0" role="region"
+                         aria-roledescription="carousel" aria-label="Reviews. Swipe left or right to change review."
+                         (pointerdown)="onPointerDown($event)" (pointermove)="onPointerMove($event)"
+                         (pointerup)="onPointerUp($event)" (pointercancel)="cancelSwipe()"
+                         (lostpointercapture)="cancelSwipe()"
+                         (keydown.arrowleft)="changeReview(-1); $event.preventDefault()"
+                         (keydown.arrowright)="changeReview(1); $event.preventDefault()">
                         <ng-container *ngFor="let review of reviews; let i = index">
-                            <input type="radio" [id]="'radio-' + (i + 1)" name="radio-card" [checked]="i === 0"/>
-                            <article class="card" [attr.style]="'--angle:' + getCardAngle(i)">
+                            <article class="card" [style.--angle]="getCardAngle(i)"
+                                     [style.z-index]="i === activeReview ? 10 : (reviews.length + activeReview - i) % reviews.length"
+                                     [class.active]="i === activeReview" [class.dragging]="i === activeReview && dragging"
+                                     [style.transform]="i === activeReview ? 'translateX(' + dragX + 'px) rotate(' + dragX / 25 + 'deg)' : null"
+                                     [attr.aria-hidden]="i !== activeReview">
                                 <div class="card-img content-container">
                                     <img
                                             class="profile-picture"
@@ -36,22 +45,9 @@
                                         <div class="profile-job-title">{{ review.jobTitle }}</div>
                                     </div>
                                 </div>
-                                <div class="card-data">
-                                    <footer>
-                                        <label
-                                                [attr.for]="'radio-' + (i === 0 ? reviews.length : i)"
-                                                aria-label="Previous"
-                                        >&#10094;</label
-                                        >
-                                        <label
-                                                [attr.for]="'radio-' + (i === reviews.length - 1 ? 1 : i + 2)"
-                                                aria-label="Next"
-                                        >&#10095;</label
-                                        >
-                                    </footer>
-                                </div>
                             </article>
                         </ng-container>
+                        <span class="sr-only" aria-live="polite">Review {{ activeReview + 1 }} of {{ reviews.length }}: {{ reviews[activeReview].name }}</span>
                     </div>
                 </div>
             </div>

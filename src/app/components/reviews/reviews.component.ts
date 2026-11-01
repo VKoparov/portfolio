@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {Observable} from "rxjs";
 
 @Component({
@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss']
 })
-export class ReviewsComponent implements OnInit {
+export class ReviewsComponent implements OnInit, OnDestroy {
 
   reviews: { imgSrc: string, description: string, name: string, jobTitle: string }[] = [
     {
@@ -63,6 +63,81 @@ export class ReviewsComponent implements OnInit {
         }, 300);
       }
     });
+  }
+
+  activeReview = 0;
+  dragX = 0;
+  dragging = false;
+  private pointerId: number | null = null;
+  private startX = 0;
+  private startY = 0;
+  private startTime = 0;
+  private settling = false;
+  private swipeTimer?: ReturnType<typeof setTimeout>;
+
+  onPointerDown(event: PointerEvent): void {
+    if (!event.isPrimary || event.button !== 0 || this.settling || this.pointerId !== null) return;
+    this.pointerId = event.pointerId;
+    this.startX = event.clientX;
+    this.startY = event.clientY;
+    this.startTime = event.timeStamp;
+  }
+
+  onPointerMove(event: PointerEvent): void {
+    if (event.pointerId !== this.pointerId) return;
+    const x = event.clientX - this.startX;
+    const y = event.clientY - this.startY;
+    if (!this.dragging) {
+      if (Math.max(Math.abs(x), Math.abs(y)) < 8) return;
+      if (Math.abs(y) >= Math.abs(x)) {
+        this.cancelSwipe();
+        return;
+      }
+      this.dragging = true;
+      (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+    }
+    this.dragX = x;
+  }
+
+  onPointerUp(event: PointerEvent): void {
+    if (event.pointerId !== this.pointerId) return;
+    const distance = this.dragX;
+    const elapsed = Math.max(event.timeStamp - this.startTime, 1);
+    const commit = this.dragging && (Math.abs(distance) >= 65 ||
+      (Math.abs(distance) >= 25 && Math.abs(distance) / elapsed > 0.45));
+    this.pointerId = null;
+    this.dragging = false;
+    if (!commit) {
+      this.dragX = 0;
+      return;
+    }
+    this.settling = true;
+    this.dragX = Math.sign(distance) * 480;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.swipeTimer = setTimeout(() => {
+      this.changeReview(distance < 0 ? 1 : -1);
+      this.settling = false;
+    }, reducedMotion ? 0 : 180);
+  }
+
+  cancelSwipe(): void {
+    if (this.pointerId === null) return;
+    this.pointerId = null;
+    this.dragging = false;
+    this.dragX = 0;
+  }
+
+  changeReview(direction: number): void {
+    clearTimeout(this.swipeTimer);
+    this.pointerId = null;
+    this.dragging = false;
+    this.settling = false;
+    this.dragX = 0;
+    this.activeReview = (this.activeReview + direction + this.reviews.length) % this.reviews.length;
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.swipeTimer);
   }
 
   getCardAngle(index: number): string {
