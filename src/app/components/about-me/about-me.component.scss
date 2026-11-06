@@ -110,7 +110,7 @@
 }
 
 .about-me-container .about .wrap-text .text-block {
-  opacity: calc(0.08 + var(--reveal, 0) * 0.92);
+  opacity: var(--reveal, 0);
   transition: opacity 100ms linear;
 }
 

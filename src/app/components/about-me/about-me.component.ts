@@ -47,11 +47,17 @@ export class AboutMeComponent implements OnInit, AfterViewInit, OnDestroy {
         const stageTop = stage.getBoundingClientRect().top;
         // Never pull the bottom of the original section above the viewport.
         const minimumTop = Math.min(0, viewport - stage.offsetHeight);
-        this.pinTop = Math.max(minimumTop, Math.min(0, 96 - (first.top - stageTop)));
+        const mobile = window.matchMedia('(max-width: 60em)').matches;
+        const resume = this.text.nativeElement.querySelector<HTMLElement>('.download-cv');
+        // On mobile preserve the portrait and resume composition, rather than scrolling
+        // past them to align the paragraphs with the top of the viewport.
+        const anchorTop = mobile && resume ? resume.getBoundingClientRect().top : first.top;
+        const anchorTarget = mobile ? Math.max(96, Math.min(140, viewport * 0.15)) : 96;
+        this.pinTop = Math.max(minimumTop, Math.min(0, anchorTarget - (anchorTop - stageTop)));
         const firstPinnedTop = first.top - stageTop + this.pinTop;
         const lastPinnedBottom = last.bottom - stageTop + this.pinTop;
-        this.canPin = !this.motionPreference.matches &&
-          firstPinnedTop >= 80 && lastPinnedBottom <= viewport - 24;
+        this.canPin = !this.motionPreference.matches && firstPinnedTop >= 80 &&
+          lastPinnedBottom <= (mobile ? viewport * 1.12 : viewport - 24);
         this.travel = viewport * 1.4;
         track.classList.toggle('pinned-enabled', this.canPin);
         track.style.setProperty('--pin-top', `${this.pinTop}px`);
