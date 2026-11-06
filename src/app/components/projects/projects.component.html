@@ -1,24 +1,18 @@
-<div class="container" [class.hint-enabled]="hintVisible && !hintCoolingDown && !touching && !isPaused">
-    <div id="slide" class="slider">
-        <div class="item" *ngFor="let project of projects; let i = index" [attr.data-project-index]="i" [style.background-image]="'url(' + project.imgSrc + ')'">
+<div class="container">
+    <div #slide id="slide" class="slider">
+        <div class="item" *ngFor="let project of projects" [style.background-image]="'url(' + project.imgSrc + ')'">
             <ng-container *ngTemplateOutlet="projectContent; context: {$implicit: project}"></ng-container>
         </div>
     </div>
-    <div class="swipe-image" *ngIf="swipeProject"
-         [style.background-image]="'url(' + swipeProject.imgSrc + ')'" aria-hidden="true"></div>
-    <div class="swipe-content-overlay" *ngIf="swipeProject" aria-hidden="true">
-        <ng-container *ngTemplateOutlet="projectContent; context: {$implicit: swipeProject}"></ng-container>
-    </div>
-    <span #deckHintMarker class="deck-hint-marker" aria-hidden="true"></span>
     <div class="controls-container">
         <div class="time-indicator" [class.paused]="isPaused" aria-label="Project timer indicator">
             <div class="time-progress" [style.width.%]="progress"></div>
         </div>
         <div class="buttons">
-            <button id="prev" type="button" aria-label="Previous project">
+            <button id="prev" type="button" (click)="previousProject()" aria-label="Previous project">
                 <span class="arrow-track" aria-hidden="true"><svg class="control-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg><svg class="control-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg></span>
             </button>
-            <button id="next" type="button" aria-label="Next project">
+            <button id="next" type="button" (click)="nextProject()" aria-label="Next project">
                 <span class="arrow-track" aria-hidden="true"><svg class="control-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg><svg class="control-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></span>
             </button>
         </div>
