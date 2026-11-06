@@ -1,22 +1,19 @@
-import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-about-me',
   templateUrl: './about-me.component.html',
   styleUrls: ['./about-me.component.scss']
 })
-export class AboutMeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AboutMeComponent implements AfterViewInit, OnDestroy {
   @Input() event!: Observable<string>;
   @ViewChild('scrollTrack') private track!: ElementRef<HTMLElement>;
   @ViewChild('stage') private stage!: ElementRef<HTMLElement>;
   @ViewChild('text') private text!: ElementRef<HTMLElement>;
-  objectRotate = 'rotate(0)';
 
   private frame: number | null = null;
   private resizeObserver?: ResizeObserver;
-  private subscription?: Subscription;
-  private rotationTimer?: ReturnType<typeof setTimeout>;
   private needsMeasure = true;
   private canPin = false;
   private pinTop = 0;
@@ -24,14 +21,6 @@ export class AboutMeComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   constructor(private readonly zone: NgZone) {}
-
-  ngOnInit(): void {
-    this.subscription = this.event?.subscribe(location => {
-      if (location === 'app-about-me' && this.rotationTimer === undefined) {
-        this.rotationTimer = setTimeout(() => this.objectRotate = 'rotate(115deg)', 500);
-      }
-    });
-  }
 
   private readonly schedule = (): void => {
     if (this.frame !== null) return;
@@ -65,6 +54,9 @@ export class AboutMeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.needsMeasure = false;
       }
       const progress = Math.max(0, Math.min(1, (this.pinTop - track.getBoundingClientRect().top) / this.travel));
+      const rotationProgress = this.canPin ? progress : Math.max(0, Math.min(1,
+        (viewport - track.getBoundingClientRect().top) / (viewport + stage.offsetHeight)));
+      track.style.setProperty('--resume-angle', `${this.motionPreference.matches ? 0 : rotationProgress * 360}deg`);
       blocks.forEach((block, index) => {
         const reveal = this.motionPreference.matches ? 1 : this.canPin
           ? Math.max(0, Math.min(1, progress * blocks.length - index))
@@ -92,8 +84,6 @@ export class AboutMeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-    if (this.rotationTimer !== undefined) clearTimeout(this.rotationTimer);
     window.removeEventListener('scroll', this.schedule);
     window.removeEventListener('resize', this.measure);
     this.motionPreference.removeEventListener('change', this.measure);

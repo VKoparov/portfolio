@@ -117,3 +117,8 @@
 @media (prefers-reduced-motion: reduce) {
   .about-me-container .about .wrap-text .text-block { opacity: 1; transition: none; }
 }
+
+.about-me-container .about .wrap-text .download-cv svg {
+  transform: rotate(var(--resume-angle, 0deg));
+  transition: none;
+}
