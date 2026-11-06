@@ -1,6 +1,6 @@
 <div class="reviews-container">
     <div #scrollTrack class="container">
-        <div #backgroundStage class="grid-1">
+        <div #backgroundStage class="grid-1" [class.is-assembling]="!controlsRevealed">
             <img #smoke class="smoke-background" [class.ready]="isBackgroundReady" (load)="handleBackgroundLoad(smoke)" ngSrc="assets/vectors/smoke.png" alt="Atmospheric smoke background" height="1600" width="1600">
             <div class="enter">
                 <span #revealMarker class="reveal-marker" aria-hidden="true"></span>
@@ -8,7 +8,12 @@
                     <div class="list desktop" [style.--spread]="0.15 + reviewSpread * 0.0085">
                         <div class="content-container" *ngFor="let review of reviews; let i = index" [style.--reveal-index]="i" tabindex="0" [attr.aria-label]="'Review by ' + review.name">
                             <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" [alt]="review.name">
-                            <div class="review-description-container" data-lenis-prevent>
+                            <div class="review-description-container"
+                                 (wheel)="descriptionScroll.onWheel($event)"
+                                 (touchstart)="descriptionScroll.onTouchStart($event)"
+                                 (touchmove)="descriptionScroll.onTouchMove($event)"
+                                 (touchend)="descriptionScroll.onTouchEnd()"
+                                 (touchcancel)="descriptionScroll.onTouchEnd()">
                                 <div class="review-description">{{ review.description }}</div>
                             </div>
                             <div class="profile-info">
@@ -40,7 +45,12 @@
                                             height="76"
                                             [alt]="review.name"
                                     />
-                                    <div class="review-description-container" data-lenis-prevent>
+                                    <div class="review-description-container"
+                                 (wheel)="descriptionScroll.onWheel($event)"
+                                 (touchstart)="descriptionScroll.onTouchStart($event)"
+                                 (touchmove)="descriptionScroll.onTouchMove($event)"
+                                 (touchend)="descriptionScroll.onTouchEnd()"
+                                 (touchcancel)="descriptionScroll.onTouchEnd()">
                                         <div class="review-description">{{ review.description }}</div>
                                     </div>
                                     <div class="profile-info">

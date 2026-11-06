@@ -6,13 +6,13 @@
                 <div class="wrapper">
                     <div class="name">{{ project.header }}</div>
                     <div class="des"
-                         data-lenis-prevent
-                         (wheel)="$event.stopPropagation()"
+                         (wheel)="descriptionScroll.onWheel($event)"
                          (mouseenter)="pauseTimer()"
                          (mouseleave)="resumeTimer()"
-                         (touchstart)="pauseTimer()"
-                         (touchend)="resumeTimer()"
-                         (touchcancel)="resumeTimer()">{{ project.description }}</div>
+                         (touchstart)="pauseTimer(); descriptionScroll.onTouchStart($event)"
+                         (touchmove)="descriptionScroll.onTouchMove($event)"
+                         (touchend)="descriptionScroll.onTouchEnd(); resumeTimer()"
+                         (touchcancel)="descriptionScroll.onTouchEnd(); resumeTimer()">{{ project.description }}</div>
                     <a class="button" *ngIf="project.url" [href]="project.url" target="_blank">View Project</a>
                 </div>
                 <div class="bottom-fade"></div>

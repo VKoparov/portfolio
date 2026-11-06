@@ -36,7 +36,7 @@
     height: 280px;
     overflow-x: hidden;
     overflow-y: auto;
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: auto;
     touch-action: pan-y pinch-zoom;
 
     &::-webkit-scrollbar {
@@ -415,4 +415,9 @@
   .container { min-height: 100svh; }
   .grid-1 { position: relative; }
   .card-img { translate: none; rotate: var(--angle, 0deg); transition: none; }
+}
+
+// Vertical gestures drive the entrance until the deck is complete.
+.grid-1.is-assembling .review-description-container {
+  overflow-y: hidden;
 }

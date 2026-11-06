@@ -1,5 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
+import {LenisService} from "../../services/lenis.service";
+import {DescriptionScrollController} from "../../shared/description-scroll.controller";
 
 @Component({
   selector: 'app-reviews',
@@ -96,7 +98,11 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
     });
   };
 
-  constructor(private readonly zone: NgZone) {}
+  readonly descriptionScroll: DescriptionScrollController;
+
+  constructor(private readonly zone: NgZone, lenis: LenisService) {
+    this.descriptionScroll = new DescriptionScrollController(lenis, () => this.controlsRevealed);
+  }
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
@@ -203,6 +209,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.descriptionScroll.onTouchEnd();
     window.removeEventListener('scroll', this.updateBackgroundOnScroll);
     window.removeEventListener('resize', this.updateBackgroundOnScroll);
     if (this.backgroundFrame !== null) cancelAnimationFrame(this.backgroundFrame);

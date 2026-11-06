@@ -1,4 +1,6 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {LenisService} from '../../services/lenis.service';
+import {DescriptionScrollController} from '../../shared/description-scroll.controller';
 
 @Component({
     selector: 'app-projects',
@@ -6,6 +8,12 @@ import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
     styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
+
+    readonly descriptionScroll: DescriptionScrollController;
+
+    constructor(lenis: LenisService) {
+        this.descriptionScroll = new DescriptionScrollController(lenis);
+    }
 
     intervalId!: any;
     readonly DURATION = 5000;
@@ -144,6 +152,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.descriptionScroll.onTouchEnd();
         this.pauseTimer();
     }
 

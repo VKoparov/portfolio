@@ -88,9 +88,11 @@ describe('ProjectsComponent', () => {
     expect(component.intervalId).toBeNull();
   });
 
-  it('should have data-lenis-prevent attribute on description element', () => {
-    const desEl = fixture.debugElement.query(By.css('.des')).nativeElement;
-    expect(desEl.hasAttribute('data-lenis-prevent')).toBeTrue();
+  it('should delegate description wheel gestures to the shared scroll controller', () => {
+    const wheel = new WheelEvent('wheel', {deltaY: 30});
+    const handler = spyOn(component.descriptionScroll, 'onWheel');
+    fixture.debugElement.query(By.css('.des')).triggerEventHandler('wheel', wheel);
+    expect(handler).toHaveBeenCalledWith(wheel);
   });
 
   it('should render time indicator on opposite side of controls and reflect progress', () => {

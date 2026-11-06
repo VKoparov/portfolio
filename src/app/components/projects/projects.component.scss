@@ -176,7 +176,7 @@ div#slide {
   animation: showcontent 650ms cubic-bezier(0.22, 0.61, 0.36, 1) 80ms 1 both;
 
   overflow: auto;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
 
   &::-webkit-scrollbar {
     width: 5px;

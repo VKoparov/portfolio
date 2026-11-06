@@ -21,6 +21,7 @@ export class LenisService implements OnDestroy {
         const options: LenisOptions = {
             duration: 1.1,
             wheelMultiplier: 0.7,
+            allowNestedScroll: true,
             ...opts,
         };
 
@@ -47,6 +48,12 @@ export class LenisService implements OnDestroy {
         }
 
         return this.lenis;
+    }
+
+    settle(): void {
+        if (this.lenis && !this.lenis.isStopped) {
+            this.lenis.scrollTo(this.lenis.actualScroll, {immediate: true, force: true});
+        }
     }
 
     pause(): void { this.lenis?.stop(); }
