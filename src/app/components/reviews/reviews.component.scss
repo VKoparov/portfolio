@@ -73,6 +73,8 @@
 .grid-1 {
   position: relative;
   --smoke-progress: 0;
+  --deck-progress: 0;
+  --controls-progress: 0;
 
   .smoke-background {
     width: 100%;
@@ -96,10 +98,9 @@
   }
 
   .content-list {
-    opacity: 0;
-    transform: translate3d(0, 16px, 0);
-    transition: opacity 650ms cubic-bezier(0.25, 0.1, 0.25, 1) 80ms,
-      transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
+    // Fade the complete, opaque stack as a single composited surface.
+    opacity: clamp(0, calc(var(--deck-progress) * 8), 1);
+    transition: opacity 120ms linear;
 
     .list {
       width: 340px;
@@ -114,13 +115,14 @@
         // A shared lower pivot opens the cards like a hand-held fan.
         // At zero spread only the small paper-edge offsets remain.
         transform-origin: 50% calc(100% + 440px);
-        --rest-transform:
-          translateX(calc(var(--stack-x) * (1 - var(--spread))))
-          translateY(calc(var(--stack-y) * (1 - var(--spread))))
-          rotate(calc(var(--fan-angle) * var(--spread)));
-        transform: var(--rest-transform);
+        --card-reveal: clamp(0, calc((var(--deck-progress) - 0.125) / 0.875 * 6 - var(--reveal-index)), 1);
+        --card-spread: calc(var(--spread) * var(--card-reveal));
+        transform:
+          translateX(calc(var(--stack-x) * (1 - var(--card-spread))))
+          translateY(calc(var(--stack-y) * (1 - var(--card-spread))))
+          rotate(calc(var(--fan-angle) * var(--card-spread)));
         translate: 0 var(--hover-y, 0px);
-        transition: translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
+        transition: transform 140ms linear, translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
 
         &:focus-visible {
           z-index: 10;
@@ -354,43 +356,30 @@
   .grid-1 .content-list .list .content-container { transition: none; }
 }
 
-// Composite the overlapping cards together so their shadows never fade separately.
-.grid-1.is-revealed .content-list {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
 .spread-control {
-  opacity: 0;
-  translate: 0 8px;
-  transition: opacity 300ms ease 350ms, translate 400ms cubic-bezier(0.22, 1, 0.36, 1) 350ms;
+  opacity: var(--controls-progress);
+  translate: 0 calc((1 - var(--controls-progress)) * 8px);
+  transition: opacity 100ms linear, translate 120ms linear;
 }
 
-.is-revealed .spread-control {
-  opacity: 1;
-  translate: 0 0;
+.grid-1 .cards {
+  opacity: clamp(0, var(--deck-progress), 1);
+  translate: 0 calc((1 - clamp(0, var(--deck-progress), 1)) * 16px);
+  transition: opacity 100ms linear, translate 120ms linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .grid-1 .smoke-background,
+  .grid-1 .smoke-background {
+    scale: 1;
+    &.ready { opacity: 1; }
+  }
+
   .grid-1 .content-list .list .content-container,
-  .grid-1 .content-list,
+  .grid-1 .cards,
   .spread-control {
     translate: none;
     transition: opacity 120ms ease;
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grid-1 .content-list { transform: none; }
-
-  .grid-1 .smoke-background {
-    scale: 1;
-    transition: opacity 120ms ease;
-
-    &.ready { opacity: 1; }
-  }
-
 }
 
 .reveal-marker {
@@ -401,28 +390,4 @@
   height: 1px;
   pointer-events: none;
   visibility: hidden;
-}
-
-// Open as one coordinated fan; keep opacity on the parent deck.
-.grid-1.is-revealed .content-list .list .content-container {
-  animation: review-fan-unfold 1100ms cubic-bezier(0.45, 0, 0.2, 1) 100ms backwards;
-}
-
-@keyframes review-fan-unfold {
-  from {
-    transform: translateX(var(--stack-x)) translateY(var(--stack-y)) rotate(0deg);
-  }
-  60% {
-    transform:
-      translateX(calc(var(--stack-x) * (1 - var(--spread))))
-      translateY(calc(var(--stack-y) * (1 - var(--spread))))
-      rotate(calc(var(--fan-angle) * (var(--spread) + (1 - var(--spread)) * 0.2)));
-  }
-  to { transform: var(--rest-transform); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grid-1.is-revealed .content-list .list .content-container {
-    animation: none;
-  }
 }

@@ -1,12 +1,12 @@
 <div class="reviews-container">
     <div class="container">
-        <div #backgroundStage class="grid-1" [class.is-revealed]="isRevealed" [attr.inert]="isRevealed ? null : ''">
+        <div #backgroundStage class="grid-1">
             <img #smoke class="smoke-background" [class.ready]="isBackgroundReady" (load)="handleBackgroundLoad(smoke)" ngSrc="assets/vectors/smoke.png" alt="Atmospheric smoke background" height="1600" width="1600">
             <div class="enter">
                 <span #revealMarker class="reveal-marker" aria-hidden="true"></span>
                 <div class="content-list">
                     <div class="list desktop" [style.--spread]="0.15 + reviewSpread * 0.0085">
-                        <div class="content-container" *ngFor="let review of reviews" tabindex="0" [attr.aria-label]="'Review by ' + review.name">
+                        <div class="content-container" *ngFor="let review of reviews; let i = index" [style.--reveal-index]="i" tabindex="0" [attr.aria-label]="'Review by ' + review.name">
                             <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" [alt]="review.name">
                             <div class="review-description-container" data-lenis-prevent>
                                 <div class="review-description">{{ review.description }}</div>
@@ -51,7 +51,7 @@
                         <span class="sr-only" aria-live="polite">Review {{ activeReview + 1 }} of {{ reviews.length }}: {{ reviews[activeReview].name }}</span>
                     </div>
                 </div>
-                <div class="spread-control desktop">
+                <div class="spread-control desktop" [attr.inert]="controlsRevealed ? null : ''">
                     <svg class="spread-icon" viewBox="0 0 24 28" aria-hidden="true">
                         <circle cx="12" cy="14" r="5" />
                     </svg>

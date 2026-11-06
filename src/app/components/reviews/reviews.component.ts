@@ -53,13 +53,13 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
 
   @Input() event!: Observable<string>;
 
-  isRevealed = false;
+  controlsRevealed = false;
   isBackgroundReady = false;
   @ViewChild('revealMarker') private revealMarker!: ElementRef<HTMLElement>;
-  private revealObserver?: IntersectionObserver;
   @ViewChild('backgroundStage') private backgroundStage!: ElementRef<HTMLElement>;
   private backgroundFrame: number | null = null;
   private lastBackgroundProgress = -1;
+  private lastDeckProgress = -1;
 
   private readonly updateBackgroundOnScroll = (): void => {
     if (this.backgroundFrame !== null) return;
@@ -73,23 +73,26 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
         stage.style.setProperty('--smoke-progress', progress.toFixed(4));
         this.lastBackgroundProgress = progress;
       }
+      const center = this.revealMarker.nativeElement.getBoundingClientRect().top;
+      const rawDeckProgress = (window.innerHeight * 0.95 - center) / (window.innerHeight * 0.4);
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const deckProgress = reducedMotion ? (rawDeckProgress > 0 ? 1.2 : 0) :
+        Math.max(0, Math.min(1.2, rawDeckProgress));
+      if (deckProgress !== this.lastDeckProgress) {
+        stage.style.setProperty('--deck-progress', deckProgress.toFixed(4));
+        stage.style.setProperty('--controls-progress', Math.max(0, Math.min(1, (deckProgress - 1) * 5)).toFixed(4));
+        this.lastDeckProgress = deckProgress;
+        const controlsVisible = deckProgress > 1;
+        if (controlsVisible !== this.controlsRevealed) {
+          this.zone.run(() => this.controlsRevealed = controlsVisible);
+        }
+      }
     });
   };
 
   constructor(private readonly zone: NgZone) {}
 
   ngAfterViewInit(): void {
-    // Wait for the center of the cards, rather than the section's leading edge.
-    this.revealObserver = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
-        this.zone.run(() => this.isRevealed = true);
-        this.revealObserver?.disconnect();
-      }
-    }, {
-      rootMargin: `0px 0px -${Math.round(window.innerHeight * 0.3)}px 0px`,
-      threshold: 1
-    });
-    this.revealObserver.observe(this.revealMarker.nativeElement);
     this.zone.runOutsideAngular(() => {
       window.addEventListener('scroll', this.updateBackgroundOnScroll, {passive: true});
       window.addEventListener('resize', this.updateBackgroundOnScroll, {passive: true});
@@ -193,7 +196,6 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.revealObserver?.disconnect();
     window.removeEventListener('scroll', this.updateBackgroundOnScroll);
     window.removeEventListener('resize', this.updateBackgroundOnScroll);
     if (this.backgroundFrame !== null) cancelAnimationFrame(this.backgroundFrame);
