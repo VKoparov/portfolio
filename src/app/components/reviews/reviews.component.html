@@ -1,12 +1,12 @@
 <div class="reviews-container">
     <div class="container">
-        <div class="grid-1" [class.is-revealed]="isRevealed" [attr.inert]="isRevealed ? null : ''">
+        <div #backgroundStage class="grid-1" [class.is-revealed]="isRevealed" [attr.inert]="isRevealed ? null : ''">
             <img #smoke class="smoke-background" [class.ready]="isBackgroundReady" (load)="handleBackgroundLoad(smoke)" ngSrc="assets/vectors/smoke.png" alt="Atmospheric smoke background" height="1600" width="1600">
             <div class="enter">
                 <span #revealMarker class="reveal-marker" aria-hidden="true"></span>
                 <div class="content-list">
                     <div class="list desktop" [style.--spread]="0.15 + reviewSpread * 0.0085">
-                        <div class="content-container" *ngFor="let review of reviews; let i = index" [style.--reveal-order]="reviews.length - 1 - i" tabindex="0" [attr.aria-label]="'Review by ' + review.name">
+                        <div class="content-container" *ngFor="let review of reviews" tabindex="0" [attr.aria-label]="'Review by ' + review.name">
                             <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" [alt]="review.name">
                             <div class="review-description-container" data-lenis-prevent>
                                 <div class="review-description">{{ review.description }}</div>

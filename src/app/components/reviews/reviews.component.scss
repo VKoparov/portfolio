@@ -72,23 +72,19 @@
 
 .grid-1 {
   position: relative;
-  --reveal-y: 24px;
+  --smoke-progress: 0;
 
   .smoke-background {
     width: 100%;
     height: max(820px, 100vh);
     object-fit: cover;
     opacity: 0;
-    scale: 1.14;
-    clip-path: inset(9% 6% round 40px);
-    transition: opacity 800ms ease, scale 1500ms cubic-bezier(0.16, 1, 0.3, 1),
-      clip-path 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+    scale: calc(1.12 - var(--smoke-progress) * 0.12);
+    transition: opacity 180ms linear, scale 180ms linear;
   }
 
-  &.is-revealed .smoke-background.ready {
-    opacity: 1;
-    scale: 1;
-    clip-path: inset(0 round 0px);
+  .smoke-background.ready {
+    opacity: var(--smoke-progress);
   }
 
   .enter {
@@ -100,7 +96,10 @@
   }
 
   .content-list {
-    transition: none;
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    transition: opacity 650ms cubic-bezier(0.25, 0.1, 0.25, 1) 80ms,
+      transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
 
     .list {
       width: 340px;
@@ -120,7 +119,6 @@
           translateY(calc(var(--stack-y) * (1 - var(--spread))))
           rotate(calc(var(--fan-angle) * var(--spread)));
         transform: var(--rest-transform);
-        opacity: 0;
         translate: 0 var(--hover-y, 0px);
         transition: translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -356,32 +354,16 @@
   .grid-1 .content-list .list .content-container { transition: none; }
 }
 
-// Entrance motion stays separate from the fan and swipe transforms.
-.grid-1.is-revealed {
-  --reveal-y: 0px;
-
-  .content-list .list .content-container {
-    opacity: 1;
-    animation: review-fan-arrival 850ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
-    animation-delay: calc(100ms + var(--reveal-order) * 65ms);
-  }
-}
-
-.grid-1 .cards {
-  opacity: 0;
-  translate: 0 var(--reveal-y);
-  transition: opacity 300ms ease 100ms, translate 400ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
-}
-
-.grid-1.is-revealed .cards {
+// Composite the overlapping cards together so their shadows never fade separately.
+.grid-1.is-revealed .content-list {
   opacity: 1;
-  animation: review-stack-arrival 850ms cubic-bezier(0.22, 1, 0.36, 1) 100ms backwards;
+  transform: translate3d(0, 0, 0);
 }
 
 .spread-control {
   opacity: 0;
   translate: 0 8px;
-  transition: opacity 300ms ease 750ms, translate 450ms cubic-bezier(0.22, 1, 0.36, 1) 750ms;
+  transition: opacity 300ms ease 350ms, translate 400ms cubic-bezier(0.22, 1, 0.36, 1) 350ms;
 }
 
 .is-revealed .spread-control {
@@ -392,50 +374,23 @@
 @media (prefers-reduced-motion: reduce) {
   .grid-1 .smoke-background,
   .grid-1 .content-list .list .content-container,
-  .grid-1 .cards,
+  .grid-1 .content-list,
   .spread-control {
     translate: none;
     transition: opacity 120ms ease;
   }
 }
 
-@keyframes review-fan-arrival {
-  from {
-    opacity: 0;
-    transform: translateX(var(--stack-x)) translateY(55px) rotate(-4deg) scale(0.96);
-  }
-  65% {
-    opacity: 1;
-    transform:
-      translateX(calc(var(--stack-x) * (1 - var(--spread))))
-      translateY(calc(var(--stack-y) * (1 - var(--spread)) - 5px))
-      rotate(calc(var(--fan-angle) * (var(--spread) + 0.09)));
-  }
-  to {
-    opacity: 1;
-    transform: var(--rest-transform);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
+  .grid-1 .content-list { transform: none; }
+
   .grid-1 .smoke-background {
     scale: 1;
-    clip-path: none;
     transition: opacity 120ms ease;
+
+    &.ready { opacity: 1; }
   }
 
-  .grid-1.is-revealed .content-list .list .content-container {
-    animation: none;
-  }
-}
-
-@keyframes review-stack-arrival {
-  from { transform: translateY(35px) rotate(-3deg) scale(0.95); }
-  to { transform: translateY(0) rotate(0deg) scale(1); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grid-1.is-revealed .cards { animation: none; }
 }
 
 .reveal-marker {
@@ -446,4 +401,28 @@
   height: 1px;
   pointer-events: none;
   visibility: hidden;
+}
+
+// Open as one coordinated fan; keep opacity on the parent deck.
+.grid-1.is-revealed .content-list .list .content-container {
+  animation: review-fan-unfold 1100ms cubic-bezier(0.45, 0, 0.2, 1) 100ms backwards;
+}
+
+@keyframes review-fan-unfold {
+  from {
+    transform: translateX(var(--stack-x)) translateY(var(--stack-y)) rotate(0deg);
+  }
+  60% {
+    transform:
+      translateX(calc(var(--stack-x) * (1 - var(--spread))))
+      translateY(calc(var(--stack-y) * (1 - var(--spread))))
+      rotate(calc(var(--fan-angle) * (var(--spread) + (1 - var(--spread)) * 0.2)));
+  }
+  to { transform: var(--rest-transform); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-1.is-revealed .content-list .list .content-container {
+    animation: none;
+  }
 }

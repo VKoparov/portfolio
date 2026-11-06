@@ -57,6 +57,24 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   isBackgroundReady = false;
   @ViewChild('revealMarker') private revealMarker!: ElementRef<HTMLElement>;
   private revealObserver?: IntersectionObserver;
+  @ViewChild('backgroundStage') private backgroundStage!: ElementRef<HTMLElement>;
+  private backgroundFrame: number | null = null;
+  private lastBackgroundProgress = -1;
+
+  private readonly updateBackgroundOnScroll = (): void => {
+    if (this.backgroundFrame !== null) return;
+    this.backgroundFrame = requestAnimationFrame(() => {
+      this.backgroundFrame = null;
+      const stage = this.backgroundStage.nativeElement;
+      const top = stage.getBoundingClientRect().top;
+      const progress = Math.max(0, Math.min(1,
+        (window.innerHeight - top) / (window.innerHeight * 0.85)));
+      if (progress !== this.lastBackgroundProgress) {
+        stage.style.setProperty('--smoke-progress', progress.toFixed(4));
+        this.lastBackgroundProgress = progress;
+      }
+    });
+  };
 
   constructor(private readonly zone: NgZone) {}
 
@@ -72,6 +90,11 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
       threshold: 1
     });
     this.revealObserver.observe(this.revealMarker.nativeElement);
+    this.zone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.updateBackgroundOnScroll, {passive: true});
+      window.addEventListener('resize', this.updateBackgroundOnScroll, {passive: true});
+      this.updateBackgroundOnScroll();
+    });
   }
 
   async handleBackgroundLoad(image: HTMLImageElement): Promise<void> {
@@ -171,6 +194,9 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.revealObserver?.disconnect();
+    window.removeEventListener('scroll', this.updateBackgroundOnScroll);
+    window.removeEventListener('resize', this.updateBackgroundOnScroll);
+    if (this.backgroundFrame !== null) cancelAnimationFrame(this.backgroundFrame);
     clearTimeout(this.swipeTimer);
   }
 
