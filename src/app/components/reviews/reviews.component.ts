@@ -63,6 +63,10 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   private backgroundFrame: number | null = null;
   private lastBackgroundProgress = -1;
   private lastDeckProgress = -1;
+  hintEnabled = false;
+  hintPaused = false;
+  hintCoolingDown = false;
+  private hintCooldownTimer?: ReturnType<typeof setTimeout>;
 
   private readonly updateBackgroundOnScroll = (): void => {
     if (this.backgroundFrame !== null) return;
@@ -94,6 +98,11 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
         if (controlsVisible !== this.controlsRevealed) {
           this.zone.run(() => this.controlsRevealed = controlsVisible);
         }
+      }
+      const hintEnabled = mobile && !reducedMotion && deckProgress >= 1 &&
+        top < window.innerHeight && top + stage.offsetHeight > 0;
+      if (hintEnabled !== this.hintEnabled) {
+        this.zone.run(() => this.hintEnabled = hintEnabled);
       }
     });
   };
@@ -141,6 +150,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   onPointerDown(event: PointerEvent): void {
     if (this.lastDeckProgress < 1) return;
     if (!event.isPrimary || event.button !== 0 || this.settling || this.pointerId !== null) return;
+    this.hintPaused = true;
     this.pointerId = event.pointerId;
     this.startX = event.clientX;
     this.startY = event.clientY;
@@ -172,6 +182,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
     this.pointerId = null;
     this.dragging = false;
     if (!commit) {
+      this.hintPaused = false;
       this.dragX = 0;
       return;
     }
@@ -196,10 +207,17 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
     if (this.pointerId === null) return;
     this.pointerId = null;
     this.dragging = false;
+    this.hintPaused = false;
     this.dragX = 0;
   }
 
   changeReview(direction: number): void {
+    this.hintPaused = false;
+    this.hintCoolingDown = true;
+    clearTimeout(this.hintCooldownTimer);
+    this.hintCooldownTimer = setTimeout(() => {
+      this.hintCoolingDown = false;
+    }, 12000);
     clearTimeout(this.swipeTimer);
     this.pointerId = null;
     this.dragging = false;
@@ -209,6 +227,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    clearTimeout(this.hintCooldownTimer);
     this.descriptionScroll.onTouchEnd();
     window.removeEventListener('scroll', this.updateBackgroundOnScroll);
     window.removeEventListener('resize', this.updateBackgroundOnScroll);
