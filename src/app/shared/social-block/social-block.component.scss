@@ -17,6 +17,7 @@
   z-index: 90;
 
   .social-ico {
+    display: block;
     filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
   }
 
@@ -30,5 +31,134 @@
   .social-ico img {
     width: 20px;
     height: 20px;
+  }
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.social-tab { display: none; }
+
+@media screen and (max-width: 60em) {
+  .social-ico-block {
+    --social-flow-duration: 700ms;
+    --social-flow-stagger: 55ms;
+    --social-release-easing: cubic-bezier(0.7, 0, 0.45, 1);
+
+    .social-ico {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+      transform-origin: center;
+      transition: transform var(--social-flow-duration) var(--social-release-easing), opacity 220ms ease;
+      transition-delay: calc((3 - var(--social-index)) * var(--social-flow-stagger)), calc(120ms + (3 - var(--social-index)) * var(--social-flow-stagger));
+    }
+
+    &.collapsed .social-ico {
+      opacity: 0;
+      // All four icons travel into the same white pool at the edge.
+      transform: translate(24px, calc((1.5 - var(--social-index)) * 26px)) scale(0.12);
+      transition-timing-function: cubic-bezier(0.55, 0, 0.3, 1), ease-in;
+      transition-delay: calc(var(--social-index) * var(--social-flow-stagger)), calc(360ms + var(--social-index) * var(--social-flow-stagger));
+    }
+
+    .social-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      width: 44px;
+      height: 108px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #252525;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(100%, -50%) scaleX(0.5);
+      transform-origin: right center;
+      transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1), opacity 250ms ease, visibility 650ms;
+
+      .social-tab-surface {
+        position: absolute;
+        inset: 0;
+        width: 44px;
+        height: 108px;
+        fill: #fff;
+        filter: drop-shadow(-3px 0 8px rgba(0, 0, 0, 0.12));
+        transform-origin: right center;
+        transform: scale(0.78, 0.82);
+        transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+      }
+
+      .social-tab-arrow {
+        fill: none;
+        stroke: #252525;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transform-box: view-box;
+        transform-origin: 23px 50px;
+        transform: rotate(180deg);
+        transition: transform 450ms var(--social-release-easing);
+      }
+
+      &:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+    }
+
+    &.past-hero .social-tab {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(0, -50%) scaleX(1);
+    }
+
+    &.past-hero.avoiding-content.collapsed .social-tab {
+      transform: translate(0, -50%) scale(0.82, 0.9);
+    }
+
+    &.collapsed .social-tab .social-tab-arrow {
+      transform: rotate(0);
+    }
+    &.collapsed .social-tab .social-tab-surface { transform: scale(1); }
+
+    &.past-hero.collapsed .social-tab-surface {
+      animation: absorb-socials 1050ms both;
+    }
+
+    &.past-hero:not(.collapsed) .social-tab-surface {
+      // Drain continuously while the staggered icons leave, with no second recoil.
+      animation: release-socials calc(var(--social-flow-duration) + 3 * var(--social-flow-stagger)) var(--social-release-easing) both;
+    }
+  }
+}
+
+@keyframes absorb-socials {
+  0% { transform: scale(0.78, 0.82); }
+  18% { transform: scale(0.75, 1.12); }
+  48% { transform: scale(1.2, 0.82); }
+  72% { transform: scale(0.92, 1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes release-socials {
+  0% { transform: scale(1); }
+  100% { transform: scale(0.78, 0.82); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-ico-block .social-ico,
+  .social-ico-block .social-tab,
+  .social-ico-block .social-tab svg {
+    transition: none;
+    animation: none !important;
   }
 }

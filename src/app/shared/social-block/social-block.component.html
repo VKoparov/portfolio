@@ -1,5 +1,14 @@
-<div class="social-ico-block">
-    <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" class="social-ico" [attr.aria-label]="social.name">
-        <img [ngSrc]="social.icon" [alt]="social.name" width="24" height="24">
-    </a>
+<div class="social-ico-block" [class.past-hero]="pastHero" [class.collapsed]="collapsed" [class.avoiding-content]="avoidingContent">
+    <div class="social-links" [attr.inert]="collapsed ? '' : null" [attr.aria-hidden]="collapsed ? 'true' : null">
+        <a *ngFor="let social of socialLinks; let i = index" [href]="social.url" target="_blank" rel="noopener noreferrer" class="social-ico" [style.--social-index]="i" [attr.aria-label]="social.name">
+            <img [ngSrc]="social.icon" [alt]="social.name" width="24" height="24">
+        </a>
+    </div>
+    <button #socialTab class="social-tab" type="button" (click)="toggleSocials()"
+            [attr.aria-expanded]="!collapsed" [attr.aria-label]="collapsed ? 'Show social links' : 'Hide social links'">
+        <svg class="social-tab-surface" viewBox="0 0 44 100" aria-hidden="true">
+            <path d="M44 0C44 20 42 25 26 28C11 30 2 38 2 50C2 62 11 70 26 72C42 75 44 80 44 100Z" />
+            <g class="social-tab-arrow"><path d="m26 43-7 7 7 7" /></g>
+        </svg>
+    </button>
 </div>
