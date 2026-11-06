@@ -20,6 +20,7 @@
   padding: 20px;
   text-align: justify;
   background: #111212;
+  border-radius: 8px;
   filter: drop-shadow(0 0 0.75rem black);
   transition: all 0.5s ease-in-out;
 
@@ -71,100 +72,108 @@
 
 .grid-1 {
   position: relative;
-  transition: all .5s ease-in-out;
+  --reveal-y: 24px;
 
   .smoke-background {
     width: 100%;
-    height: 100vh;
+    height: max(820px, 100vh);
     object-fit: cover;
+    opacity: 0;
+    scale: 1.14;
+    clip-path: inset(9% 6% round 40px);
+    transition: opacity 800ms ease, scale 1500ms cubic-bezier(0.16, 1, 0.3, 1),
+      clip-path 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &.is-revealed .smoke-background.ready {
+    opacity: 1;
+    scale: 1;
+    clip-path: inset(0 round 0px);
   }
 
   .enter {
     position: absolute;
-    top: 50%;
+    top: max(410px, 50vh);
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 60;
   }
 
   .content-list {
-    transition: all 1s ease-in-out;
+    transition: none;
 
     .list {
-      width: fit-content;
+      width: 340px;
       position: relative;
-      display: flex;
-      transform: rotate(-17.5deg);
+      display: grid;
+      isolation: isolate;
+
+      .content-container {
+        position: relative;
+        grid-area: 1 / 1;
+        margin: 0;
+        // A shared lower pivot opens the cards like a hand-held fan.
+        // At zero spread only the small paper-edge offsets remain.
+        transform-origin: 50% calc(100% + 440px);
+        --rest-transform:
+          translateX(calc(var(--stack-x) * (1 - var(--spread))))
+          translateY(calc(var(--stack-y) * (1 - var(--spread))))
+          rotate(calc(var(--fan-angle) * var(--spread)));
+        transform: var(--rest-transform);
+        opacity: 0;
+        translate: 0 var(--hover-y, 0px);
+        transition: translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
+
+        &:focus-visible {
+          z-index: 10;
+          outline: 2px solid #ffdd99;
+          outline-offset: 4px;
+        }
+      }
 
       .content-container:nth-child(1) {
-        position: relative;
-        bottom: 40px;
-        transform: rotate(-10deg);
+        --stack-x: 0px;
+        --stack-y: 0px;
+        --fan-angle: -25deg;
+        z-index: 6;
+      }
+      .content-container:nth-child(2) {
+        --stack-x: 2px;
+        --stack-y: -3px;
+        --fan-angle: -15deg;
+        z-index: 5;
+      }
+      .content-container:nth-child(3) {
+        --stack-x: 4px;
+        --stack-y: -6px;
+        --fan-angle: -5deg;
+        z-index: 4;
+      }
+      .content-container:nth-child(4) {
+        --stack-x: 6px;
+        --stack-y: -9px;
+        --fan-angle: 5deg;
         z-index: 3;
       }
-
-      .content-container:nth-child(2) {
-        position: relative;
-        bottom: 50px;
+      .content-container:nth-child(5) {
+        --stack-x: 8px;
+        --stack-y: -12px;
+        --fan-angle: 15deg;
         z-index: 2;
       }
-
-      .content-container:nth-child(3) {
-        position: relative;
-        bottom: 30px;
-        transform: rotate(10deg);
+      .content-container:nth-child(6) {
+        --stack-x: 10px;
+        --stack-y: -15px;
+        --fan-angle: 25deg;
         z-index: 1;
       }
 
-      .content-container:nth-child(4) {
-        position: relative;
-        bottom: -10px;
-        transform: rotate(20deg);
-        z-index: 0;
-      }
-
-      .content-container:nth-child(5) {
-        position: relative;
-        bottom: -70px;
-        transform: rotate(30deg);
-        z-index: -1;
-      }
-
-      .content-container:nth-child(6) {
-        position: relative;
-        right: 10px;
-        bottom: -150px;
-        transform: rotate(40deg);
-        z-index: -2;
-      }
-
-      .content-container:hover {
-        position: relative;
-        z-index: 10;
-      }
-
-      .content-container:nth-child(1):hover {
-        bottom: 50px;
-      }
-
-      .content-container:nth-child(2):hover {
-        bottom: 60px;
-      }
-
-      .content-container:nth-child(3):hover {
-        bottom: 60px;
-      }
-
-      .content-container:nth-child(4):hover {
-        bottom: 0;
-      }
-
-      .content-container:nth-child(5):hover {
-        bottom: -60px;
-      }
-
-      .content-container:nth-child(6):hover {
-        bottom: -140px;
+      @media (hover: hover) and (pointer: fine) {
+        .content-container:hover {
+          z-index: 10;
+          --hover-y: -10px;
+          transition-delay: 0ms;
+        }
       }
     }
   }
@@ -185,8 +194,11 @@
 
   @media screen and (max-width: 60em) {
     .smoke-background {
+      height: 100vh;
       transform: scale(2) !important;
     }
+
+    .enter { top: 50%; }
   }
 }
 
@@ -254,4 +266,184 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card { transition: none; }
+}
+
+.spread-control {
+  position: absolute;
+  top: calc(100% + 129px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 440px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 61;
+
+  .spread-icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 28px;
+    fill: none;
+    stroke: #aaa;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    &.spread-icon-dots {
+      flex-basis: 32px;
+      width: 32px;
+      fill: #aaa;
+      stroke: #000;
+      stroke-width: 1;
+    }
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    display: block;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    background: transparent;
+    cursor: ew-resize;
+    touch-action: pan-y;
+
+    &::-webkit-slider-runnable-track {
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #ededed var(--progress), #555 var(--progress));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+    &::-moz-range-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #555;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+    &::-moz-range-progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #ededed;
+    }
+    &::-webkit-slider-thumb {
+      appearance: none;
+      box-sizing: border-box;
+      width: 15px;
+      height: 36px;
+      margin-top: -14px;
+      border: 0;
+      border-inline: 6px solid #000;
+      border-radius: 2px;
+      background: #fff;
+    }
+    &::-moz-range-thumb {
+      box-sizing: border-box;
+      width: 15px;
+      height: 36px;
+      border: 0;
+      border-inline: 6px solid #000;
+      border-radius: 2px;
+      background: #fff;
+    }
+    &:focus-visible { outline: 2px solid #ededed; outline-offset: 4px; border-radius: 4px; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-1 .content-list .list .content-container { transition: none; }
+}
+
+// Entrance motion stays separate from the fan and swipe transforms.
+.grid-1.is-revealed {
+  --reveal-y: 0px;
+
+  .content-list .list .content-container {
+    opacity: 1;
+    animation: review-fan-arrival 850ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(100ms + var(--reveal-order) * 65ms);
+  }
+}
+
+.grid-1 .cards {
+  opacity: 0;
+  translate: 0 var(--reveal-y);
+  transition: opacity 300ms ease 100ms, translate 400ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+}
+
+.grid-1.is-revealed .cards {
+  opacity: 1;
+  animation: review-stack-arrival 850ms cubic-bezier(0.22, 1, 0.36, 1) 100ms backwards;
+}
+
+.spread-control {
+  opacity: 0;
+  translate: 0 8px;
+  transition: opacity 300ms ease 750ms, translate 450ms cubic-bezier(0.22, 1, 0.36, 1) 750ms;
+}
+
+.is-revealed .spread-control {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-1 .smoke-background,
+  .grid-1 .content-list .list .content-container,
+  .grid-1 .cards,
+  .spread-control {
+    translate: none;
+    transition: opacity 120ms ease;
+  }
+}
+
+@keyframes review-fan-arrival {
+  from {
+    opacity: 0;
+    transform: translateX(var(--stack-x)) translateY(55px) rotate(-4deg) scale(0.96);
+  }
+  65% {
+    opacity: 1;
+    transform:
+      translateX(calc(var(--stack-x) * (1 - var(--spread))))
+      translateY(calc(var(--stack-y) * (1 - var(--spread)) - 5px))
+      rotate(calc(var(--fan-angle) * (var(--spread) + 0.09)));
+  }
+  to {
+    opacity: 1;
+    transform: var(--rest-transform);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-1 .smoke-background {
+    scale: 1;
+    clip-path: none;
+    transition: opacity 120ms ease;
+  }
+
+  .grid-1.is-revealed .content-list .list .content-container {
+    animation: none;
+  }
+}
+
+@keyframes review-stack-arrival {
+  from { transform: translateY(35px) rotate(-3deg) scale(0.95); }
+  to { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-1.is-revealed .cards { animation: none; }
+}
+
+.reveal-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
 }

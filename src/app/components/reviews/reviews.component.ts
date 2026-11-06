@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
 
 @Component({
@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss']
 })
-export class ReviewsComponent implements OnInit, OnDestroy {
+export class ReviewsComponent implements AfterViewInit, OnDestroy {
 
   reviews: { imgSrc: string, description: string, name: string, jobTitle: string }[] = [
     {
@@ -53,16 +53,41 @@ export class ReviewsComponent implements OnInit, OnDestroy {
 
   @Input() event!: Observable<string>;
 
-  objectScale: string = 'scale(.0)';
+  isRevealed = false;
+  isBackgroundReady = false;
+  @ViewChild('revealMarker') private revealMarker!: ElementRef<HTMLElement>;
+  private revealObserver?: IntersectionObserver;
 
-  ngOnInit(): void {
-    this.event.subscribe(location => {
-      if (location === 'app-reviews') {
-        setTimeout(() => {
-          this.objectScale = 'scale(1)';
-        }, 300);
+  constructor(private readonly zone: NgZone) {}
+
+  ngAfterViewInit(): void {
+    // Wait for the center of the cards, rather than the section's leading edge.
+    this.revealObserver = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        this.zone.run(() => this.isRevealed = true);
+        this.revealObserver?.disconnect();
       }
+    }, {
+      rootMargin: `0px 0px -${Math.round(window.innerHeight * 0.3)}px 0px`,
+      threshold: 1
     });
+    this.revealObserver.observe(this.revealMarker.nativeElement);
+  }
+
+  async handleBackgroundLoad(image: HTMLImageElement): Promise<void> {
+    try {
+      await image.decode();
+      this.isBackgroundReady = true;
+    } catch {
+      // The dark section remains usable if the decorative image fails.
+    }
+  }
+
+  // Keep the original fan as the fully expanded endpoint.
+  reviewSpread = 0;
+
+  updateSpread(event: Event): void {
+    this.reviewSpread = Number((event.target as HTMLInputElement).value);
   }
 
   activeReview = 0;
@@ -145,6 +170,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.revealObserver?.disconnect();
     clearTimeout(this.swipeTimer);
   }
 

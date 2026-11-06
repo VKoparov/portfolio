@@ -1,11 +1,12 @@
 <div class="reviews-container">
     <div class="container">
-        <div class="grid-1" [ngStyle]="{'transform' : objectScale}">
-            <img class="smoke-background" ngSrc="assets/vectors/smoke.png" alt="Atmospheric smoke background" height="1600" width="1600">
+        <div class="grid-1" [class.is-revealed]="isRevealed" [attr.inert]="isRevealed ? null : ''">
+            <img #smoke class="smoke-background" [class.ready]="isBackgroundReady" (load)="handleBackgroundLoad(smoke)" ngSrc="assets/vectors/smoke.png" alt="Atmospheric smoke background" height="1600" width="1600">
             <div class="enter">
-                <div class="content-list" [ngStyle]="{'transform' : objectScale}">
-                    <div class="list desktop">
-                        <div class="content-container" *ngFor="let review of reviews">
+                <span #revealMarker class="reveal-marker" aria-hidden="true"></span>
+                <div class="content-list">
+                    <div class="list desktop" [style.--spread]="0.15 + reviewSpread * 0.0085">
+                        <div class="content-container" *ngFor="let review of reviews; let i = index" [style.--reveal-order]="reviews.length - 1 - i" tabindex="0" [attr.aria-label]="'Review by ' + review.name">
                             <img class="profile-picture" [ngSrc]="review.imgSrc" width="76" height="76" [alt]="review.name">
                             <div class="review-description-container" data-lenis-prevent>
                                 <div class="review-description">{{ review.description }}</div>
@@ -49,6 +50,21 @@
                         </ng-container>
                         <span class="sr-only" aria-live="polite">Review {{ activeReview + 1 }} of {{ reviews.length }}: {{ reviews[activeReview].name }}</span>
                     </div>
+                </div>
+                <div class="spread-control desktop">
+                    <svg class="spread-icon" viewBox="0 0 24 28" aria-hidden="true">
+                        <circle cx="12" cy="14" r="5" />
+                    </svg>
+                    <input id="review-spread" type="range" min="0" max="100" step="1"
+                           aria-label="Card spread"
+                           [value]="reviewSpread" (input)="updateSpread($event)"
+                           [style.--progress]="reviewSpread + '%'"
+                           [attr.aria-valuetext]="reviewSpread === 0 ? 'Compact' : reviewSpread === 100 ? 'Fully spread' : reviewSpread + '% spread'">
+                    <svg class="spread-icon spread-icon-dots" viewBox="0 0 32 28" aria-hidden="true">
+                        <circle cx="10" cy="14" r="5" />
+                        <circle cx="16" cy="14" r="5" />
+                        <circle cx="22" cy="14" r="5" />
+                    </svg>
                 </div>
             </div>
             <div class="top-fade"></div>
