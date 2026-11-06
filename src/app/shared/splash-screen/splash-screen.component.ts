@@ -27,6 +27,7 @@ export class SplashScreenComponent implements AfterViewInit, OnDestroy {
     titleVisible = false;
     rolling = false;
     selected = false;
+    framed = false;
     expanding = false;
     departing = false;
     private disposed = false;
@@ -69,6 +70,7 @@ export class SplashScreenComponent implements AfterViewInit, OnDestroy {
             const original = document.querySelector(selector);
             if (original) this.preview.nativeElement.appendChild(original.cloneNode(true));
         }
+        this.prepareHomepageElements();
         for (const child of Array.from(this.preview.nativeElement.children)) {
             this.landingFrame.nativeElement.appendChild(child.cloneNode(true));
         }
@@ -84,11 +86,57 @@ export class SplashScreenComponent implements AfterViewInit, OnDestroy {
         await this.wait(650);
         if (this.disposed || this.finishing) return;
         this.selected = true;
+        await this.wait(200);
+        if (this.disposed || this.finishing) return;
+        this.revealHomepageElements();
+        await this.wait(1800);
+        if (this.disposed || this.finishing) return;
+        this.framed = true;
         await this.wait(750);
         if (this.disposed || this.finishing) return;
         this.expanding = true;
         await this.wait(1700);
         this.finish();
+    }
+
+    private prepareHomepageElements(): void {
+        const parts = [
+            {selector: '.ham-menu-btn', x: -100, y: -40, delay: 0},
+            {selector: '.navigation-bar-container .logo-container', x: 0, y: -70, delay: 100},
+            {selector: '.nav-btn', x: 100, y: -40, delay: 200},
+            {selector: '.social-ico', x: 85, y: 0, delay: 300},
+            {selector: '.location', x: -60, y: 55, delay: 550},
+            {selector: '.right-bottom-text', x: 60, y: 55, delay: 650},
+            {selector: '.parallax .logo-container', x: 0, y: 70, delay: 950}
+        ];
+        for (const part of parts) {
+            this.preview.nativeElement.querySelectorAll<HTMLElement>(part.selector).forEach((element, index) => {
+                element.dataset['introDelay'] = String(part.delay + index * 70);
+                element.dataset['introLogo'] = String(part.selector === '.parallax .logo-container');
+                element.style.opacity = '0';
+                element.style.translate = `${part.x}px ${part.y}px`;
+                element.style.scale = element.dataset['introLogo'] === 'true' ? '0.94' : '1';
+                element.style.transition = 'none';
+            });
+        }
+    }
+
+    private revealHomepageElements(): void {
+        // Animate both identical copies so the selected frame and zoom surface stay in sync.
+        for (const root of [this.preview.nativeElement, this.landingFrame.nativeElement]) {
+            root.querySelectorAll<HTMLElement>('[data-intro-delay]').forEach(element => {
+                const logo = element.dataset['introLogo'] === 'true';
+                this.frameAnimations.push(element.animate([
+                    {opacity: 0, translate: element.style.translate, scale: element.style.scale},
+                    {opacity: 1, translate: '0px 0px', scale: '1'}
+                ], {
+                    duration: logo ? 750 : 550,
+                    delay: Number(element.dataset['introDelay']),
+                    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                    fill: 'forwards'
+                }));
+            });
+        }
     }
 
     private animateFrames(): void {
