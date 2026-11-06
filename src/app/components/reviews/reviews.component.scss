@@ -9,6 +9,9 @@
   @media screen and (max-width: 60em) {
     gap: 0;
     padding: 0;
+    display: block;
+    min-height: 240svh;
+    overflow: visible;
   }
 }
 
@@ -247,10 +250,13 @@
 }
 
 .card-img {
-  rotate: var(--angle, 0deg);
+  --stack-reveal: clamp(0, calc(var(--deck-progress) * 6 - (5 - var(--depth))), 1);
+  translate: calc((1 - var(--stack-reveal)) * var(--entry-x)) 0;
+  rotate: calc(var(--angle, 0deg) + (1 - var(--stack-reveal)) * 8deg);
   border-radius: 10px;
   overflow: hidden;
   transform-origin: center;
+  transition: translate 120ms linear, rotate 120ms linear;
 
   img { -webkit-user-drag: none; }
 }
@@ -362,10 +368,19 @@
   transition: opacity 100ms linear, translate 120ms linear;
 }
 
-.grid-1 .cards {
-  opacity: clamp(0, var(--deck-progress), 1);
-  translate: 0 calc((1 - clamp(0, var(--deck-progress), 1)) * 16px);
-  transition: opacity 100ms linear, translate 120ms linear;
+.grid-1 .cards { transition: none; }
+
+@media screen and (max-width: 60em) {
+  .grid-1 {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+
+    .smoke-background { height: 100%; }
+    .enter { top: 50%; }
+    .content-list { opacity: 1; transition: none; }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -390,4 +405,14 @@
   height: 1px;
   pointer-events: none;
   visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-img { transition: none; }
+}
+
+@media screen and (max-width: 60em) and (prefers-reduced-motion: reduce) {
+  .container { min-height: 100svh; }
+  .grid-1 { position: relative; }
+  .card-img { translate: none; rotate: var(--angle, 0deg); transition: none; }
 }

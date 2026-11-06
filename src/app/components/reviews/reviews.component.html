@@ -1,5 +1,5 @@
 <div class="reviews-container">
-    <div class="container">
+    <div #scrollTrack class="container">
         <div #backgroundStage class="grid-1">
             <img #smoke class="smoke-background" [class.ready]="isBackgroundReady" (load)="handleBackgroundLoad(smoke)" ngSrc="assets/vectors/smoke.png" alt="Atmospheric smoke background" height="1600" width="1600">
             <div class="enter">
@@ -26,6 +26,8 @@
                          (keydown.arrowright)="changeReview(1); $event.preventDefault()">
                         <ng-container *ngFor="let review of reviews; let i = index">
                             <article class="card" [style.--angle]="getCardAngle(i)"
+                                     [style.--depth]="(i - activeReview + reviews.length) % reviews.length"
+                                     [style.--entry-x]="i % 2 ? '110vw' : '-110vw'"
                                      [style.z-index]="i === activeReview ? 10 : (reviews.length + activeReview - i) % reviews.length"
                                      [class.active]="i === activeReview" [class.dragging]="i === activeReview && dragging"
                                      [style.transform]="i === activeReview ? 'translateX(' + dragX + 'px) rotate(' + dragX / 25 + 'deg)' : null"

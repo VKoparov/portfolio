@@ -1,3 +1,4 @@
 .frame-container {
-  overflow: hidden;
+  display: flow-root;
+  overflow: clip;
 }

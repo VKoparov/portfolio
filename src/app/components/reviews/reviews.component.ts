@@ -57,6 +57,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   isBackgroundReady = false;
   @ViewChild('revealMarker') private revealMarker!: ElementRef<HTMLElement>;
   @ViewChild('backgroundStage') private backgroundStage!: ElementRef<HTMLElement>;
+  @ViewChild('scrollTrack') private scrollTrack!: ElementRef<HTMLElement>;
   private backgroundFrame: number | null = null;
   private lastBackgroundProgress = -1;
   private lastDeckProgress = -1;
@@ -74,8 +75,13 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
         this.lastBackgroundProgress = progress;
       }
       const center = this.revealMarker.nativeElement.getBoundingClientRect().top;
-      const rawDeckProgress = (window.innerHeight * 0.95 - center) / (window.innerHeight * 0.4);
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const mobile = window.matchMedia('(max-width: 60em)').matches;
+      const track = this.scrollTrack.nativeElement;
+      const travel = Math.max(1, track.offsetHeight - stage.offsetHeight);
+      const rawDeckProgress = mobile && !reducedMotion
+        ? -track.getBoundingClientRect().top / travel * 1.2
+        : (window.innerHeight * 0.95 - center) / (window.innerHeight * 0.4);
       const deckProgress = reducedMotion ? (rawDeckProgress > 0 ? 1.2 : 0) :
         Math.max(0, Math.min(1.2, rawDeckProgress));
       if (deckProgress !== this.lastDeckProgress) {
@@ -127,6 +133,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   private swipeTimer?: ReturnType<typeof setTimeout>;
 
   onPointerDown(event: PointerEvent): void {
+    if (this.lastDeckProgress < 1) return;
     if (!event.isPrimary || event.button !== 0 || this.settling || this.pointerId !== null) return;
     this.pointerId = event.pointerId;
     this.startX = event.clientX;
@@ -203,7 +210,8 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   getCardAngle(index: number): string {
-    const angles = [4, -8, -7, 11, 13, -17];
-    return `${angles[index % angles.length]}deg`;
+    const depth = (index - this.activeReview + this.reviews.length) % this.reviews.length;
+    const angles = [0, -3, 4, -5.5, 6, -7];
+    return `${angles[depth % angles.length]}deg`;
   }
 }
