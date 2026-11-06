@@ -9,6 +9,7 @@ import {LenisService} from "./services/lenis.service";
 export class AppComponent implements OnInit {
 
     title = 'Valentin Koparov';
+    introFinished = false;
 
     constructor(private lenisService: LenisService) {
     }

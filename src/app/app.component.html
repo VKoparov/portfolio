@@ -1,2 +1,2 @@
-<app-splash-screen></app-splash-screen>
-<app-frame></app-frame>
+<app-splash-screen *ngIf="!introFinished" (closed)="introFinished = true"></app-splash-screen>
+<app-frame [attr.inert]="introFinished ? null : ''"></app-frame>

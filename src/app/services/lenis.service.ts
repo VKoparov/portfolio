@@ -49,6 +49,10 @@ export class LenisService implements OnDestroy {
         return this.lenis;
     }
 
+    pause(): void { this.lenis?.stop(); }
+
+    resume(): void { this.lenis?.start(); }
+
     ngOnDestroy() {
         if (this.rafId) cancelAnimationFrame(this.rafId);
         this.lenis?.destroy();
