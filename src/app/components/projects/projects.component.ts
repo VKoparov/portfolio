@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LenisService} from '../../services/lenis.service';
 import {DescriptionScrollController} from '../../shared/description-scroll.controller';
 
@@ -7,11 +7,22 @@ import {DescriptionScrollController} from '../../shared/description-scroll.contr
     templateUrl: './projects.component.html',
     styleUrls: ['./projects.component.scss']
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
+export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     readonly descriptionScroll: DescriptionScrollController;
 
-    constructor(lenis: LenisService) {
+    @ViewChild('deckHintMarker') private deckHintMarker!: ElementRef<HTMLElement>;
+    hintVisible = false;
+    hintCoolingDown = false;
+    touching = false;
+    private hintObserver?: IntersectionObserver;
+    private hintCooldownTimer?: ReturnType<typeof setTimeout>;
+    private swipeDirection: 'next' | 'previous' | null = null;
+    private swipeProgress = 0;
+    private swipeSettling = false;
+    private swipeSettleTimer?: ReturnType<typeof setTimeout>;
+
+    constructor(lenis: LenisService, private readonly zone: NgZone) {
         this.descriptionScroll = new DescriptionScrollController(lenis);
     }
 
@@ -144,6 +155,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
     ];
 
+    swipeProject: ProjectsComponent['projects'][number] | null = null;
+
     ngOnInit(): void {
         this.startTimer();
 
@@ -151,7 +164,23 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.doSwipeRight();
     }
 
+    ngAfterViewInit(): void {
+        this.hintObserver = new IntersectionObserver(entries => {
+            this.zone.run(() => this.hintVisible = entries.some(entry => entry.isIntersecting));
+        }, {threshold: 0.25});
+        this.hintObserver.observe(this.deckHintMarker.nativeElement);
+    }
+
+    private pauseSwipeHint(): void {
+        this.hintCoolingDown = true;
+        clearTimeout(this.hintCooldownTimer);
+        this.hintCooldownTimer = setTimeout(() => this.hintCoolingDown = false, 12000);
+    }
+
     ngOnDestroy(): void {
+        this.hintObserver?.disconnect();
+        clearTimeout(this.hintCooldownTimer);
+        clearTimeout(this.swipeSettleTimer);
         this.descriptionScroll.onTouchEnd();
         this.pauseTimer();
     }
@@ -193,30 +222,55 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('touchstart', ['$event'])
+    @HostListener('touchmove', ['$event'])
     @HostListener('touchend', ['$event'])
     @HostListener('touchcancel', ['$event'])
     handleTouch(event: any) {
+        if (this.swipeSettling) return;
         const touch = this.getTouch(event);
+        if (!touch) return;
 
+        if (event.type === 'touchmove') {
+            this.handleTouchMove(touch, event);
+            return;
+        }
         if (event.type === 'touchstart') {
+            this.touching = true;
+            this.pauseTimer();
             this.handleTouchStart(touch, event.timeStamp);
             return;
         }
 
         if (event.type === 'touchend') {
+            if (this.swipeDirection) {
+                this.settleMobileSwipe(this.swipeProgress >= 0.28, event);
+                return;
+            }
+            this.touching = false;
             this.handleTouchEnd(touch, event.timeStamp, event);
+            if (this.isPaused) this.resumeTimer();
             return;
+        }
+        if (event.type === 'touchcancel') {
+            if (this.swipeDirection) {
+                this.settleMobileSwipe(false, event);
+                return;
+            }
+            this.touching = false;
+            this.resumeTimer();
         }
     }
 
     doSwipeLeft() {
         document.getElementById('next')!.onclick = () => {
+            this.pauseSwipeHint();
             this.directionLeft(null);
         };
     }
 
     doSwipeRight() {
         document.getElementById('prev')!.onclick = () => {
+            this.pauseSwipeHint();
             this.directionRight(null);
         };
     }
@@ -231,12 +285,69 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.defaultTouch.time = timeStamp;
     }
 
+    private handleTouchMove(touch: Touch, event: TouchEvent): void {
+        if (!window.matchMedia('(max-width: 992px)').matches || event.touches.length !== 1) return;
+        const deltaX = touch.pageX - this.defaultTouch.x;
+        const deltaY = touch.pageY - this.defaultTouch.y;
+        if (!this.swipeDirection && (Math.abs(deltaX) < 8 || Math.abs(deltaX) <= Math.abs(deltaY))) return;
+        if (event.cancelable) event.preventDefault();
+        const slide = document.getElementById('slide');
+        if (!slide) return;
+        const direction = deltaX < 0 ? 'next' : 'previous';
+        if (!this.swipeProject || direction !== this.swipeDirection) {
+            const incoming = slide.querySelector<HTMLElement>(direction === 'next' ? '.item:nth-child(3)' : '.item:first-child');
+            const index = Number(incoming?.getAttribute('data-project-index'));
+            this.swipeProject = this.projects[index] ?? null;
+            const description = incoming?.querySelector<HTMLElement>('.des');
+            if (description) description.scrollTop = 0;
+        }
+        this.swipeDirection = direction;
+        this.swipeProgress = Math.min(1, Math.abs(deltaX) / Math.min(240, window.innerWidth * 0.6));
+        slide.classList.add('is-dragging');
+        slide.classList.toggle('swiping-next', this.swipeDirection === 'next');
+        slide.classList.toggle('swiping-previous', this.swipeDirection === 'previous');
+        slide.style.setProperty('--swipe-progress', String(this.swipeProgress));
+        slide.parentElement?.style.setProperty('--swipe-progress', String(this.swipeProgress));
+    }
+
+    private settleMobileSwipe(commit: boolean, event: TouchEvent): void {
+        const slide = document.getElementById('slide');
+        const direction = this.swipeDirection;
+        if (!slide || !direction) return;
+        this.swipeSettling = true;
+        this.pauseTimer();
+        slide.classList.remove('is-dragging');
+        // Capture the current interpolated geometry before changing the target.
+        void slide.parentElement?.offsetWidth;
+        slide.style.setProperty('--swipe-progress', commit ? '1' : '0');
+        slide.parentElement?.style.setProperty('--swipe-progress', commit ? '1' : '0');
+        if (commit) this.pauseSwipeHint();
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.swipeSettleTimer = setTimeout(() => {
+            if (commit) {
+                if (direction === 'next') this.directionLeft(event);
+                else this.directionRight(event);
+                // The incoming copy is already fully revealed; don't replay its entrance.
+                slide.classList.add('swipe-completed');
+            }
+            slide.classList.remove('swiping-next', 'swiping-previous');
+            slide.style.removeProperty('--swipe-progress');
+            slide.parentElement?.style.removeProperty('--swipe-progress');
+            this.swipeProject = null;
+            this.swipeDirection = null;
+            this.swipeProgress = 0;
+            this.swipeSettling = false;
+            this.touching = false;
+            if (this.isPaused) this.resumeTimer();
+        }, reducedMotion ? 0 : 360);
+    }
+
     private handleTouchEnd(touch: Touch, timeStamp: number, event: any) {
         const deltaX = touch.pageX - this.defaultTouch.x;
         const deltaY = touch.pageY - this.defaultTouch.y;
         const deltaTime = timeStamp - this.defaultTouch.time;
 
-        if (this.isValidSwipe(deltaX, deltaTime)) {
+        if (Math.abs(deltaX) > Math.abs(deltaY) && this.isValidSwipe(deltaX, deltaTime)) {
             this.executeSwipeAction(deltaX, event);
         }
     }
@@ -246,6 +357,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     private executeSwipeAction(deltaX: number, event: any) {
+        this.pauseSwipeHint();
         if (deltaX > 0) {
             this.directionRight(event);
             return;
@@ -257,6 +369,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private directionLeft(event: any) {
         const lists = document.querySelectorAll('.item');
         const slide = document.getElementById('slide');
+        slide?.classList.remove('swipe-completed');
         if (slide && lists.length > 0) {
             slide.appendChild(lists[0]);
         }
@@ -266,6 +379,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private directionRight(event: any) {
         const lists = document.querySelectorAll('.item');
         const slide = document.getElementById('slide');
+        slide?.classList.remove('swipe-completed');
         if (slide && lists.length > 0) {
             slide.prepend(lists[lists.length - 1]);
         }

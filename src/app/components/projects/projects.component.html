@@ -1,24 +1,15 @@
-<div class="container">
+<div class="container" [class.hint-enabled]="hintVisible && !hintCoolingDown && !touching && !isPaused">
     <div id="slide" class="slider">
-        <div class="item" *ngFor="let project of projects" [style.background-image]="'url(' + project.imgSrc + ')'">
-            <div class="content">
-                <div class="top-fade"></div>
-                <div class="wrapper">
-                    <div class="name">{{ project.header }}</div>
-                    <div class="des"
-                         (wheel)="descriptionScroll.onWheel($event)"
-                         (mouseenter)="pauseTimer()"
-                         (mouseleave)="resumeTimer()"
-                         (touchstart)="pauseTimer(); descriptionScroll.onTouchStart($event)"
-                         (touchmove)="descriptionScroll.onTouchMove($event)"
-                         (touchend)="descriptionScroll.onTouchEnd(); resumeTimer()"
-                         (touchcancel)="descriptionScroll.onTouchEnd(); resumeTimer()">{{ project.description }}</div>
-                    <a class="button" *ngIf="project.url" [href]="project.url" target="_blank">View Project</a>
-                </div>
-                <div class="bottom-fade"></div>
-            </div>
+        <div class="item" *ngFor="let project of projects; let i = index" [attr.data-project-index]="i" [style.background-image]="'url(' + project.imgSrc + ')'">
+            <ng-container *ngTemplateOutlet="projectContent; context: {$implicit: project}"></ng-container>
         </div>
     </div>
+    <div class="swipe-image" *ngIf="swipeProject"
+         [style.background-image]="'url(' + swipeProject.imgSrc + ')'" aria-hidden="true"></div>
+    <div class="swipe-content-overlay" *ngIf="swipeProject" aria-hidden="true">
+        <ng-container *ngTemplateOutlet="projectContent; context: {$implicit: swipeProject}"></ng-container>
+    </div>
+    <span #deckHintMarker class="deck-hint-marker" aria-hidden="true"></span>
     <div class="controls-container">
         <div class="time-indicator" [class.paused]="isPaused" aria-label="Project timer indicator">
             <div class="time-progress" [style.width.%]="progress"></div>
@@ -33,3 +24,22 @@
         </div>
     </div>
 </div>
+
+<ng-template #projectContent let-project>
+    <div class="content">
+        <div class="top-fade"></div>
+        <div class="wrapper">
+            <div class="name">{{ project.header }}</div>
+            <div class="des"
+                 (wheel)="descriptionScroll.onWheel($event)"
+                 (mouseenter)="pauseTimer()"
+                 (mouseleave)="resumeTimer()"
+                 (touchstart)="pauseTimer(); descriptionScroll.onTouchStart($event)"
+                 (touchmove)="descriptionScroll.onTouchMove($event)"
+                 (touchend)="descriptionScroll.onTouchEnd(); resumeTimer()"
+                 (touchcancel)="descriptionScroll.onTouchEnd(); resumeTimer()">{{ project.description }}</div>
+            <a class="button" *ngIf="project.url" [href]="project.url" target="_blank">View Project</a>
+        </div>
+        <div class="bottom-fade"></div>
+    </div>
+</ng-template>

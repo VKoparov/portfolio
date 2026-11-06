@@ -136,7 +136,8 @@ div#slide {
   z-index: -1;
 }
 
-.item .content {
+.item .content,
+.swipe-content-overlay .content {
   height: 100%;
 
   display: none;
@@ -416,7 +417,8 @@ div#slide {
     max-height: 200px;
   }
 
-  .item .wrapper {
+  .item .wrapper,
+  .swipe-content-overlay .wrapper {
     top: 25%;
     left: 15px;
   }
@@ -473,7 +475,8 @@ div#slide {
     opacity: 0;
   }
 
-  .item .content {
+  .item .content,
+  .swipe-content-overlay .content {
     left: 0;
     padding-left: 15px;
     padding-right: 15px;
@@ -492,4 +495,162 @@ div#slide {
   .item:nth-child(4) {
     left: calc(31% + 40px);
   }
+}
+
+.deck-hint-marker { display: none; }
+
+@media (max-width: 992px) {
+  .item:nth-child(n+3) {
+    left: 15px;
+    top: auto;
+    bottom: 10px;
+    width: min(52vw, 210px);
+    height: 178px;
+    transform: none;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .item:nth-child(3) {
+    opacity: 1;
+    z-index: 15;
+  }
+  .item:nth-child(4) {
+    opacity: 1;
+    z-index: 14;
+    left: 43px;
+    transform: none;
+  }
+  .item:nth-child(5) {
+    opacity: 1;
+    z-index: 13;
+    left: 71px;
+    transform: none;
+  }
+
+  .controls-container { justify-content: flex-start; }
+
+  .deck-hint-marker {
+    display: block;
+    position: absolute;
+    top: 512px;
+    left: 15px;
+    width: 1px;
+    height: 178px;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 992px) and (prefers-reduced-motion: no-preference) {
+  .hint-enabled .item:nth-child(3) {
+    animation: project-swipe-reminder 2000ms ease-in-out 400ms infinite;
+  }
+}
+
+@keyframes project-swipe-reminder {
+  0%, 60%, 100% { translate: 0 0; }
+  28% { translate: 12px 0; }
+  46% { translate: -2px 0; }
+}
+
+@media (max-width: 992px) {
+  #slide {
+    --swipe-progress: 0;
+    --preview-width: min(52vw, 210px);
+    touch-action: pan-y pinch-zoom;
+  }
+
+  #slide.is-dragging .item { transition: none; }
+}
+
+@media (max-width: 992px) {
+  .swipe-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 700px;
+    z-index: 20;
+    pointer-events: none;
+
+    .content { display: block; }
+    .name, .des, .button {
+      animation: none;
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+
+  #slide.swiping-next .item:nth-child(2) .content,
+  #slide.swiping-previous .item:nth-child(2) .content {
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 992px) {
+  .swipe-content-overlay {
+    opacity: clamp(0, calc(var(--swipe-progress, 0) * 2), 1);
+    transition: opacity 120ms linear;
+  }
+
+  #slide.swipe-completed .item:nth-child(2) .name,
+  #slide.swipe-completed .item:nth-child(2) .des,
+  #slide.swipe-completed .item:nth-child(2) .button {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .swipe-image {
+    --preview-width: min(52vw, 210px);
+    position: absolute;
+    top: calc(512px - 522px * var(--swipe-progress, 0));
+    left: calc(15px * (1 - var(--swipe-progress, 0)));
+    width: calc(var(--preview-width) + (100% - var(--preview-width)) * var(--swipe-progress, 0));
+    height: calc(178px + 522px * var(--swipe-progress, 0));
+    border-radius: calc(20px * (1 - var(--swipe-progress, 0)));
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+    z-index: 2;
+    transition: top 360ms cubic-bezier(0.22, 1, 0.36, 1),
+      left 360ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 360ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 360ms cubic-bezier(0.22, 1, 0.36, 1), border-radius 360ms ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(0, 0, 0, 0.44);
+      box-shadow: 0 0 80px 80px #000 inset;
+      opacity: var(--swipe-progress, 0);
+      transition: opacity 120ms linear;
+    }
+  }
+
+  #slide.is-dragging ~ .swipe-image { transition: none; }
+  #slide.is-dragging ~ .swipe-image::after { transition: none; }
+
+  // Keep all previews above the expanding image and close the gap as it leaves.
+  #slide.swiping-next .item:nth-child(3) {
+    opacity: calc(1 - var(--swipe-progress));
+    animation: none;
+    translate: none;
+  }
+  #slide.swiping-next .item:nth-child(4) { left: calc(43px - 28px * var(--swipe-progress)); }
+  #slide.swiping-next .item:nth-child(5) { left: calc(71px - 28px * var(--swipe-progress)); }
+  #slide.swiping-next .item:nth-child(6) {
+    left: 71px;
+    opacity: var(--swipe-progress);
+    z-index: 12;
+  }
+
+  #slide.swipe-completed .item:nth-child(2) { transition: none; }
 }
