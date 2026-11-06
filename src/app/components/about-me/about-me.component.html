@@ -1,14 +1,15 @@
-<div class="about-me-container">
+<div #scrollTrack class="about-scroll-track">
+<div #stage class="about-me-container">
     <div class="about">
         <div class="background-container">
             <img class="background-image" ngSrc="assets/images/about-me.png" alt="Valentin Koparov - Freelance Web Developer" height="1600" width="1074">
             <div class="top-fade"></div>
             <app-bottom-fade></app-bottom-fade>
         </div>
-        <div class="wrap-text">
+        <div #text class="wrap-text">
             <a appMagnetic class="download-cv" download="Resume-Valentin-Koparov" target="_blank"
                href="../../../assets/files/Valentin-Koparov-CV.pdf" aria-label="Download Valentin Koparov's Resume (PDF)">
-                <svg [ngStyle]="{'transform' : objectRotate}" width="110" height="110" viewBox="0 0 110 110">
+                <svg [ngStyle]="{'transform': objectRotate}" width="110" height="110" viewBox="0 0 110 110">
                     <path id="textpath-1" d="M 55, 55 m -55, 0 a 55,55 0 1,0 110,0 a 55,55 0 1,0 -110,0 "></path>
                     <text fill="#FFF">
                         <textPath xlink:href="#textpath-1" startOffset="50%" text-anchor="middle">
@@ -17,16 +18,17 @@
                     </text>
                 </svg>
             </a>
-            <p><strong>Awkward introduction? Clammy handshake? Nah, let’s go in for a virtual bear hug and a quick
+            <p class="text-block"><strong>Awkward introduction? Clammy handshake? Nah, let’s go in for a virtual bear hug and a quick
                 two-minute spiel about who I am, because who I am is your new hyper-talented mate – a web developer
                 with a background in corporate software building.</strong></p>
-            <p>I am passion for creating dynamic and innovative websites and applications.
+            <p class="text-block">I am passion for creating dynamic and innovative websites and applications.
                I have a deep understanding of web development best practices and a proven track record of delivering
                 high-quality results. If you are looking for a skilled and experienced web developer to bring your digital
                 vision to life, look no further than me. I am dedicated to helping companies and clients achieve their
                 goals and I am confident that I can deliver outstanding results for your project.</p>
-            <p>So that’s me in a nutshell. If you want to learn more about me (especially how I ended up in the biggest ecommerce company),
+            <p class="text-block">So that’s me in a nutshell. If you want to learn more about me (especially how I ended up in the biggest ecommerce company),
                 take a peek around the rest of my site.</p>
         </div>
     </div>
+</div>
 </div>

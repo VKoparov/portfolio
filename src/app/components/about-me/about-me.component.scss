@@ -94,3 +94,26 @@
     height: 1200px;
   }
 }
+
+.about-scroll-track {
+  position: relative;
+  display: flow-root;
+  background: #000;
+  transition: none;
+}
+
+.about-scroll-track .about-me-container { transition: none; }
+
+.about-scroll-track.pinned-enabled .about-me-container {
+  position: sticky;
+  top: var(--pin-top, 0px);
+}
+
+.about-me-container .about .wrap-text .text-block {
+  opacity: calc(0.08 + var(--reveal, 0) * 0.92);
+  transition: opacity 100ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-me-container .about .wrap-text .text-block { opacity: 1; transition: none; }
+}
