@@ -1,6 +1,7 @@
-<div class="container" [class.hint-enabled]="hintVisible && !hintCoolingDown && !touching && !isPaused">
+<div class="container">
     <div id="slide" class="slider">
         <div class="item" *ngFor="let project of projects; let i = index" [attr.data-project-index]="i" [style.background-image]="'url(' + project.imgSrc + ')'">
+            <div class="project-preview-face" [style.background-image]="'url(' + project.imgSrc + ')'" aria-hidden="true"></div>
             <ng-container *ngTemplateOutlet="projectContent; context: {$implicit: project}"></ng-container>
         </div>
     </div>

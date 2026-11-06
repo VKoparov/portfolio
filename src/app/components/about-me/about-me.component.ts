@@ -45,8 +45,10 @@ export class AboutMeComponent implements AfterViewInit, OnDestroy {
         this.pinTop = Math.max(minimumTop, Math.min(0, anchorTarget - (anchorTop - stageTop)));
         const firstPinnedTop = first.top - stageTop + this.pinTop;
         const lastPinnedBottom = last.bottom - stageTop + this.pinTop;
-        this.canPin = !this.motionPreference.matches && firstPinnedTop >= 80 &&
-          lastPinnedBottom <= (mobile ? viewport * 1.12 : viewport - 24);
+        // Mobile always gets the requested pinned sequence, at the resume anchor.
+        // Desktop may skip pinning only when the existing text cannot fit on screen.
+        this.canPin = !this.motionPreference.matches &&
+          (mobile || (firstPinnedTop >= 80 && lastPinnedBottom <= viewport - 24));
         this.travel = viewport * 1.4;
         track.classList.toggle('pinned-enabled', this.canPin);
         track.style.setProperty('--pin-top', `${this.pinTop}px`);

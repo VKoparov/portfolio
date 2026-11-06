@@ -421,15 +421,3 @@
 .grid-1.is-assembling .review-description-container {
   overflow-y: hidden;
 }
-
-@media screen and (max-width: 60em) and (prefers-reduced-motion: no-preference) {
-  .card.swipe-hint {
-    animation: review-swipe-reminder 2000ms ease-in-out 300ms infinite;
-  }
-}
-
-@keyframes review-swipe-reminder {
-  0%, 60%, 100% { translate: 0 0; rotate: 0deg; }
-  28% { translate: -28px 0; rotate: -1.2deg; }
-  46% { translate: 2px 0; rotate: 0.1deg; }
-}

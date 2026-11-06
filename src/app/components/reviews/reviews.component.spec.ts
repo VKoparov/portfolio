@@ -41,6 +41,23 @@ describe('ReviewsComponent pointer capture', () => {
       currentTarget: {setPointerCapture: () => {}}} as unknown as PointerEvent);
   }
 
+  it('resumes the hint when an idle touch ends outside the deck without clearing its cooldown', () => {
+    const component = assembledDeck();
+    component.hintPaused = true;
+    component.hintCoolingDown = true;
+    component.releaseHintAfterTouch();
+    expect(component.hintPaused).toBeFalse();
+    expect(component.hintCoolingDown).toBeTrue();
+  });
+
+  it('keeps the hint paused while a swipe is being dragged', () => {
+    const component = assembledDeck();
+    startDrag(component);
+    component.releaseHintAfterTouch();
+    expect(component.hintPaused).toBeTrue();
+    expect(component.dragging).toBeTrue();
+  });
+
   it('keeps dragging when a touched child hands capture to the deck', () => {
     const component = assembledDeck();
     startDrag(component);

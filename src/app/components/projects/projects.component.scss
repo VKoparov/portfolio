@@ -536,22 +536,10 @@ div#slide {
     position: absolute;
     top: 512px;
     left: 15px;
-    width: 1px;
+    width: min(52vw, 210px);
     height: 178px;
     pointer-events: none;
   }
-}
-
-@media (max-width: 992px) and (prefers-reduced-motion: no-preference) {
-  .hint-enabled .item:nth-child(3) {
-    animation: project-swipe-reminder 2000ms ease-in-out 400ms infinite;
-  }
-}
-
-@keyframes project-swipe-reminder {
-  0%, 60%, 100% { translate: 0 0; }
-  28% { translate: 12px 0; }
-  46% { translate: -2px 0; }
 }
 
 @media (max-width: 992px) {
@@ -653,4 +641,31 @@ div#slide {
   }
 
   #slide.swipe-completed .item:nth-child(2) { transition: none; }
+}
+
+.project-preview-face { display: none; }
+
+@media (max-width: 992px) {
+  // Animate only the thumbnail surface, never the item that becomes the main view.
+  .item:nth-child(3) {
+    background-image: none !important;
+    box-shadow: none;
+
+    .project-preview-face {
+      display: block;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-position: center;
+      background-size: cover;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+      transition: none;
+    }
+  }
+
+  .item:nth-child(2) {
+    translate: none;
+    .project-preview-face { display: none; }
+  }
 }
