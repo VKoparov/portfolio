@@ -19,11 +19,6 @@ export class SocialBlockComponent {
       url: 'https://github.com/VKoparov'
     },
     {
-      name: 'Facebook',
-      icon: 'assets/icons/facebook.svg',
-      url: 'https://www.facebook.com/valentin.koparov'
-    },
-    {
       name: 'Upwork',
       icon: 'assets/icons/upwork.svg',
       url: 'https://www.upwork.com/freelancers/~0179fa2d8ab45e83ab'
