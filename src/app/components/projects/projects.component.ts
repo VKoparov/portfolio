@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LenisService} from '../../services/lenis.service';
-import {SwipeReminder} from '../../shared/swipe-reminder';
 import {DescriptionScrollController} from '../../shared/description-scroll.controller';
 
 @Component({
@@ -13,7 +12,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     readonly descriptionScroll: DescriptionScrollController;
 
     @ViewChild('deckHintMarker') private deckHintMarker!: ElementRef<HTMLElement>;
-    private readonly swipeReminder = new SwipeReminder(12);
     hintVisible = false;
     hintCoolingDown = false;
     touching = false;
@@ -169,31 +167,17 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         this.hintObserver = new IntersectionObserver(entries => {
             this.zone.run(() => this.hintVisible = entries.some(entry => entry.isIntersecting));
-            this.syncSwipeHint();
         }, {threshold: 0.25});
         this.hintObserver.observe(this.deckHintMarker.nativeElement);
     }
 
-    private syncSwipeHint(): void {
-        const enabled = this.hintVisible && !this.hintCoolingDown && !this.touching &&
-          window.matchMedia('(max-width: 992px)').matches &&
-          !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        this.swipeReminder.update(enabled
-          ? document.querySelector<HTMLElement>('#slide .item:nth-child(3) .project-preview-face') : null);
-    }
-
     private pauseSwipeHint(): void {
         this.hintCoolingDown = true;
-        this.syncSwipeHint();
         clearTimeout(this.hintCooldownTimer);
-        this.hintCooldownTimer = setTimeout(() => {
-            this.hintCoolingDown = false;
-            this.syncSwipeHint();
-        }, 12000);
+        this.hintCooldownTimer = setTimeout(() => this.hintCoolingDown = false, 12000);
     }
 
     ngOnDestroy(): void {
-        this.swipeReminder.destroy();
         this.hintObserver?.disconnect();
         clearTimeout(this.hintCooldownTimer);
         clearTimeout(this.swipeSettleTimer);
@@ -252,7 +236,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         if (event.type === 'touchstart') {
             this.touching = true;
-            this.syncSwipeHint();
             this.pauseTimer();
             this.handleTouchStart(touch, event.timeStamp);
             return;
@@ -266,7 +249,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.touching = false;
             this.handleTouchEnd(touch, event.timeStamp, event);
             if (this.isPaused) this.resumeTimer();
-            this.syncSwipeHint();
             return;
         }
         if (event.type === 'touchcancel') {
@@ -276,7 +258,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             this.touching = false;
             this.resumeTimer();
-            this.syncSwipeHint();
         }
     }
 
@@ -358,7 +339,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.swipeSettling = false;
             this.touching = false;
             if (this.isPaused) this.resumeTimer();
-            this.syncSwipeHint();
         }, reducedMotion ? 0 : 360);
     }
 
@@ -394,7 +374,6 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             slide.appendChild(lists[0]);
         }
         this.startTimer();
-        this.syncSwipeHint();
     }
 
     private directionRight(event: any) {
@@ -405,6 +384,5 @@ export class ProjectsComponent implements OnInit, AfterViewInit, OnDestroy {
             slide.prepend(lists[lists.length - 1]);
         }
         this.startTimer();
-        this.syncSwipeHint();
     }
 }

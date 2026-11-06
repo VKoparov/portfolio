@@ -35,7 +35,7 @@
                                      [style.--entry-x]="i % 2 ? '110vw' : '-110vw'"
                                      [style.z-index]="i === activeReview ? 10 : (reviews.length + activeReview - i) % reviews.length"
                                      [class.active]="i === activeReview"
-                                     [class.dragging]="i === activeReview && dragging"
+                                     [class.swipe-hint]="i === activeReview && hintEnabled && !hintPaused && !hintCoolingDown" [class.dragging]="i === activeReview && dragging"
                                      [style.transform]="i === activeReview ? 'translateX(' + dragX + 'px) rotate(' + dragX / 25 + 'deg)' : null"
                                      [attr.aria-hidden]="i !== activeReview">
                                 <div class="card-img content-container">

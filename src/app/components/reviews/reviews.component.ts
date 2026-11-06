@@ -1,6 +1,5 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
-import {SwipeReminder} from "../../shared/swipe-reminder";
 import {LenisService} from "../../services/lenis.service";
 import {DescriptionScrollController} from "../../shared/description-scroll.controller";
 
@@ -64,14 +63,12 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   private backgroundFrame: number | null = null;
   private lastBackgroundProgress = -1;
   private lastDeckProgress = -1;
-  private readonly swipeReminder = new SwipeReminder(-28);
   hintEnabled = false;
   hintPaused = false;
   hintCoolingDown = false;
   private hintCooldownTimer?: ReturnType<typeof setTimeout>;
 
   private readonly updateBackgroundOnScroll = (): void => {
-    if (!this.backgroundStage?.nativeElement) return;
     if (this.backgroundFrame !== null) return;
     this.backgroundFrame = requestAnimationFrame(() => {
       this.backgroundFrame = null;
@@ -107,8 +104,6 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
       if (hintEnabled !== this.hintEnabled) {
         this.zone.run(() => this.hintEnabled = hintEnabled);
       }
-      this.swipeReminder.update(hintEnabled && !this.hintPaused && !this.hintCoolingDown
-        ? stage.querySelector<HTMLElement>('.cards .card.active') : null);
     });
   };
 
@@ -152,21 +147,10 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   private settling = false;
   private swipeTimer?: ReturnType<typeof setTimeout>;
 
-  @HostListener('window:pointerup')
-  @HostListener('window:pointercancel')
-  releaseHintAfterTouch(): void {
-    if (!this.dragging && !this.settling) {
-      this.hintPaused = false;
-      this.pointerId = null;
-      this.updateBackgroundOnScroll();
-    }
-  }
-
   onPointerDown(event: PointerEvent): void {
     if (this.lastDeckProgress < 1) return;
     if (!event.isPrimary || event.button !== 0 || this.settling || this.pointerId !== null) return;
     this.hintPaused = true;
-    this.swipeReminder.update(null);
     this.pointerId = event.pointerId;
     this.startX = event.clientX;
     this.startY = event.clientY;
@@ -199,7 +183,6 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
     this.dragging = false;
     if (!commit) {
       this.hintPaused = false;
-      this.updateBackgroundOnScroll();
       this.dragX = 0;
       return;
     }
@@ -221,8 +204,6 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   cancelSwipe(): void {
-    this.hintPaused = false;
-    this.updateBackgroundOnScroll();
     if (this.pointerId === null) return;
     this.pointerId = null;
     this.dragging = false;
@@ -233,11 +214,9 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   changeReview(direction: number): void {
     this.hintPaused = false;
     this.hintCoolingDown = true;
-    this.swipeReminder.update(null);
     clearTimeout(this.hintCooldownTimer);
     this.hintCooldownTimer = setTimeout(() => {
       this.hintCoolingDown = false;
-      this.updateBackgroundOnScroll();
     }, 12000);
     clearTimeout(this.swipeTimer);
     this.pointerId = null;
@@ -248,7 +227,6 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.swipeReminder.destroy();
     clearTimeout(this.hintCooldownTimer);
     this.descriptionScroll.onTouchEnd();
     window.removeEventListener('scroll', this.updateBackgroundOnScroll);
