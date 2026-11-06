@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://valentin-koparov.dev/sitemap.xml
+Sitemap: https://www.valentinkoparov.dev/sitemap.xml
