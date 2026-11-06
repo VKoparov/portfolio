@@ -1,15 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, QueryList, ViewChildren} from '@angular/core';
 import {Observable} from "rxjs";
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {flyInOut} from "../../animations/fly-in-out";
 
 @Component({
     selector: 'app-what-i-do',
     templateUrl: './what-i-do.component.html',
-    styleUrls: ['./what-i-do.component.scss'],
-    animations: [flyInOut]
+    styleUrls: ['./what-i-do.component.scss']
 })
-export class WhatIDoComponent implements OnInit {
+export class WhatIDoComponent implements AfterViewInit, OnDestroy {
 
     templates: { imgSrc: string, logoUrl: string, header: string, action: Function }[] = [
         {
@@ -49,14 +46,49 @@ export class WhatIDoComponent implements OnInit {
 
     @Input() event!: Observable<string>;
 
-    visibility!: boolean;
+    @ViewChildren('revealCard') private cards!: QueryList<ElementRef<HTMLElement>>;
+    private frame: number | null = null;
+    private resizeObserver?: ResizeObserver;
+    private readonly motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    ngOnInit(): void {
-        this.event.subscribe(location => {
-            if (!this.visibility) {
-                this.visibility = location === 'app-what-i-do';
-            }
+    constructor(private readonly zone: NgZone) {}
+
+    private readonly updateScroll = (): void => {
+        if (this.frame !== null) return;
+        this.frame = requestAnimationFrame(() => {
+            this.frame = null;
+            const viewport = window.innerHeight;
+            const mobile = window.matchMedia('(max-width: 60em)').matches;
+            this.cards.forEach((card, index) => {
+                // Measure the stationary slot, never the animated card inside it.
+                const slot = card.nativeElement;
+                const bounds = slot.getBoundingClientRect();
+                const stagger = (mobile ? index % 2 : index) * viewport * 0.035;
+                const distance = Math.max(1, Math.min(viewport * 0.55, bounds.height * 0.9));
+                const progress = this.motionPreference.matches ? 1 :
+                    Math.max(0, Math.min(1, (viewport * 0.92 - bounds.top - stagger) / distance));
+                slot.style.setProperty('--card-progress', progress.toFixed(4));
+            });
         });
+    };
+
+    ngAfterViewInit(): void {
+        this.zone.runOutsideAngular(() => {
+            this.resizeObserver = new ResizeObserver(this.updateScroll);
+            this.cards.forEach(card => this.resizeObserver!.observe(card.nativeElement));
+            window.addEventListener('scroll', this.updateScroll, {passive: true});
+            window.addEventListener('resize', this.updateScroll, {passive: true});
+            this.motionPreference.addEventListener('change', this.updateScroll);
+            this.updateScroll();
+        });
+    }
+
+    ngOnDestroy(): void {
+        window.removeEventListener('scroll', this.updateScroll);
+        window.removeEventListener('resize', this.updateScroll);
+        this.motionPreference.removeEventListener('change', this.updateScroll);
+        this.resizeObserver?.disconnect();
+        if (this.frame !== null) cancelAnimationFrame(this.frame);
     }
 
     handleActionEvent(fun: Function): void {

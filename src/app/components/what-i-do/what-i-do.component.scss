@@ -147,3 +147,38 @@
     }
   }
 }
+
+.grid-1 .grid-inner-content {
+  --card-progress: 0;
+  --entry-x: -24px;
+  --entry-angle: -8deg;
+  perspective: 1000px;
+
+  &:nth-child(even) { --entry-x: 24px; --entry-angle: 8deg; }
+
+  .content-container {
+    opacity: var(--card-progress);
+    transform-origin: 50% 65%;
+    transform:
+      translate3d(calc((1 - var(--card-progress)) * var(--entry-x)), calc((1 - var(--card-progress)) * 72px), 0)
+      rotateX(calc((1 - var(--card-progress)) * 10deg))
+      rotateY(calc((1 - var(--card-progress)) * var(--entry-angle)))
+      scale(calc(0.92 + var(--card-progress) * 0.08));
+    transition: opacity 100ms linear, transform 120ms linear;
+
+    &:focus-visible {
+      opacity: 1;
+      transform: none;
+      outline: 2px solid #fff;
+      outline-offset: 6px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-1 .grid-inner-content .content-container {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
