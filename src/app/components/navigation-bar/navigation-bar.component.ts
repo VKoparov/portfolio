@@ -1,12 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable, Subject} from "rxjs";
-import {fade} from "../../animations/fade";
 
 @Component({
     selector: 'app-navigation-bar',
     templateUrl: './navigation-bar.component.html',
-    styleUrls: ['./navigation-bar.component.scss'],
-    animations: [fade]
+    styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent implements OnInit {
 
@@ -19,6 +17,17 @@ export class NavigationBarComponent implements OnInit {
     isLogoVisible: boolean = false;
 
     isNavigationOpen: boolean = false;
+
+    isBackgroundReady = false;
+
+    async handleBackgroundLoad(image: HTMLImageElement): Promise<void> {
+        try {
+            await image.decode();
+            this.isBackgroundReady = true;
+        } catch {
+            // Keep the dark fallback if the image cannot be decoded.
+        }
+    }
 
     readonly siteNavigation: string[] = [
         'app-homepage',
@@ -49,7 +58,8 @@ export class NavigationBarComponent implements OnInit {
 
         const element = `${elementId.toLowerCase()}`;
 
-        this.isNavigationOpen = !this.isNavigationOpen;
+        this.isNavigationOpen = false;
+        this.isLogoVisible = this.currentLocation !== this.homepage;
         this.handleMainScrollBehavior();
 
         (document.getElementsByTagName(element)[0] as HTMLElement)

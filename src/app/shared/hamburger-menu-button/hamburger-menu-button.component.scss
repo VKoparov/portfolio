@@ -6,7 +6,7 @@
 
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 400ms;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 160ms ease;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -34,7 +34,7 @@
 
 .line {
   fill: none;
-  transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
+  transition: stroke-dasharray 300ms cubic-bezier(0.22, 1, 0.36, 1), stroke-dashoffset 300ms cubic-bezier(0.22, 1, 0.36, 1), stroke 160ms ease;
   stroke: #000;
   stroke-width: 5.5;
   stroke-linecap: round;
@@ -54,4 +54,10 @@
 
 .ham1.active .bottom {
   stroke-dashoffset: -138px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ham, .line {
+    transition: none;
+  }
 }
