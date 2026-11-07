@@ -116,7 +116,9 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
       this.socialTab.nativeElement.parentElement!.classList.remove('wave-at-corner');
       return;
     }
-    const h = window.innerHeight, cy = h/2, p = this.dockProgress;
+    const h = window.innerHeight, p = this.dockProgress;
+    const anchor = this.socialTab.nativeElement.parentElement!;
+    const cy = anchor.getBoundingClientRect().top + anchor.offsetHeight / 2;
     const travel = Math.min(1, p/0.8);
     const q = Math.max(0, (p-0.8)/0.2);
     const spread = q*q*(3-2*q);
@@ -136,7 +138,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     this.wavePath.nativeElement.setAttribute('d', `M${v[0]} ${v[1]} `+[2,8,14,20].map(i=>`C${v.slice(i,i+6).join(' ')}`).join(' ')+'Z');
     this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy+(h-cy)*travel}px`;
     this.waveArrow.nativeElement.setAttribute('transform', `translate(${120+(-24-2*spread)*size} ${cy+(h-26*size-cy)*travel}) rotate(${45*spread})`);
-    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (cy - 26)}px)`;
+    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (h - 26 - cy)}px)`;
     this.socialTab.nativeElement.parentElement!.classList.toggle('wave-at-corner', p >= 0.999);
   }
 
