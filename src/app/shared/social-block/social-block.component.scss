@@ -170,6 +170,15 @@
     top: calc(50dvh - 52px);
     transform: none;
 
+    .social-links { transition: none; }
+
+    &.wave-at-corner:not(.collapsed) {
+      .social-ico:nth-child(1) { transform: translate(14px, -23px); }
+      .social-ico:nth-child(2) { transform: translate(-14px, -35px); }
+      .social-ico:nth-child(3) { transform: translate(-36px, -38px); }
+      .social-ico:nth-child(4) { transform: translate(-49px, -35px); }
+    }
+
     .social-tab {
       position: fixed;
       inset: 0 0 auto auto;

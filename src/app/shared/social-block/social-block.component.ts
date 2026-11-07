@@ -7,6 +7,7 @@ import {AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild} from
 })
 export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   @ViewChild('socialTab', {static: true}) private socialTab!: ElementRef<HTMLElement>;
+  @ViewChild('linksContainer', {static: true}) private linksContainer!: ElementRef<HTMLElement>;
   @ViewChild('waveSvg', {static: true}) private waveSvg!: ElementRef<SVGSVGElement>;
   @ViewChild('wavePath', {static: true}) private wavePath!: ElementRef<SVGPathElement>;
   @ViewChild('waveGroup', {static: true}) private waveGroup!: ElementRef<SVGGElement>;
@@ -106,11 +107,20 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
       75,cy+15,79,cy+26,96,cy+29,106,cy+32,120,cy+36,120,cy+60];
     const corner = [120,h-100,120,h-72,112,h-65,96,h-61,74,h-57,66,h-44,62,h-28,
       58,h-10,36,h,14,h,52,h,86,h,120,h];
-    const v = side.map((value,index) => value+(corner[index]-value)*(index%2?travel:spread));
+    const size = 0.82;
+    const v = side.map((value,index) => {
+      const fromOrigin = index % 2 ? cy : 120;
+      const toOrigin = index % 2 ? h : 120;
+      const from = fromOrigin + (value - fromOrigin) * size;
+      const to = toOrigin + (corner[index] - toOrigin) * size;
+      return from + (to - from) * (index % 2 ? travel : spread);
+    });
     this.waveSvg.nativeElement.setAttribute('viewBox', `0 0 120 ${h}`);
     this.wavePath.nativeElement.setAttribute('d', `M${v[0]} ${v[1]} `+[2,8,14,20].map(i=>`C${v.slice(i,i+6).join(' ')}`).join(' ')+'Z');
     this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy+(h-cy)*travel}px`;
-    this.waveArrow.nativeElement.setAttribute('transform', `translate(${96-2*spread} ${cy+(h-26-cy)*travel}) rotate(${45*spread})`);
+    this.waveArrow.nativeElement.setAttribute('transform', `translate(${120+(-24-2*spread)*size} ${cy+(h-26*size-cy)*travel}) rotate(${45*spread})`);
+    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (cy - 26)}px)`;
+    this.socialTab.nativeElement.parentElement!.classList.toggle('wave-at-corner', p >= 0.999);
   }
 
   private scheduleOverlapCheck(): void {
