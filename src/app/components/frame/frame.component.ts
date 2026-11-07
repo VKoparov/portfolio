@@ -10,6 +10,7 @@ export class FrameComponent {
 
   location!: string;
   logoVisible = false;
+  navigationOpen = false;
 
   visibilitySubject: Subject<string> = new Subject<string>();
 

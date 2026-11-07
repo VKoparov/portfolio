@@ -212,3 +212,12 @@
     }
   }
 }
+
+@media screen and (max-width: 60em) {
+  .social-ico-block.bottom-corner.wave-at-corner:not(.collapsed) {
+    .social-ico:nth-child(1) { transform: translate(14px, -23px); }
+    .social-ico:nth-child(2) { transform: translate(-14px, -35px); }
+    .social-ico:nth-child(3) { transform: translate(-36px, -38px); }
+    .social-ico:nth-child(4) { transform: translate(-49px, -35px); }
+  }
+}

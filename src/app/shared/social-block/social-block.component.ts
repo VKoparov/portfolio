@@ -12,6 +12,33 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   @ViewChild('wavePath', {static: true}) private wavePath!: ElementRef<SVGPathElement>;
   @ViewChild('waveGroup', {static: true}) private waveGroup!: ElementRef<SVGGElement>;
   @ViewChild('waveArrow', {static: true}) private waveArrow!: ElementRef<SVGGElement>;
+  private cornerFrame = 0;
+  private bottomProgress = 0;
+  bottomCorner = false;
+  @Input() set menuOpen(open: boolean) {
+    this.bottomCorner = open;
+    this.expanded = false;
+    cancelAnimationFrame(this.cornerFrame);
+    if (!this.mobile) {
+      this.bottomProgress = open ? 1 : 0;
+      return;
+    }
+    const start = this.bottomProgress;
+    const target = open ? 1 : 0;
+    const started = performance.now();
+    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 450;
+    this.zone.runOutsideAngular(() => {
+      const frame = (time: number) => {
+        const t = duration ? Math.min(1, (time - started) / duration) : 1;
+        const eased = t * t * (3 - 2 * t);
+        this.bottomProgress = start + (target - start) * eased;
+        this.renderWave();
+        if (t < 1) this.cornerFrame = requestAnimationFrame(frame);
+        else this.cornerFrame = 0;
+      };
+      this.cornerFrame = requestAnimationFrame(frame);
+    });
+  }
   private dockProgress = 0;
   private dockFrame = 0;
   private wantsCorner = false;
@@ -130,19 +157,23 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
       75,cy+15,79,cy+26,96,cy+29,106,cy+32,120,cy+36,120,cy+60];
     const corner = [120,100,120,72,112,65,96,61,74,57,66,44,62,28,
       58,10,36,0,14,0,52,0,86,0,120,0];
+    const cornerY = h * this.bottomProgress;
+    const direction = 1 - 2 * this.bottomProgress;
     const size = 0.82;
     const v = side.map((value,index) => {
       const fromOrigin = index % 2 ? cy : 120;
-      const toOrigin = index % 2 ? 0 : 120;
+      const toOrigin = index % 2 ? cornerY : 120;
       const from = fromOrigin + (value - fromOrigin) * size;
-      const to = toOrigin + (corner[index] - toOrigin) * size;
+      const to = index % 2
+        ? cornerY + corner[index] * direction * size
+        : toOrigin + (corner[index] - toOrigin) * size;
       return from + (to - from) * (index % 2 ? travel : spread);
     });
     this.waveSvg.nativeElement.setAttribute('viewBox', `0 0 120 ${h}`);
     this.wavePath.nativeElement.setAttribute('d', `M${v[0]} ${v[1]} `+[2,8,14,20].map(i=>`C${v.slice(i,i+6).join(' ')}`).join(' ')+'Z');
-    this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy*(1-travel)}px`;
-    this.waveArrow.nativeElement.setAttribute('transform', `translate(${120+(-24-2*spread)*size} ${cy+(26*size-cy)*travel}) rotate(${-45*spread})`);
-    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (26 - cy)}px)`;
+    this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy+(cornerY-cy)*travel}px`;
+    this.waveArrow.nativeElement.setAttribute('transform', `translate(${120+(-24-2*spread)*size} ${cy+(cornerY+direction*26*size-cy)*travel}) rotate(${(-45+90*this.bottomProgress)*spread})`);
+    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (cornerY + direction * 26 - cy)}px)`;
     this.socialTab.nativeElement.parentElement!.classList.toggle('wave-at-corner', p >= 0.999);
   }
 
@@ -163,8 +194,8 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     // Measure the normal footprint, even while visually shrunk, to avoid flicker.
     const centerY = tab.parentElement!.getBoundingClientRect().top + tab.parentElement!.offsetHeight / 2;
     const area = {left: window.innerWidth - 64, right: window.innerWidth,
-      top: this.dockProgress > 0.8 ? 0 : centerY - 32,
-      bottom: this.dockProgress > 0.8 ? 64 : centerY + 32};
+      top: this.dockProgress > 0.8 ? Math.max(0, window.innerHeight * this.bottomProgress - 64) : centerY - 32,
+      bottom: this.dockProgress > 0.8 ? Math.min(window.innerHeight, window.innerHeight * this.bottomProgress + 64) : centerY + 32};
     const overlaps = (rect: DOMRect) => rect.width > 0 && rect.height > 0 &&
       rect.left < area.right && rect.right > area.left && rect.top < area.bottom && rect.bottom > area.top;
     const candidates = new Set<Element>();
@@ -197,6 +228,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     window.removeEventListener('resize', this.onViewportChange);
     window.removeEventListener('scroll', this.onScroll, true);
     clearTimeout(this.dockTimer);
+    cancelAnimationFrame(this.cornerFrame);
     cancelAnimationFrame(this.collisionFrame);
     cancelAnimationFrame(this.dockFrame);
   }

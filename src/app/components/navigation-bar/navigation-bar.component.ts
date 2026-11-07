@@ -14,6 +14,7 @@ export class NavigationBarComponent implements OnInit {
 
     menuItemClickEvent: Subject<void> = new Subject<void>();
 
+    @Output() navigationOpenChange = new EventEmitter<boolean>();
     @Output() logoVisibilityChange = new EventEmitter<boolean>();
     private logoVisible = false;
 
@@ -83,6 +84,7 @@ export class NavigationBarComponent implements OnInit {
     }
 
     private handleMainScrollBehavior() {
+        this.navigationOpenChange.emit(this.isNavigationOpen);
         document.body.style.overflow = this.isNavigationOpen ? 'hidden' : '';
     }
 }
