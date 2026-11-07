@@ -197,3 +197,18 @@
     }
   }
 }
+
+@media screen and (max-width: 60em) {
+  .social-ico-block.fast-docking.collapsed {
+    .social-ico {
+      transition-duration: 120ms, 100ms;
+      transition-delay: 0ms;
+    }
+
+    .social-tab-surface {
+      animation: none;
+      transform: scale(1);
+      transition-duration: 120ms;
+    }
+  }
+}

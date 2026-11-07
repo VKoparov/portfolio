@@ -16,6 +16,8 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   private dockFrame = 0;
   private wantsCorner = false;
   private dockTarget = false;
+  private dockScrollStart = 0;
+  fastDocking = false;
   private dockTimer?: ReturnType<typeof setTimeout>;
   @Input() set cornerDocked(value: boolean) {
     this.wantsCorner = value;
@@ -29,6 +31,15 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   expanded = false;
   private mobile?: MediaQueryList;
   private readonly onScroll = () => {
+    if (this.mobile?.matches && this.dockTarget && !this.fastDocking && this.dockProgress < 1 &&
+        Math.abs(window.scrollY - this.dockScrollStart) > window.innerHeight * 0.35) {
+      this.fastDocking = true;
+      clearTimeout(this.dockTimer);
+      cancelAnimationFrame(this.dockFrame);
+      this.dockFrame = 0;
+      // Finish absorbing the icons first, then take the shorter trip.
+      this.dockTimer = setTimeout(() => this.moveWave(1), 120);
+    }
     if (this.mobile?.matches && this.pastHero && this.expanded) {
       this.expanded = false;
     }
@@ -58,6 +69,8 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     const target = !!this.mobile?.matches && this.wantsCorner;
     if (target === this.dockTarget) return;
     this.dockTarget = target;
+    this.dockScrollStart = window.scrollY;
+    this.fastDocking = false;
     this.expanded = false;
     this.avoidingContent = false;
     clearTimeout(this.dockTimer);
@@ -66,7 +79,10 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     if (target) {
       // Let the staggered icons finish entering the side pool before transport.
       this.pastHero = true;
-      const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1050;
+      const hero = document.querySelector('.frame-container app-homepage .homepage-container');
+      this.fastDocking = !!hero && hero.getBoundingClientRect().bottom < -window.innerHeight * 0.35;
+      const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 :
+        (this.fastDocking ? 120 : 1050);
       this.dockTimer = setTimeout(() => this.moveWave(1), delay);
     } else {
       // Return the pool to the side before releasing its icons.
@@ -79,7 +95,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   private moveWave(target: number, complete?: () => void): void {
     cancelAnimationFrame(this.dockFrame);
     const start = this.dockProgress;
-    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 550 * Math.abs(target - start);
+    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : (this.fastDocking ? 220 : 550) * Math.abs(target - start);
     const started = performance.now();
     this.zone.runOutsideAngular(() => {
       const frame = (time: number) => {
