@@ -152,3 +152,88 @@
     transform: none !important;
   }
 }
+
+@media screen and (max-width: 60em) {
+  .contacts-container {
+    height: 100vh;
+    height: 100svh;
+    padding-top: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: none;
+
+    .background-image {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .navigation-button-container {
+      inset: 0;
+      padding: 88px 16px max(24px, env(safe-area-inset-bottom));
+      box-sizing: border-box;
+
+      .wrap-text {
+        height: 100%;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto auto;
+        gap: clamp(8px, 3svh, 24px);
+
+        .contact-container {
+          align-self: center;
+        }
+
+        .logo-row,
+        .credits-row {
+          float: none;
+          margin: 0;
+        }
+
+        .logo-row img {
+          max-width: 100%;
+        }
+
+        .credits-row li {
+          font-size: clamp(10px, 2.8vw, 14px);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 60em) and (max-height: 500px) {
+  .contacts-container .navigation-button-container {
+    padding-top: 80px;
+    padding-bottom: 16px;
+
+    .wrap-text {
+      .contact-container .contact { line-height: 28px; }
+      .logo-row img { height: 40px; }
+    }
+  }
+}
+
+@media screen and (max-width: 60em) and (min-height: 501px) {
+  .contacts-container .navigation-button-container .wrap-text .contact-container {
+    position: absolute;
+    // The wrapper starts below the header; this places the links near 65%
+    // of the full section while keeping the footer in its existing grid rows.
+    top: calc(65svh - 88px);
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    transition: none;
+  }
+
+  .contacts-container .navigation-button-container .wrap-text .logo-row {
+    grid-row: 2;
+  }
+
+  .contacts-container .navigation-button-container .wrap-text .credits-row {
+    grid-row: 3;
+  }
+}
