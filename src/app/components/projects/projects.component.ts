@@ -144,6 +144,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         }
     ];
 
+    activeProject = this.projects[1];
+
     ngOnInit(): void {
         this.startTimer();
     }
@@ -202,6 +204,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     private finishNavigation(): void {
+        const activeId = this.slide.nativeElement.children[1]?.getAttribute('data-project-id');
+        this.activeProject = this.projects.find(project => project.identifier === activeId) ?? this.activeProject;
         const description = this.slide.nativeElement.querySelector<HTMLElement>('.item:nth-child(2) .des');
         if (description) description.scrollTop = 0;
         this.startTimer();
