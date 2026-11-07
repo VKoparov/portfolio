@@ -8,6 +8,7 @@
   background: black;
 
   overflow: hidden;
+  contain: paint;
 }
 
 .top-fade {
@@ -271,8 +272,11 @@ div#slide {
     height: 100%;
     background: #FFFFFF;
     border-radius: 999px;
-    width: 0;
-    transition: width 0.05s linear;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+    transition: transform 0.05s linear;
   }
 }
 

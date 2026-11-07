@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { ProjectsComponent } from './projects.component';
@@ -66,7 +66,7 @@ describe('ProjectsComponent', () => {
     spyOn(component, 'pauseTimer').and.callThrough();
     spyOn(component, 'resumeTimer').and.callThrough();
 
-    desDebugEl.triggerEventHandler('touchstart', {});
+    desDebugEl.triggerEventHandler('touchstart', {touches: []});
     expect(component.pauseTimer).toHaveBeenCalled();
     expect(component.intervalId).toBeNull();
 
@@ -74,13 +74,25 @@ describe('ProjectsComponent', () => {
     expect(component.resumeTimer).toHaveBeenCalled();
     expect(component.intervalId).toBeTruthy();
 
-    desDebugEl.triggerEventHandler('touchstart', {});
+    desDebugEl.triggerEventHandler('touchstart', {touches: []});
     expect(component.intervalId).toBeNull();
 
     desDebugEl.triggerEventHandler('touchcancel', {});
     expect(component.resumeTimer).toHaveBeenCalled();
     expect(component.intervalId).toBeTruthy();
   });
+
+  it('should update progress and cycle the active project after five seconds', fakeAsync(() => {
+    component.startTimer();
+    tick(2500);
+    expect(component.progress).toBe(50);
+    const progress = fixture.nativeElement.querySelector('.time-progress') as HTMLElement;
+    expect(progress.style.transform).toBe('scaleX(0.5)');
+    tick(2500);
+    expect(component.activeProject).toBe(component.projects[2]);
+    expect(component.progress).toBe(0);
+    component.pauseTimer();
+  }));
 
   it('should clear interval on ngOnDestroy', () => {
     expect(component.intervalId).toBeTruthy();
@@ -103,7 +115,7 @@ describe('ProjectsComponent', () => {
 
     component.progress = 45;
     fixture.detectChanges();
-    expect(timeProgressEl.nativeElement.style.width).toBe('45%');
+    expect(timeProgressEl.nativeElement.style.transform).toBe('scaleX(0.45)');
   });
 
   it('should freeze progress and add paused class when timer is paused', () => {

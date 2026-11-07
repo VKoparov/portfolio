@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LenisService} from '../../services/lenis.service';
 import {DescriptionScrollController} from '../../shared/description-scroll.controller';
 
@@ -11,9 +11,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     readonly descriptionScroll: DescriptionScrollController;
 
+    @ViewChild('timeProgress', {static: true}) private timeProgress!: ElementRef<HTMLElement>;
     @ViewChild('slide') private slide!: ElementRef<HTMLElement>;
 
-    constructor(lenis: LenisService) {
+    constructor(lenis: LenisService, private readonly zone: NgZone) {
         this.descriptionScroll = new DescriptionScrollController(lenis);
     }
 
@@ -21,7 +22,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     readonly DURATION = 5000;
     readonly STEP = 50;
     elapsedTime = 0;
-    progress = 0;
+    private progressValue = 0;
+    get progress(): number { return this.progressValue; }
+    set progress(value: number) {
+        this.progressValue = value;
+        if (this.timeProgress) {
+            this.timeProgress.nativeElement.style.transform = `scaleX(${value / 100})`;
+        }
+    }
     isPaused = false;
 
     projects: {
@@ -181,14 +189,18 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
-        this.intervalId = setInterval(() => {
-            this.elapsedTime += this.STEP;
-            this.progress = Math.min(100, (this.elapsedTime / this.DURATION) * 100);
+        // Keep the 20Hz timer out of Angular's application-wide change detection.
+        // Only actual project changes need to update the template.
+        this.zone.runOutsideAngular(() => {
+            this.intervalId = setInterval(() => {
+                this.elapsedTime += this.STEP;
+                this.progress = Math.min(100, (this.elapsedTime / this.DURATION) * 100);
 
-            if (this.elapsedTime >= this.DURATION) {
-                this.nextProject();
-            }
-        }, this.STEP);
+                if (this.elapsedTime >= this.DURATION) {
+                    this.zone.run(() => this.nextProject());
+                }
+            }, this.STEP);
+        });
     }
 
     nextProject(): void {

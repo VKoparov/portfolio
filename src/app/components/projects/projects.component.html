@@ -6,7 +6,7 @@
     </div>
     <div class="controls-container">
         <div class="time-indicator" [class.paused]="isPaused" aria-label="Project timer indicator">
-            <div class="time-progress" [style.width.%]="progress"></div>
+            <div #timeProgress class="time-progress"></div>
         </div>
         <div class="buttons">
             <a *ngIf="activeProject.url" class="project-link" [href]="activeProject.url" target="_blank" rel="noopener noreferrer"
