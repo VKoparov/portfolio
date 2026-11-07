@@ -6,9 +6,11 @@
     </div>
     <button #socialTab class="social-tab" type="button" (click)="toggleSocials()"
             [attr.aria-expanded]="!collapsed" [attr.aria-label]="collapsed ? 'Show social links' : 'Hide social links'">
-        <svg class="social-tab-surface" viewBox="0 0 44 100" aria-hidden="true">
-            <path d="M44 0C44 20 42 25 26 28C11 30 2 38 2 50C2 62 11 70 26 72C42 75 44 80 44 100Z" />
-            <g class="social-tab-arrow"><path d="m26 43-7 7 7 7" /></g>
+        <svg #waveSvg class="wave-svg" aria-hidden="true" preserveAspectRatio="none">
+            <g #waveGroup class="social-tab-surface">
+                <path #wavePath class="wave-body" />
+                <g #waveArrow class="wave-arrow-position"><g class="social-tab-arrow"><path d="m3-6-6 6 6 6" /></g></g>
+            </g>
         </svg>
     </button>
 </div>

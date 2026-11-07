@@ -162,3 +162,28 @@
     animation: none !important;
   }
 }
+
+// Transport the existing liquid surface without changing its icon animations.
+@media screen and (max-width: 60em) {
+  .social-ico-block {
+    top: calc(50vh - 52px);
+    top: calc(50dvh - 52px);
+    transform: none;
+
+    .social-tab {
+      position: fixed;
+      inset: 0 0 auto auto;
+      width: 120px;
+      height: 100vh;
+      height: 100dvh;
+      transform: none !important;
+      pointer-events: none;
+
+      .wave-svg { display: block; width: 100%; height: 100%; overflow: visible; transition: none; }
+      .social-tab-surface { transform-box: view-box; filter: none; }
+      .wave-body { pointer-events: visiblePainted; cursor: pointer; transition: none; }
+      .wave-arrow-position { transition: none; }
+      .social-tab-arrow { transform-origin: 0 0; pointer-events: none; }
+    }
+  }
+}

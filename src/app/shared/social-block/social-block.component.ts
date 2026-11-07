@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-social-block',
@@ -7,6 +7,16 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angul
 })
 export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   @ViewChild('socialTab', {static: true}) private socialTab!: ElementRef<HTMLElement>;
+  @ViewChild('waveSvg', {static: true}) private waveSvg!: ElementRef<SVGSVGElement>;
+  @ViewChild('wavePath', {static: true}) private wavePath!: ElementRef<SVGPathElement>;
+  @ViewChild('waveGroup', {static: true}) private waveGroup!: ElementRef<SVGGElement>;
+  @ViewChild('waveArrow', {static: true}) private waveArrow!: ElementRef<SVGGElement>;
+  private dockProgress = 0;
+  private dockFrame = 0;
+  private dockTimer?: ReturnType<typeof setTimeout>;
+  private heroPastTarget = false;
+  constructor(private readonly zone: NgZone) {}
+
   avoidingContent = false;
   private collisionFrame = 0;
   pastHero = false;
@@ -22,6 +32,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   private readonly onViewportChange = () => {
     this.expanded = false;
     this.observeHeroExit();
+    this.renderWave();
     this.scheduleOverlapCheck();
   };
 
@@ -35,6 +46,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     window.addEventListener('resize', this.onViewportChange);
     window.addEventListener('scroll', this.onScroll, {passive: true, capture: true});
     this.observeHeroExit();
+    this.renderWave();
   }
 
   private observeHeroExit(): void {
@@ -45,11 +57,60 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     // before the service cards below it enter the viewport.
     const exitLine = Math.max(0, window.innerHeight - 32);
     this.heroObserver = new IntersectionObserver(entries => {
-      this.pastHero = entries[0].boundingClientRect.bottom <= exitLine;
-      if (!this.pastHero) this.expanded = false;
+      const hidden = entries[0].boundingClientRect.bottom <= exitLine;
+      if (hidden !== this.heroPastTarget) {
+        this.heroPastTarget = hidden;
+        this.expanded = false;
+        clearTimeout(this.dockTimer);
+        if (hidden) {
+          this.pastHero = true;
+          this.dockTimer = setTimeout(() => this.moveWave(1),
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1100);
+        } else {
+          this.moveWave(0, () => { if (!this.heroPastTarget) this.pastHero = false; });
+        }
+      }
       this.scheduleOverlapCheck();
     }, {threshold: 0, rootMargin: `-${exitLine}px 0px 0px 0px`});
     this.heroObserver.observe(hero);
+  }
+
+  private moveWave(target: number, complete?: () => void): void {
+    cancelAnimationFrame(this.dockFrame);
+    const start = this.dockProgress;
+    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1100 * Math.abs(target - start);
+    const started = performance.now();
+    this.zone.runOutsideAngular(() => {
+      const frame = (time: number) => {
+        const t = duration ? Math.min(1, (time - started) / duration) : 1;
+        const eased = t*t*t*(t*(t*6-15)+10);
+        this.dockProgress = start + (target-start)*eased;
+        this.renderWave();
+        if (t < 1) this.dockFrame = requestAnimationFrame(frame);
+        else {
+          this.dockFrame = 0;
+          this.zone.run(() => { complete?.(); this.scheduleOverlapCheck(); });
+        }
+      };
+      this.dockFrame = requestAnimationFrame(frame);
+    });
+  }
+
+  private renderWave(): void {
+    if (!this.waveSvg) return;
+    const h = window.innerHeight, cy = h/2, p = this.dockProgress;
+    const travel = Math.min(1, p/0.8);
+    const q = Math.max(0, (p-0.8)/0.2);
+    const spread = q*q*(3-2*q);
+    const side = [120,cy-60,120,cy-36,106,cy-32,96,cy-29,79,cy-26,75,cy-15,75,cy,
+      75,cy+15,79,cy+26,96,cy+29,106,cy+32,120,cy+36,120,cy+60];
+    const corner = [120,h-100,120,h-72,112,h-65,96,h-61,74,h-57,66,h-44,62,h-28,
+      58,h-10,36,h,14,h,52,h,86,h,120,h];
+    const v = side.map((value,index) => value+(corner[index]-value)*(index%2?travel:spread));
+    this.waveSvg.nativeElement.setAttribute('viewBox', `0 0 120 ${h}`);
+    this.wavePath.nativeElement.setAttribute('d', `M${v[0]} ${v[1]} `+[2,8,14,20].map(i=>`C${v.slice(i,i+6).join(' ')}`).join(' ')+'Z');
+    this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy+(h-cy)*travel}px`;
+    this.waveArrow.nativeElement.setAttribute('transform', `translate(${96-2*spread} ${cy+(h-26-cy)*travel}) rotate(${45*spread})`);
   }
 
   private scheduleOverlapCheck(): void {
@@ -68,7 +129,9 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     const tab = this.socialTab.nativeElement;
     // Measure the normal footprint, even while visually shrunk, to avoid flicker.
     const centerY = tab.parentElement!.getBoundingClientRect().top + tab.parentElement!.offsetHeight / 2;
-    const area = {left: window.innerWidth - 48, right: window.innerWidth, top: centerY - 32, bottom: centerY + 32};
+    const area = {left: window.innerWidth - 64, right: window.innerWidth,
+      top: this.dockProgress > 0.8 ? window.innerHeight - 64 : centerY - 32,
+      bottom: this.dockProgress > 0.8 ? window.innerHeight : centerY + 32};
     const overlaps = (rect: DOMRect) => rect.width > 0 && rect.height > 0 &&
       rect.left < area.right && rect.right > area.left && rect.top < area.bottom && rect.bottom > area.top;
     const candidates = new Set<Element>();
@@ -102,6 +165,8 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     window.removeEventListener('resize', this.onViewportChange);
     window.removeEventListener('scroll', this.onScroll, true);
     cancelAnimationFrame(this.collisionFrame);
+    cancelAnimationFrame(this.dockFrame);
+    clearTimeout(this.dockTimer);
   }
 
 
