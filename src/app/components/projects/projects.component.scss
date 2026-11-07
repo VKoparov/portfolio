@@ -48,12 +48,8 @@ div#slide {
   display: inline-block;
 }
 
-#slide {
-  width: max-content;
-}
-
 .item {
-  width: 200px;
+  width: 15%;
   height: 300px;
   background-position: center;
   display: inline-block;
@@ -67,10 +63,6 @@ div#slide {
   z-index: 5;
 }
 
-.item {
-  width: 15%;
-}
-
 .item:nth-child(1) {
   z-index: 0;
   opacity: 0;
@@ -78,9 +70,6 @@ div#slide {
 
 .item:nth-child(2) {
   z-index: 1;
-}
-
-.item:nth-child(2) {
   left: 0;
   top: 0;
   transform: translate(0, 0);
@@ -108,20 +97,8 @@ div#slide {
   left: 50%;
 }
 
-.item:nth-child(3) {
-  left: 50%;
-}
-
-.item:nth-child(4) {
-  left: calc(50% + 220px);
-}
-
 .item:nth-child(4) {
   left: calc(65% + 20px);
-}
-
-.item:nth-child(5) {
-  left: calc(50% + 440px);
 }
 
 .item:nth-child(5) {
@@ -131,9 +108,6 @@ div#slide {
 .item:nth-child(n+6) {
   left: calc(50% + 660px);
   opacity: 0;
-}
-
-.item:nth-child(n+6) {
   z-index: -1;
 }
 
@@ -194,53 +168,6 @@ div#slide {
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
-}
-
-.wrapper button {
-  padding: 10px 20px;
-  border: none;
-  opacity: 0;
-  animation: showcontent 650ms cubic-bezier(0.22, 0.61, 0.36, 1) 160ms 1 both;
-}
-
-.wrapper .button {
-  position: absolute;
-
-  cursor: pointer;
-
-  & {
-    width: 90px;
-    height: fit-content;
-
-    padding: 13px 30px 13px 30px;
-
-    font-size: 14px;
-    line-height: 24px;
-    font-weight: 600;
-    letter-spacing: normal;
-    text-align: center;
-
-    color: #252525;
-    background: #FFFFFF;
-
-    border-radius: 25px;
-
-    text-decoration: none;
-    outline: 0;
-
-    opacity: 0;
-
-    animation: showcontent 650ms cubic-bezier(0.22, 0.61, 0.36, 1) 160ms 1 both;
-  }
-
-  &:hover {
-    color: #FFFFFF;
-    background: #252525;
-  }
-}
-
-.wrapper button {
-  color: #000;
 }
 
 .controls-container {
@@ -379,12 +306,6 @@ div#slide {
   }
 }
 
-.button {
-  background-color: #fff;
-  color: #000;
-  padding: 5px 15px;
-}
-
 @keyframes showcontent {
 
   from {
@@ -406,9 +327,7 @@ div#slide {
 
 @media (prefers-reduced-motion: reduce) {
   .wrapper .name,
-  .wrapper .des,
-  .wrapper button,
-  .wrapper .button {
+  .wrapper .des {
     animation: fadecontent 250ms ease-out both;
     transform: none;
     filter: none;
@@ -487,9 +406,6 @@ div#slide {
 }
 
 @media(max-width: 550px) {
-  .item:nth-child(n+6) {
-  }
-
   .item:nth-child(5) {
     opacity: 0;
   }
@@ -607,12 +523,6 @@ div#slide {
     margin: 0;
     font-size: 14px;
     line-height: 1.6;
-  }
-
-  .wrapper .button {
-    position: static;
-    padding: 10px 24px;
-    width: max-content;
   }
 
   .item:nth-child(n+3) {
