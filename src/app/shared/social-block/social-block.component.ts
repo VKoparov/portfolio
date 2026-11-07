@@ -52,12 +52,24 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
 
   private observeHeroExit(): void {
     this.heroObserver?.disconnect();
+    if (!this.mobile?.matches) {
+      clearTimeout(this.dockTimer);
+      cancelAnimationFrame(this.dockFrame);
+      this.dockFrame = 0;
+      this.dockProgress = 0;
+      this.heroPastTarget = false;
+      this.pastHero = false;
+      this.avoidingContent = false;
+      this.renderWave();
+      return;
+    }
     const hero = document.querySelector('.frame-container app-homepage .homepage-container');
     if (!hero) return;
     // Begin tucking the links away after the first 32px of hero scroll,
     // before the service cards below it enter the viewport.
     const exitLine = Math.max(0, window.innerHeight - 32);
     this.heroObserver = new IntersectionObserver(entries => {
+      if (!this.mobile?.matches) return;
       const hidden = entries[0].boundingClientRect.bottom <= exitLine;
       if (hidden !== this.heroPastTarget) {
         this.heroPastTarget = hidden;
@@ -99,6 +111,11 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
 
   private renderWave(): void {
     if (!this.waveSvg) return;
+    if (!this.mobile?.matches) {
+      this.linksContainer.nativeElement.style.removeProperty('transform');
+      this.socialTab.nativeElement.parentElement!.classList.remove('wave-at-corner');
+      return;
+    }
     const h = window.innerHeight, cy = h/2, p = this.dockProgress;
     const travel = Math.min(1, p/0.8);
     const q = Math.max(0, (p-0.8)/0.2);
