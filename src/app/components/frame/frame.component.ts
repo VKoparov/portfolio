@@ -9,6 +9,7 @@ import {Subject} from "rxjs";
 export class FrameComponent {
 
   location!: string;
+  logoVisible = false;
 
   visibilitySubject: Subject<string> = new Subject<string>();
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 
 @Component({
@@ -14,7 +14,16 @@ export class NavigationBarComponent implements OnInit {
 
     menuItemClickEvent: Subject<void> = new Subject<void>();
 
-    isLogoVisible: boolean = false;
+    @Output() logoVisibilityChange = new EventEmitter<boolean>();
+    private logoVisible = false;
+
+    get isLogoVisible(): boolean { return this.logoVisible; }
+
+    set isLogoVisible(visible: boolean) {
+        if (visible === this.logoVisible) return;
+        this.logoVisible = visible;
+        this.logoVisibilityChange.emit(visible);
+    }
 
     isNavigationOpen: boolean = false;
 

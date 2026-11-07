@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-social-block',
@@ -14,8 +14,13 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   @ViewChild('waveArrow', {static: true}) private waveArrow!: ElementRef<SVGGElement>;
   private dockProgress = 0;
   private dockFrame = 0;
+  private wantsCorner = false;
+  private dockTarget = false;
   private dockTimer?: ReturnType<typeof setTimeout>;
-  private heroPastTarget = false;
+  @Input() set cornerDocked(value: boolean) {
+    this.wantsCorner = value;
+    if (this.mobile) this.syncDock();
+  }
   constructor(private readonly zone: NgZone) {}
 
   avoidingContent = false;
@@ -23,7 +28,6 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   pastHero = false;
   expanded = false;
   private mobile?: MediaQueryList;
-  private heroObserver?: IntersectionObserver;
   private readonly onScroll = () => {
     if (this.mobile?.matches && this.pastHero && this.expanded) {
       this.expanded = false;
@@ -32,7 +36,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   };
   private readonly onViewportChange = () => {
     this.expanded = false;
-    this.observeHeroExit();
+    this.syncDock();
     this.renderWave();
     this.scheduleOverlapCheck();
   };
@@ -46,52 +50,36 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     this.mobile.addEventListener('change', this.onViewportChange);
     window.addEventListener('resize', this.onViewportChange);
     window.addEventListener('scroll', this.onScroll, {passive: true, capture: true});
-    this.observeHeroExit();
+    this.syncDock();
     this.renderWave();
   }
 
-  private observeHeroExit(): void {
-    this.heroObserver?.disconnect();
-    if (!this.mobile?.matches) {
-      clearTimeout(this.dockTimer);
-      cancelAnimationFrame(this.dockFrame);
-      this.dockFrame = 0;
-      this.dockProgress = 0;
-      this.heroPastTarget = false;
-      this.pastHero = false;
-      this.avoidingContent = false;
-      this.renderWave();
-      return;
+  private syncDock(): void {
+    const target = !!this.mobile?.matches && this.wantsCorner;
+    if (target === this.dockTarget) return;
+    this.dockTarget = target;
+    this.expanded = false;
+    this.avoidingContent = false;
+    clearTimeout(this.dockTimer);
+    cancelAnimationFrame(this.dockFrame);
+    this.dockFrame = 0;
+    if (target) {
+      // Let the staggered icons finish entering the side pool before transport.
+      this.pastHero = true;
+      const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1050;
+      this.dockTimer = setTimeout(() => this.moveWave(1), delay);
+    } else {
+      // Return the pool to the side before releasing its icons.
+      this.moveWave(0, () => {
+        if (!this.dockTarget) this.pastHero = false;
+      });
     }
-    const hero = document.querySelector('.frame-container app-homepage .homepage-container');
-    if (!hero) return;
-    // Begin tucking the links away after the first 32px of hero scroll,
-    // before the service cards below it enter the viewport.
-    const exitLine = Math.max(0, window.innerHeight - 32);
-    this.heroObserver = new IntersectionObserver(entries => {
-      if (!this.mobile?.matches) return;
-      const hidden = entries[0].boundingClientRect.bottom <= exitLine;
-      if (hidden !== this.heroPastTarget) {
-        this.heroPastTarget = hidden;
-        this.expanded = false;
-        clearTimeout(this.dockTimer);
-        if (hidden) {
-          this.pastHero = true;
-          this.dockTimer = setTimeout(() => this.moveWave(1),
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1100);
-        } else {
-          this.moveWave(0, () => { if (!this.heroPastTarget) this.pastHero = false; });
-        }
-      }
-      this.scheduleOverlapCheck();
-    }, {threshold: 0, rootMargin: `-${exitLine}px 0px 0px 0px`});
-    this.heroObserver.observe(hero);
   }
 
   private moveWave(target: number, complete?: () => void): void {
     cancelAnimationFrame(this.dockFrame);
     const start = this.dockProgress;
-    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1100 * Math.abs(target - start);
+    const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 550 * Math.abs(target - start);
     const started = performance.now();
     this.zone.runOutsideAngular(() => {
       const frame = (time: number) => {
@@ -124,21 +112,21 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     const spread = q*q*(3-2*q);
     const side = [120,cy-60,120,cy-36,106,cy-32,96,cy-29,79,cy-26,75,cy-15,75,cy,
       75,cy+15,79,cy+26,96,cy+29,106,cy+32,120,cy+36,120,cy+60];
-    const corner = [120,h-100,120,h-72,112,h-65,96,h-61,74,h-57,66,h-44,62,h-28,
-      58,h-10,36,h,14,h,52,h,86,h,120,h];
+    const corner = [120,100,120,72,112,65,96,61,74,57,66,44,62,28,
+      58,10,36,0,14,0,52,0,86,0,120,0];
     const size = 0.82;
     const v = side.map((value,index) => {
       const fromOrigin = index % 2 ? cy : 120;
-      const toOrigin = index % 2 ? h : 120;
+      const toOrigin = index % 2 ? 0 : 120;
       const from = fromOrigin + (value - fromOrigin) * size;
       const to = toOrigin + (corner[index] - toOrigin) * size;
       return from + (to - from) * (index % 2 ? travel : spread);
     });
     this.waveSvg.nativeElement.setAttribute('viewBox', `0 0 120 ${h}`);
     this.wavePath.nativeElement.setAttribute('d', `M${v[0]} ${v[1]} `+[2,8,14,20].map(i=>`C${v.slice(i,i+6).join(' ')}`).join(' ')+'Z');
-    this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy+(h-cy)*travel}px`;
-    this.waveArrow.nativeElement.setAttribute('transform', `translate(${120+(-24-2*spread)*size} ${cy+(h-26*size-cy)*travel}) rotate(${45*spread})`);
-    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (h - 26 - cy)}px)`;
+    this.waveGroup.nativeElement.style.transformOrigin = `120px ${cy*(1-travel)}px`;
+    this.waveArrow.nativeElement.setAttribute('transform', `translate(${120+(-24-2*spread)*size} ${cy+(26*size-cy)*travel}) rotate(${-45*spread})`);
+    this.linksContainer.nativeElement.style.transform = `translateY(${travel * (26 - cy)}px)`;
     this.socialTab.nativeElement.parentElement!.classList.toggle('wave-at-corner', p >= 0.999);
   }
 
@@ -159,8 +147,8 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     // Measure the normal footprint, even while visually shrunk, to avoid flicker.
     const centerY = tab.parentElement!.getBoundingClientRect().top + tab.parentElement!.offsetHeight / 2;
     const area = {left: window.innerWidth - 64, right: window.innerWidth,
-      top: this.dockProgress > 0.8 ? window.innerHeight - 64 : centerY - 32,
-      bottom: this.dockProgress > 0.8 ? window.innerHeight : centerY + 32};
+      top: this.dockProgress > 0.8 ? 0 : centerY - 32,
+      bottom: this.dockProgress > 0.8 ? 64 : centerY + 32};
     const overlaps = (rect: DOMRect) => rect.width > 0 && rect.height > 0 &&
       rect.left < area.right && rect.right > area.left && rect.top < area.bottom && rect.bottom > area.top;
     const candidates = new Set<Element>();
@@ -189,13 +177,12 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.heroObserver?.disconnect();
     this.mobile?.removeEventListener('change', this.onViewportChange);
     window.removeEventListener('resize', this.onViewportChange);
     window.removeEventListener('scroll', this.onScroll, true);
+    clearTimeout(this.dockTimer);
     cancelAnimationFrame(this.collisionFrame);
     cancelAnimationFrame(this.dockFrame);
-    clearTimeout(this.dockTimer);
   }
 
 

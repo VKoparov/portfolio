@@ -166,17 +166,18 @@
 // Transport the existing liquid surface without changing its icon animations.
 @media screen and (max-width: 60em) {
   .social-ico-block {
-    top: calc(58vh - 52px);
+    // Stable viewport units keep the icons anchored as browser chrome changes.
     top: calc(58svh - 52px);
+    transition: none;
     transform: none;
 
     .social-links { transition: none; }
 
     &.wave-at-corner:not(.collapsed) {
-      .social-ico:nth-child(1) { transform: translate(14px, -23px); }
-      .social-ico:nth-child(2) { transform: translate(-14px, -35px); }
-      .social-ico:nth-child(3) { transform: translate(-36px, -38px); }
-      .social-ico:nth-child(4) { transform: translate(-49px, -35px); }
+      .social-ico:nth-child(1) { transform: translate(14px, 101px); }
+      .social-ico:nth-child(2) { transform: translate(-14px, 61px); }
+      .social-ico:nth-child(3) { transform: translate(-36px, 12px); }
+      .social-ico:nth-child(4) { transform: translate(-49px, -39px); }
     }
 
     .social-tab {
