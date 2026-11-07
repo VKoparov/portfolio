@@ -17,6 +17,7 @@
   --preview-scale: 0.32;
   --tile-width: 32vw;
   --tile-height: 32vh;
+  --frame-radius: 6px;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -51,7 +52,7 @@
   height: var(--tile-height);
   transform: translate(-50%, -50%);
   transition: none;
-  border-radius: 6px;
+  border-radius: var(--frame-radius);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.13);
   will-change: transform, opacity;
   overflow: hidden;
@@ -79,10 +80,12 @@
   overflow: hidden;
   pointer-events: none;
   opacity: 0;
+  // Compensate for the preview scale so selection keeps the reel's visible radius.
+  border-radius: calc(var(--frame-radius) / var(--preview-scale));
   transform: translate(-50%, -50%) scale(0.32);
   transform-origin: center;
   box-shadow: 0 40px 140px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  transition: transform 1650ms cubic-bezier(0.65, 0, 0.2, 1), opacity 180ms ease;
+  transition: transform 1650ms cubic-bezier(0.65, 0, 0.2, 1), border-radius 1650ms cubic-bezier(0.65, 0, 0.2, 1), opacity 180ms ease;
   will-change: transform;
 }
 
@@ -93,6 +96,7 @@
 .expanded {
   .homepage-preview {
     transform: translate(-50%, -50%) scale(1);
+    border-radius: var(--frame-radius);
   }
   .viewfinder { opacity: 0; transition: opacity 450ms ease; }
 }
@@ -113,26 +117,30 @@
 
   i {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 18px;
+    height: 18px;
     border-color: #aaa;
     border-style: solid;
     transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   i:nth-child(1) {
     top: 0; left: 0; border-width: 1px 0 0 1px;
+    border-top-left-radius: var(--frame-radius);
     transform: translate3d(calc(-1 * var(--corner-x)), calc(-1 * var(--corner-y)), 0);
   }
   i:nth-child(2) {
     top: 0; right: 0; border-width: 1px 1px 0 0;
+    border-top-right-radius: var(--frame-radius);
     transform: translate3d(var(--corner-x), calc(-1 * var(--corner-y)), 0);
   }
   i:nth-child(3) {
     bottom: 0; left: 0; border-width: 0 0 1px 1px;
+    border-bottom-left-radius: var(--frame-radius);
     transform: translate3d(calc(-1 * var(--corner-x)), var(--corner-y), 0);
   }
   i:nth-child(4) {
     bottom: 0; right: 0; border-width: 0 1px 1px 0;
+    border-bottom-right-radius: var(--frame-radius);
     transform: translate3d(var(--corner-x), var(--corner-y), 0);
   }
 }
