@@ -6,6 +6,9 @@
   background: black;
 
   .background-image {
+    // Scroll sets opacity every frame; override the global timed transition.
+    transition: none;
+    opacity: 0;
     width: 50%;
     height: 100%;
 
@@ -69,9 +72,8 @@
           display: inline-block;
           text-decoration: none;
           opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 300ms ease,
-            transform 400ms cubic-bezier(0.22, 1, 0.36, 1), color 160ms ease;
+          transform: translateY(24px);
+          transition: color 160ms ease;
 
           &:focus-visible {
             outline: 2px solid #fff;
@@ -85,13 +87,12 @@
           }
         }
 
-        &.is-revealed .contact {
-          opacity: 1;
-          transform: translateY(0);
+        &:focus-within .contact {
+          opacity: 1 !important;
+          transform: none !important;
         }
 
         .phone-link {
-          transition-delay: 80ms, 80ms, 0ms;
           font-size: 22px;
 
           @media screen and (max-width: 60em) {
@@ -145,8 +146,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .contacts-container .background-image,
   .contacts-container .navigation-button-container .wrap-text .contact-container .contact {
-    transform: none;
-    transition: opacity 120ms ease, color 160ms ease;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
