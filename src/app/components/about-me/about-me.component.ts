@@ -1,3 +1,4 @@
+import {observeScrollScene} from '../../shared/scroll-scene';
 import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
 
@@ -7,6 +8,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./about-me.component.scss']
 })
 export class AboutMeComponent implements AfterViewInit, OnDestroy {
+  private stopScene?: () => void;
   @Input() event!: Observable<string>;
   @ViewChild('scrollTrack') private track!: ElementRef<HTMLElement>;
   @ViewChild('stage') private stage!: ElementRef<HTMLElement>;
@@ -76,16 +78,14 @@ export class AboutMeComponent implements AfterViewInit, OnDestroy {
       this.resizeObserver = new ResizeObserver(this.measure);
       this.resizeObserver.observe(this.text.nativeElement);
       this.resizeObserver.observe(this.stage.nativeElement);
-      window.addEventListener('scroll', this.schedule, {passive: true});
-      window.addEventListener('resize', this.measure, {passive: true});
+      this.stopScene = observeScrollScene(this.track.nativeElement, this.schedule, this.measure);
       this.motionPreference.addEventListener('change', this.measure);
       this.schedule();
     });
   }
 
   ngOnDestroy(): void {
-    window.removeEventListener('scroll', this.schedule);
-    window.removeEventListener('resize', this.measure);
+    this.stopScene?.();
     this.motionPreference.removeEventListener('change', this.measure);
     this.resizeObserver?.disconnect();
     if (this.frame !== null) cancelAnimationFrame(this.frame);

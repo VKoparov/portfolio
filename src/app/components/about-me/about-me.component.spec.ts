@@ -1,3 +1,5 @@
+import {BottomFadeModule} from '../../shared/bottom-fade/bottom-fade.module';
+import {NgOptimizedImage} from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AboutMeComponent } from './about-me.component';
@@ -8,6 +10,7 @@ describe('AboutMeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [NgOptimizedImage, BottomFadeModule],
       declarations: [ AboutMeComponent ]
     })
     .compileComponents();

@@ -52,15 +52,13 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
   }
   constructor(private readonly zone: NgZone) {}
 
-  avoidingContent = false;
-  private collisionFrame = 0;
   pastHero = false;
   expanded = false;
   private mobile?: MediaQueryList;
   private readonly onScroll = () => {
     if (this.mobile?.matches && this.dockTarget && !this.fastDocking && this.dockProgress < 1 &&
         Math.abs(window.scrollY - this.dockScrollStart) > window.innerHeight * 0.35) {
-      this.fastDocking = true;
+      this.zone.run(() => this.fastDocking = true);
       clearTimeout(this.dockTimer);
       cancelAnimationFrame(this.dockFrame);
       this.dockFrame = 0;
@@ -68,15 +66,13 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
       this.dockTimer = setTimeout(() => this.moveWave(1), 120);
     }
     if (this.mobile?.matches && this.pastHero && this.expanded) {
-      this.expanded = false;
+      this.zone.run(() => this.expanded = false);
     }
-    this.scheduleOverlapCheck();
   };
   private readonly onViewportChange = () => {
     this.expanded = false;
     this.syncDock();
     this.renderWave();
-    this.scheduleOverlapCheck();
   };
 
   get collapsed(): boolean {
@@ -87,7 +83,9 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     this.mobile = window.matchMedia('(max-width: 60em)');
     this.mobile.addEventListener('change', this.onViewportChange);
     window.addEventListener('resize', this.onViewportChange);
-    window.addEventListener('scroll', this.onScroll, {passive: true, capture: true});
+    this.zone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.onScroll, {passive: true, capture: true});
+    });
     this.syncDock();
     this.renderWave();
   }
@@ -99,7 +97,6 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     this.dockScrollStart = window.scrollY;
     this.fastDocking = false;
     this.expanded = false;
-    this.avoidingContent = false;
     clearTimeout(this.dockTimer);
     cancelAnimationFrame(this.dockFrame);
     this.dockFrame = 0;
@@ -133,7 +130,7 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
         if (t < 1) this.dockFrame = requestAnimationFrame(frame);
         else {
           this.dockFrame = 0;
-          this.zone.run(() => { complete?.(); this.scheduleOverlapCheck(); });
+          this.zone.run(() => complete?.());
         }
       };
       this.dockFrame = requestAnimationFrame(frame);
@@ -177,48 +174,6 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     this.socialTab.nativeElement.parentElement!.classList.toggle('wave-at-corner', p >= 0.999);
   }
 
-  private scheduleOverlapCheck(): void {
-    if (this.collisionFrame) return;
-    this.collisionFrame = requestAnimationFrame(() => {
-      this.collisionFrame = 0;
-      this.checkOverlap();
-    });
-  }
-
-  private checkOverlap(): void {
-    if (!this.mobile?.matches || !this.pastHero) {
-      this.avoidingContent = false;
-      return;
-    }
-    const tab = this.socialTab.nativeElement;
-    // Measure the normal footprint, even while visually shrunk, to avoid flicker.
-    const centerY = tab.parentElement!.getBoundingClientRect().top + tab.parentElement!.offsetHeight / 2;
-    const area = {left: window.innerWidth - 64, right: window.innerWidth,
-      top: this.dockProgress > 0.8 ? Math.max(0, window.innerHeight * this.bottomProgress - 64) : centerY - 32,
-      bottom: this.dockProgress > 0.8 ? Math.min(window.innerHeight, window.innerHeight * this.bottomProgress + 64) : centerY + 32};
-    const overlaps = (rect: DOMRect) => rect.width > 0 && rect.height > 0 &&
-      rect.left < area.right && rect.right > area.left && rect.top < area.bottom && rect.bottom > area.top;
-    const candidates = new Set<Element>();
-    for (let y = area.top; y <= area.bottom; y += 8) {
-      for (const x of [area.left + 2, area.left + 22, area.right - 2]) {
-        document.elementsFromPoint(x, y).forEach(element => {
-          if (!tab.parentElement!.contains(element)) candidates.add(element);
-        });
-      }
-    }
-    this.avoidingContent = Array.from(candidates).some(element => {
-      const control = element.closest('a, button, input, textarea, select, [role="button"], [tabindex]');
-      if (control && overlaps(control.getBoundingClientRect())) return true;
-      // Text ranges detect the letters themselves rather than large empty containers.
-      return Array.from(element.childNodes).some(node => {
-        if (node.nodeType !== Node.TEXT_NODE || !node.textContent?.trim()) return false;
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        return Array.from(range.getClientRects()).some(overlaps);
-      });
-    });
-  }
-
   toggleSocials(): void {
     this.expanded = !this.expanded;
   }
@@ -229,7 +184,6 @@ export class SocialBlockComponent implements AfterViewInit, OnDestroy {
     window.removeEventListener('scroll', this.onScroll, true);
     clearTimeout(this.dockTimer);
     cancelAnimationFrame(this.cornerFrame);
-    cancelAnimationFrame(this.collisionFrame);
     cancelAnimationFrame(this.dockFrame);
   }
 

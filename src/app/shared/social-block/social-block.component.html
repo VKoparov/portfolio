@@ -1,4 +1,4 @@
-<div class="social-ico-block" [class.past-hero]="pastHero" [class.bottom-corner]="bottomCorner" [class.fast-docking]="fastDocking" [class.collapsed]="collapsed" [class.avoiding-content]="avoidingContent">
+<div class="social-ico-block" [class.past-hero]="pastHero" [class.bottom-corner]="bottomCorner" [class.fast-docking]="fastDocking" [class.collapsed]="collapsed">
     <div #linksContainer class="social-links" [attr.inert]="collapsed ? '' : null" [attr.aria-hidden]="collapsed ? 'true' : null">
         <a *ngFor="let social of socialLinks; let i = index" [href]="social.url" target="_blank" rel="noopener noreferrer" class="social-ico" [style.--social-index]="i" [attr.aria-label]="social.name">
             <img [ngSrc]="social.icon" [alt]="social.name" width="24" height="24">

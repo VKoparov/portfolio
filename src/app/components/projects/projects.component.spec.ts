@@ -6,8 +6,14 @@ import { ProjectsComponent } from './projects.component';
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
   let fixture: ComponentFixture<ProjectsComponent>;
+  let setNearby: (nearby: boolean) => void;
 
   beforeEach(async () => {
+    spyOn(window, 'IntersectionObserver').and.callFake(function(callback: IntersectionObserverCallback) {
+      const observer = {observe: () => {}, disconnect: () => {}} as unknown as IntersectionObserver;
+      setNearby = nearby => callback([{isIntersecting: nearby} as IntersectionObserverEntry], observer);
+      return observer;
+    });
     await TestBed.configureTestingModule({
       declarations: [ ProjectsComponent ]
     })
@@ -93,6 +99,28 @@ describe('ProjectsComponent', () => {
     expect(component.progress).toBe(0);
     component.pauseTimer();
   }));
+
+  it('suspends offscreen playback and resumes from the same progress', fakeAsync(() => {
+    component.startTimer();
+    tick(1000);
+    setNearby(false);
+    tick(6000);
+    expect(component.progress).toBe(20);
+    expect(component.activeProject).toBe(component.projects[1]);
+    expect(component.intervalId).toBeNull();
+    setNearby(true);
+    tick(4000);
+    expect(component.activeProject).toBe(component.projects[2]);
+    component.pauseTimer();
+  }));
+
+  it('keeps a manually paused timer paused when re-entering the viewport', () => {
+    component.pauseTimer();
+    setNearby(false);
+    setNearby(true);
+    expect(component.isPaused).toBeTrue();
+    expect(component.intervalId).toBeNull();
+  });
 
   it('should clear interval on ngOnDestroy', () => {
     expect(component.intervalId).toBeTruthy();

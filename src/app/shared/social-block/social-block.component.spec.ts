@@ -1,3 +1,4 @@
+import {NgOptimizedImage} from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SocialBlockComponent } from './social-block.component';
@@ -8,6 +9,7 @@ describe('SocialBlockComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [NgOptimizedImage],
       declarations: [ SocialBlockComponent ]
     })
     .compileComponents();

@@ -1,3 +1,4 @@
+import {NgOptimizedImage} from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParallaxLandingComponent } from './parallax-landing.component';
@@ -8,6 +9,7 @@ describe('ParallaxLandingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [NgOptimizedImage],
       declarations: [ ParallaxLandingComponent ]
     })
     .compileComponents();

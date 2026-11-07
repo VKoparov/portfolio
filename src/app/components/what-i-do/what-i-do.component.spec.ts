@@ -1,3 +1,4 @@
+import {NgOptimizedImage} from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WhatIDoComponent } from './what-i-do.component';
@@ -8,6 +9,7 @@ describe('WhatIDoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [NgOptimizedImage],
       declarations: [ WhatIDoComponent ]
     })
     .compileComponents();

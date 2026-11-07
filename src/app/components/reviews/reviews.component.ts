@@ -1,3 +1,4 @@
+import {observeScrollScene} from '../../shared/scroll-scene';
 import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
 import {LenisService} from "../../services/lenis.service";
@@ -9,6 +10,7 @@ import {DescriptionScrollController} from "../../shared/description-scroll.contr
   styleUrls: ['./reviews.component.scss']
 })
 export class ReviewsComponent implements AfterViewInit, OnDestroy {
+  private stopScene?: () => void;
 
   reviews: { imgSrc: string, description: string, name: string, jobTitle: string }[] = [
     {
@@ -115,8 +117,7 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
-      window.addEventListener('scroll', this.updateBackgroundOnScroll, {passive: true});
-      window.addEventListener('resize', this.updateBackgroundOnScroll, {passive: true});
+      this.stopScene = observeScrollScene(this.scrollTrack.nativeElement, this.updateBackgroundOnScroll, this.updateBackgroundOnScroll);
       this.updateBackgroundOnScroll();
     });
   }
@@ -227,10 +228,9 @@ export class ReviewsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stopScene?.();
     clearTimeout(this.hintCooldownTimer);
     this.descriptionScroll.onTouchEnd();
-    window.removeEventListener('scroll', this.updateBackgroundOnScroll);
-    window.removeEventListener('resize', this.updateBackgroundOnScroll);
     if (this.backgroundFrame !== null) cancelAnimationFrame(this.backgroundFrame);
     clearTimeout(this.swipeTimer);
   }

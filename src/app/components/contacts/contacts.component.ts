@@ -1,3 +1,4 @@
+import {observeScrollScene} from '../../shared/scroll-scene';
 import {AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {EmailService} from "../../services/email.service";
@@ -8,6 +9,7 @@ import {EmailService} from "../../services/email.service";
   styleUrls: ['./contacts.component.scss']
 })
 export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
+  private stopScene?: () => void;
 
   contactForm!: FormGroup;
   @ViewChild('contactLinks') private contactLinks!: ElementRef<HTMLElement>;
@@ -56,16 +58,14 @@ export class ContactsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
-      window.addEventListener('scroll', this.updateScroll, {passive: true});
-      window.addEventListener('resize', this.updateScroll);
+      this.stopScene = observeScrollScene(this.portrait.nativeElement.parentElement!, this.updateScroll);
       this.portrait.nativeElement.addEventListener('load', this.updateScroll);
       this.updateScroll();
     });
   }
 
   ngOnDestroy(): void {
-    window.removeEventListener('scroll', this.updateScroll);
-    window.removeEventListener('resize', this.updateScroll);
+    this.stopScene?.();
     this.portrait.nativeElement.removeEventListener('load', this.updateScroll);
     cancelAnimationFrame(this.scrollFrame);
   }

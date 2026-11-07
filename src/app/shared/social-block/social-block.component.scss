@@ -121,10 +121,6 @@
       transform: translate(0, -50%) scaleX(1);
     }
 
-    &.past-hero.avoiding-content.collapsed .social-tab {
-      transform: translate(0, -50%) scale(0.82, 0.9);
-    }
-
     &.collapsed .social-tab .social-tab-arrow {
       transform: rotate(0);
     }

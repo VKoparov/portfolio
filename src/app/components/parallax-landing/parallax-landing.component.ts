@@ -1,3 +1,4 @@
+import {observeScrollScene} from '../../shared/scroll-scene';
 import {
     AfterViewInit,
     Component,
@@ -20,6 +21,15 @@ export class ParallaxLandingComponent implements AfterViewInit, OnDestroy {
 
     private rafId: number | null = null;
 
+    private stopScene?: () => void;
+    private readonly schedule = (): void => {
+        if (this.rafId !== null) return;
+        this.rafId = requestAnimationFrame(() => {
+            this.rafId = null;
+            this.updateFrame(this.getScrollY());
+        });
+    };
+
     private zoomEndPx = 500;
     private maxLogo = 1.8;
     private maxFg = 1.8;
@@ -28,18 +38,13 @@ export class ParallaxLandingComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        this.updateFrame(this.getScrollY());
-
         this.zone.runOutsideAngular(() => {
-            const loop = () => {
-                this.updateFrame(this.getScrollY());
-                this.rafId = requestAnimationFrame(loop);
-            };
-            this.rafId = requestAnimationFrame(loop);
+            this.stopScene = observeScrollScene(this.darkRef.nativeElement.parentElement!, this.schedule);
         });
     }
 
     ngOnDestroy(): void {
+        this.stopScene?.();
         if (this.rafId != null) cancelAnimationFrame(this.rafId);
     }
 

@@ -1,3 +1,4 @@
+import {observeScrollScene} from '../../shared/scroll-scene';
 import {AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, QueryList, ViewChildren} from '@angular/core';
 import {Observable} from "rxjs";
 
@@ -7,6 +8,7 @@ import {Observable} from "rxjs";
     styleUrls: ['./what-i-do.component.scss']
 })
 export class WhatIDoComponent implements AfterViewInit, OnDestroy {
+    private stopScene?: () => void;
 
     templates: { imgSrc: string, logoUrl: string, header: string, action: Function }[] = [
         {
@@ -51,7 +53,7 @@ export class WhatIDoComponent implements AfterViewInit, OnDestroy {
     private resizeObserver?: ResizeObserver;
     private readonly motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    constructor(private readonly zone: NgZone) {}
+    constructor(private readonly zone: NgZone, private readonly host: ElementRef<HTMLElement>) {}
 
     private readonly updateScroll = (): void => {
         if (this.frame !== null) return;
@@ -76,16 +78,14 @@ export class WhatIDoComponent implements AfterViewInit, OnDestroy {
         this.zone.runOutsideAngular(() => {
             this.resizeObserver = new ResizeObserver(this.updateScroll);
             this.cards.forEach(card => this.resizeObserver!.observe(card.nativeElement));
-            window.addEventListener('scroll', this.updateScroll, {passive: true});
-            window.addEventListener('resize', this.updateScroll, {passive: true});
+            this.stopScene = observeScrollScene(this.host.nativeElement.querySelector<HTMLElement>('.what-i-do-container')!, this.updateScroll);
             this.motionPreference.addEventListener('change', this.updateScroll);
             this.updateScroll();
         });
     }
 
     ngOnDestroy(): void {
-        window.removeEventListener('scroll', this.updateScroll);
-        window.removeEventListener('resize', this.updateScroll);
+        this.stopScene?.();
         this.motionPreference.removeEventListener('change', this.updateScroll);
         this.resizeObserver?.disconnect();
         if (this.frame !== null) cancelAnimationFrame(this.frame);

@@ -1,3 +1,5 @@
+import {BottomFadeModule} from '../../shared/bottom-fade/bottom-fade.module';
+import {NgOptimizedImage} from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgZone } from '@angular/core';
 import { LenisService } from '../../services/lenis.service';
@@ -10,6 +12,7 @@ describe('ReviewsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [NgOptimizedImage, BottomFadeModule],
       declarations: [ ReviewsComponent ]
     })
     .compileComponents();
